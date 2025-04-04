@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>ドーナドーナ キャラクターエディター</title>
+  <style>body { padding: 0; margin: 0; }</style>
+  <script src="https://cdn.jsdelivr.net/npm/encoding-japanese@2.0.0/encoding.min.js"></script>
+  <script src="shift-jis-encoder.js"></script>
+</head>
+
+<body>
+  <div id="elm"></div>
+  <script src="elm.js"></script>
+  <script>
+    var app = Elm.Main.init({
+      node: document.getElementById('elm')
+    });
+
+    // Elmからのポートを受け取る処理を追加
+    if (app.ports && app.ports.downloadFile) {
+      app.ports.downloadFile.subscribe(function(data) {
+        var filename = data[0];
+        var content = data[1];
+        
+        // UTF-8からShift-JISに変換してダウンロード
+        downloadWithShiftJIS(filename, content);
+      });
+    }
+  </script>
+</body>
+</html>

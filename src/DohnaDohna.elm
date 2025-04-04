@@ -1,4 +1,4 @@
-module DohnaDohna exposing (Image, Jinzai, JinzaiAttribute, JinzaiAttributes, Looks, Mental, Name, Techinc, attributes, rankNames, undefinedRandomText, undefinedText)
+module DohnaDohna exposing (Image, Jinzai, JinzaiAttribute, JinzaiAttributes, Looks, Mental, Name, Present, ProfileText, Techinc, Voice, attributes, rankNames, undefinedRandomText, undefinedText, voices)
 
 
 type alias Image =
@@ -49,9 +49,8 @@ type alias ProfileText =
     String
 
 
-type JinzaiProfileTexts
-    = ProfileTextList (List String)
-    | ProfileTextString String
+type alias JinzaiProfileTexts =
+    List ProfileText
 
 
 type alias Present =
@@ -76,7 +75,7 @@ type alias Jinzai =
     , attributes : JinzaiAttributes
     , isVergin : Maybe IsVergin
     , voice : Maybe Voice
-    , profile : Maybe JinzaiProfileTexts
+    , profile : JinzaiProfileTexts
     }
 
 
@@ -161,6 +160,8 @@ attributes =
     , "上品"
     , "家庭的"
     , "魔性"
+
+    -- マニュアルに記載されていない隠し属性
     , "二形"
     , "男の娘"
     , "泥中蓮"
@@ -170,7 +171,7 @@ attributes =
     ]
 
 
-rankNames : List String
+rankNames : List RankName
 rankNames =
     [ undefinedRandomText
     , "S+ (神話級)"
@@ -183,4 +184,51 @@ rankNames =
     , "C (一般的)"
     , "D+ (劣っている)"
     , "D (能力が皆無)"
+    ]
+
+
+voices : List Voice
+voices =
+    [ undefinedRandomText
+    , "女子汎用／大／真面目"
+
+    -- 公式マニュアルには記載されているが実際に設定するとエラーで落ちる
+    -- , "女子汎用／大／陽気"
+    , "女子汎用／大／強気"
+    , "女子汎用／高／真面目"
+    , "女子汎用／高／活発"
+    , "女子汎用／高／陽気"
+    , "女子汎用／高／控え目"
+    , "女子汎用／高／無邪気"
+    , "女子汎用／中／真面目"
+    , "女子汎用／中／活発"
+    , "女子汎用／中／控え目"
+    , "女子汎用／小／無邪気"
+    , "女子汎用／小／勝ち気"
+    , "女子汎用／小／控え目"
+
+    --  隠し要素: ナユタメンバーやユニークジンザイの音声も使用することができる。
+    -- @link https://trap.jp/post/1362/
+    , "キラキラ"
+    , "ポルノ"
+    , "メディコ"
+    , "アンテナ"
+    , "アリス"
+    , "菊千代"
+    , "クマ"
+    , "ザッパ"
+    , "虎太郎"
+    , "ジョーカー"
+    , "リリヱ"
+    , "衣縫"
+    , "恭花"
+    , "凛"
+    , "ノエル"
+    , "心瑠姫"
+    , "環"
+    , "千晴"
+    , "フミ"
+    , "早奈"
+    , "菜々実"
+    , "しゅ子"
     ]
