@@ -1,10 +1,11 @@
-import { Kokyaku } from '../types/DohnaDohna';
+import { Kokyaku } from '../DohnaDohna/data';
+import { TextInput, Select, Textarea, Stack, Title, Box } from '@mantine/core';
 
 type KokyakuFormProps = {
   kokyaku: Kokyaku;
   onChange: (field: keyof Kokyaku, value: string, index?: number) => void;
   attributes: string[];
-  rankNames: string[];
+  rankNames: readonly string[];
   undefinedRandomText: string;
 };
 
@@ -30,15 +31,12 @@ const AttributeSelector = ({
   attributes: string[];
   index: number;
 }) => (
-  <div style={{ marginBottom: '10px' }}>
-    <select value={value} onChange={(e) => onChange(e.target.value, index)}>
-      {attributes.map((attribute) => (
-        <option key={attribute} value={attribute}>
-          {attribute}
-        </option>
-      ))}
-    </select>
-  </div>
+  <Select
+    value={value}
+    onChange={(value) => onChange(value || '', index)}
+    data={attributes.map((attribute) => ({ value: attribute, label: attribute }))}
+    mb="xs"
+  />
 );
 
 // プレゼント入力コンポーネント
@@ -51,13 +49,12 @@ const PresentInput = ({
   onChange: (value: string, index: number) => void;
   index: number;
 }) => (
-  <div style={{ marginBottom: '10px' }}>
-    <input
-      placeholder="プレゼント (例: LKS↑↑, TEC↓)"
-      value={value}
-      onChange={(e) => onChange(e.target.value, index)}
-    />
-  </div>
+  <TextInput
+    placeholder="プレゼント (例: LKS↑↑, TEC↓)"
+    value={value}
+    onChange={(e) => onChange(e.target.value, index)}
+    mb="xs"
+  />
 );
 
 // プロフィール入力コンポーネント
@@ -72,13 +69,14 @@ const ProfileInput = ({
   index: number;
   placeholder: string;
 }) => (
-  <div style={{ marginBottom: '10px' }}>
-    <textarea
-      placeholder={placeholder}
-      value={value}
-      onChange={(e) => onChange(e.target.value, index)}
-    />
-  </div>
+  <Textarea
+    placeholder={placeholder}
+    value={value}
+    onChange={(e) => onChange(e.target.value, index)}
+    mb="xs"
+    autosize
+    minRows={2}
+  />
 );
 
 export const KokyakuForm = ({
@@ -111,50 +109,45 @@ export const KokyakuForm = ({
   };
 
   return (
-    <div>
-      <h2>コキャク設定</h2>
+    <Stack gap="md">
+      <Title order={2}>コキャク設定</Title>
 
-      <div className="form-group">
-        <label>画像ファイル名</label>
-        <input
+      <Box>
+        <TextInput
+          label="画像ファイル名"
           placeholder="画像ファイル名を入力してください"
           value={kokyaku.image}
           onChange={(e) => onChange('image', e.target.value)}
         />
-      </div>
+      </Box>
 
-      <div className="form-group">
-        <label>名前 (最大6文字)</label>
-        <input
+      <Box>
+        <TextInput
+          label="名前 (最大6文字)"
           placeholder="名前を入力してください"
           value={kokyaku.name}
           onChange={(e) => onChange('name', e.target.value)}
         />
-      </div>
+      </Box>
 
-      <div className="form-group">
-        <label>インカム</label>
-        <select
+      <Box>
+        <Select
+          label="インカム"
           value={modelToView(kokyaku.income, undefinedRandomText)}
-          onChange={(e) => onChange('income', e.target.value)}
-        >
-          {rankNames.map((rank) => (
-            <option key={rank} value={rank}>
-              {rank}
-            </option>
-          ))}
-        </select>
-      </div>
+          onChange={(value) => onChange('income', value || '')}
+          data={rankNames.map((rank) => ({ value: rank, label: rank }))}
+        />
+      </Box>
 
-      <div className="form-group">
-        <label>プレゼント</label>
+      <Box>
+        <Box mb="xs">プレゼント</Box>
         {kokyaku.present.map((present, index) => (
           <PresentInput key={index} value={present} onChange={handlePresentChange} index={index} />
         ))}
-      </div>
+      </Box>
 
-      <div className="form-group">
-        <label>ターゲット (最大3つ)</label>
+      <Box>
+        <Box mb="xs">ターゲット (最大3つ)</Box>
         <AttributeSelector
           value={attributesToValue(kokyaku.target, 0)}
           onChange={handleTargetChange}
@@ -173,10 +166,10 @@ export const KokyakuForm = ({
           attributes={attributes}
           index={2}
         />
-      </div>
+      </Box>
 
-      <div className="form-group">
-        <label>プロフィール (最大2行)</label>
+      <Box>
+        <Box mb="xs">プロフィール (最大2行)</Box>
         <ProfileInput
           value={getProfileValue(0)}
           onChange={handleProfileChange}
@@ -189,7 +182,7 @@ export const KokyakuForm = ({
           index={1}
           placeholder="2行目"
         />
-      </div>
-    </div>
+      </Box>
+    </Stack>
   );
 };

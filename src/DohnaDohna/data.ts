@@ -1,51 +1,12 @@
 /**
  * ドーナドーナキャラクターエディターの型定義
  */
-
-export type Image = string;
-export type Name = string;
-export type RankName = string;
-export type Looks = RankName;
-export type Techinc = RankName;
-export type Mental = RankName;
-export type JinzaiAttribute = string;
-export type JinzaiAttributes = JinzaiAttribute[];
-export type IsVergin = boolean;
-export type Voice = string;
-export type ProfileText = string;
-export type JinzaiProfileTexts = ProfileText[];
-export type Present = string;
-export type Presents = Present[];
-
-export type KokyakuProfileTexts = ProfileText[] | string;
-
-export type Jinzai = {
-  image: Image;
-  name: Name | null;
-  looks: Looks | null;
-  technic: Techinc | null;
-  mental: Mental | null;
-  attributes: JinzaiAttributes;
-  isVergin: IsVergin | null;
-  voice: Voice | null;
-  profile: JinzaiProfileTexts;
-};
-
-export type Kokyaku = {
-  characterType: string;
-  image: Image;
-  name: Name;
-  income: RankName | null;
-  present: Presents;
-  target: JinzaiAttributes;
-  profile: KokyakuProfileTexts | null;
-};
-
-export const undefinedRandomText = '未設定（ランダム）';
-export const undefinedText = '未設定';
+export const randomText = 'ランダム（未設定）';
+export const nullText = 'なし（空欄）';
 
 export const attributes: string[] = [
-  undefinedText,
+  nullText,
+  randomText,
   '巨乳',
   '貧乳',
   '安産型',
@@ -112,8 +73,8 @@ export const attributes: string[] = [
   '無想',
 ];
 
-export const rankNames: RankName[] = [
-  undefinedRandomText,
+export const rankWithDescription = [
+  randomText,
   'S+ (神話級)',
   'S (伝説級)',
   'A+ (世界級)',
@@ -124,10 +85,11 @@ export const rankNames: RankName[] = [
   'C (一般的)',
   'D+ (劣っている)',
   'D (能力が皆無)',
-];
+] as const;
+type RankNameWithDescription = (typeof rankWithDescription)[number];
 
 export const voices: Voice[] = [
-  undefinedRandomText,
+  randomText,
   '女子汎用／大／真面目',
   '女子汎用／大／陽気',
   '女子汎用／大／強気',
@@ -165,4 +127,42 @@ export const voices: Voice[] = [
   '早奈',
   '菜々実',
   'しゅ子',
-];
+] as const;
+
+export type Image = string;
+export type Name = string;
+export type Looks = RankNameWithDescription;
+export type Techinc = RankNameWithDescription;
+export type Mental = RankNameWithDescription;
+export type JinzaiAttribute = string;
+export type JinzaiAttributes = JinzaiAttribute[];
+export type IsVergin = boolean;
+export type Voice = string;
+export type ProfileText = string;
+export type JinzaiProfileTexts = ProfileText[];
+export type Present = string;
+export type Presents = Present[];
+
+export type KokyakuProfileTexts = ProfileText[] | string;
+
+export type Jinzai = {
+  image: Image;
+  name: Name | null;
+  looks: Looks | null;
+  technic: Techinc | null;
+  mental: Mental | null;
+  attributes: JinzaiAttributes;
+  isVergin: IsVergin | null;
+  voice: Voice | null;
+  profile: JinzaiProfileTexts;
+};
+
+export type Kokyaku = {
+  characterType: string;
+  image: Image;
+  name: Name;
+  income: RankNameWithDescription | null;
+  present: Presents;
+  target: JinzaiAttributes;
+  profile: KokyakuProfileTexts | null;
+};

@@ -1,10 +1,11 @@
-import { Jinzai } from '../types/DohnaDohna';
+import { Jinzai } from '../DohnaDohna/data';
+import { TextInput, Select, Radio, Textarea, Stack, Title, Group, Box } from '@mantine/core';
 
 type JinzaiFormProps = {
   jinzai: Jinzai;
   onChange: (field: keyof Jinzai, value: string | boolean, index?: number) => void;
   attributes: string[];
-  rankNames: string[];
+  rankNames: readonly string[];
   voices: string[];
   undefinedRandomText: string;
 };
@@ -31,15 +32,12 @@ const AttributeSelector = ({
   attributes: string[];
   index: number;
 }) => (
-  <div style={{ marginBottom: '10px' }}>
-    <select value={value} onChange={(e) => onChange(e.target.value, index)}>
-      {attributes.map((attribute) => (
-        <option key={attribute} value={attribute}>
-          {attribute}
-        </option>
-      ))}
-    </select>
-  </div>
+  <Select
+    value={value}
+    onChange={(value) => onChange(value || '', index)}
+    data={attributes.map((attribute) => ({ value: attribute, label: attribute }))}
+    mb="xs"
+  />
 );
 
 // プロフィール入力コンポーネント
@@ -54,13 +52,14 @@ const ProfileInput = ({
   index: number;
   placeholder: string;
 }) => (
-  <div style={{ marginBottom: '10px' }}>
-    <textarea
-      placeholder={placeholder}
-      value={value}
-      onChange={(e) => onChange(e.target.value, index)}
-    />
-  </div>
+  <Textarea
+    placeholder={placeholder}
+    value={value}
+    onChange={(e) => onChange(e.target.value, index)}
+    mb="xs"
+    autosize
+    minRows={2}
+  />
 );
 
 export const JinzaiForm = ({
@@ -82,71 +81,56 @@ export const JinzaiForm = ({
   };
 
   return (
-    <div>
-      <h2>ジンザイ設定</h2>
+    <Stack gap="md">
+      <Title order={2}>ジンザイ設定</Title>
 
-      <div className="form-group">
-        <label>画像ファイル名</label>
-        <input
+      <Box>
+        <TextInput
+          label="画像ファイル名"
           placeholder="画像ファイル名を入力してください"
           value={jinzai.image}
           onChange={(e) => onChange('image', e.target.value)}
         />
-      </div>
+      </Box>
 
-      <div className="form-group">
-        <label>名前 (最大6文字)</label>
-        <input
+      <Box>
+        <TextInput
+          label="名前 (最大6文字)"
           placeholder="名前を入力してください"
           value={modelToView(jinzai.name, '')}
           onChange={(e) => onChange('name', e.target.value)}
         />
-      </div>
+      </Box>
 
-      <div className="form-group">
-        <label>ルックス</label>
-        <select
+      <Box>
+        <Select
+          label="ルックス"
           value={modelToView(jinzai.looks, undefinedRandomText)}
-          onChange={(e) => onChange('looks', e.target.value)}
-        >
-          {rankNames.map((rank) => (
-            <option key={rank} value={rank}>
-              {rank}
-            </option>
-          ))}
-        </select>
-      </div>
+          onChange={(value) => onChange('looks', value || '')}
+          data={rankNames.map((rank) => ({ value: rank, label: rank }))}
+        />
+      </Box>
 
-      <div className="form-group">
-        <label>テクニック</label>
-        <select
+      <Box>
+        <Select
+          label="テクニック"
           value={modelToView(jinzai.technic, undefinedRandomText)}
-          onChange={(e) => onChange('technic', e.target.value)}
-        >
-          {rankNames.map((rank) => (
-            <option key={rank} value={rank}>
-              {rank}
-            </option>
-          ))}
-        </select>
-      </div>
+          onChange={(value) => onChange('technic', value || '')}
+          data={rankNames.map((rank) => ({ value: rank, label: rank }))}
+        />
+      </Box>
 
-      <div className="form-group">
-        <label>メンタル</label>
-        <select
+      <Box>
+        <Select
+          label="メンタル"
           value={modelToView(jinzai.mental, undefinedRandomText)}
-          onChange={(e) => onChange('mental', e.target.value)}
-        >
-          {rankNames.map((rank) => (
-            <option key={rank} value={rank}>
-              {rank}
-            </option>
-          ))}
-        </select>
-      </div>
+          onChange={(value) => onChange('mental', value || '')}
+          data={rankNames.map((rank) => ({ value: rank, label: rank }))}
+        />
+      </Box>
 
-      <div className="form-group">
-        <label>属性 (最大3つ)</label>
+      <Box>
+        <Box mb="xs">属性 (最大3つ)</Box>
         <AttributeSelector
           value={attributesToValue(jinzai.attributes, 0)}
           onChange={handleAttributeChange}
@@ -165,48 +149,32 @@ export const JinzaiForm = ({
           attributes={attributes}
           index={2}
         />
-      </div>
+      </Box>
 
-      <div className="form-group">
-        <label>処女設定</label>
-        <div className="radio-group">
-          <div>
-            <input
-              type="radio"
-              id="vergin-yes"
-              checked={jinzai.isVergin === true}
-              onChange={() => onChange('isVergin', true)}
-            />
-            <label htmlFor="vergin-yes">処女 (1)</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              id="vergin-no"
-              checked={jinzai.isVergin === false}
-              onChange={() => onChange('isVergin', false)}
-            />
-            <label htmlFor="vergin-no">非処女 (0)</label>
-          </div>
-        </div>
-      </div>
-
-      <div className="form-group">
-        <label>音声</label>
-        <select
-          value={modelToView(jinzai.voice, undefinedRandomText)}
-          onChange={(e) => onChange('voice', e.target.value)}
+      <Box>
+        <Box mb="xs">処女設定</Box>
+        <Radio.Group
+          value={jinzai.isVergin === true ? 'true' : jinzai.isVergin === false ? 'false' : ''}
+          onChange={(value) => onChange('isVergin', value === 'true')}
         >
-          {voices.map((voice) => (
-            <option key={voice} value={voice}>
-              {voice}
-            </option>
-          ))}
-        </select>
-      </div>
+          <Group>
+            <Radio value="true" label="処女 (1)" />
+            <Radio value="false" label="非処女 (0)" />
+          </Group>
+        </Radio.Group>
+      </Box>
 
-      <div className="form-group">
-        <label>プロフィール (最大3行)</label>
+      <Box>
+        <Select
+          label="音声"
+          value={modelToView(jinzai.voice, undefinedRandomText)}
+          onChange={(value) => onChange('voice', value || '')}
+          data={voices.map((voice) => ({ value: voice, label: voice }))}
+        />
+      </Box>
+
+      <Box>
+        <Box mb="xs">プロフィール (最大3行)</Box>
         <ProfileInput
           value={jinzai.profile[0] || ''}
           onChange={handleProfileChange}
@@ -225,7 +193,7 @@ export const JinzaiForm = ({
           index={2}
           placeholder="3行目"
         />
-      </div>
-    </div>
+      </Box>
+    </Stack>
   );
 };

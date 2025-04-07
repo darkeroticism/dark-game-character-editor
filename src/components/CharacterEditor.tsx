@@ -2,16 +2,17 @@ import { useState } from 'react';
 import {
   Jinzai,
   Kokyaku,
-  undefinedRandomText,
-  undefinedText,
+  randomText,
+  nullText,
   attributes,
-  rankNames,
+  rankWithDescription,
   voices,
-} from '../types/DohnaDohna';
+} from '../DohnaDohna/data';
 import { downloadWithShiftJIS } from '../utils/shiftJisEncoder';
 import { JinzaiForm } from './JinzaiForm';
 import { KokyakuForm } from './KokyakuForm';
-import '../styles/CharacterEditor.css';
+import { generateJinzaiIniContent, generateKokyakuIniContent } from '../DohnaDohna/logic';
+import { Container, Title, SegmentedControl, Button, Paper } from '@mantine/core';
 
 // キャラクタータイプの定義
 type CharacterType = 'jinzai' | 'kokyaku';
@@ -23,7 +24,7 @@ const createInitialJinzai = (): Jinzai => ({
   looks: null,
   technic: null,
   mental: null,
-  attributes: [undefinedText, undefinedText, undefinedText],
+  attributes: [nullText, nullText, nullText],
   isVergin: null,
   voice: null,
   profile: ['', '', ''],
@@ -36,14 +37,13 @@ const createInitialKokyaku = (): Kokyaku => ({
   name: '',
   income: null,
   present: [''],
-  target: [undefinedText, undefinedText, undefinedText],
+  target: [nullText, nullText, nullText],
   profile: ['', ''],
 });
 
 // 値がnullになるべきかを判定する関数
 const shouldBeNull = (value: string | boolean): boolean =>
-  typeof value === 'string' &&
-  (value === undefinedText || value === undefinedRandomText || value === '');
+  typeof value === 'string' && (value === nullText || value === randomText || value === '');
 
 // 配列フィールドを更新する関数
 const updateArrayField = <T,>(array: T[], index: number, value: T): T[] => {
@@ -67,84 +67,6 @@ const updatePresentArray = (presents: string[], index: number, value: string): s
   return newPresents;
 };
 
-// ランク値からINI用の文字列を生成する関数
-const formatRankValue = (value: string | null): string => {
-  return value ? `=${value.substring(0, 2)}` : '=';
-};
-
-// 属性配列からINI用の文字列を生成する関数
-const formatAttributeRows = (
-  attributes: string[],
-  fieldName: string,
-  undefinedValue: string
-): string => {
-  return attributes.every((attr) => attr === undefinedValue)
-    ? Array(3).fill(`${fieldName}=`).join('\n')
-    : attributes
-        .filter((attr) => attr !== undefinedValue)
-        .map((attr) => `${fieldName}=${attr}`)
-        .join('\n');
-};
-
-// プロフィール配列からINI用の文字列を生成する関数
-const formatProfileRows = (profiles: string[], count: number): string => {
-  return profiles.every((profile) => profile === '')
-    ? Array(count).fill('プロフィール=').join('\n')
-    : profiles
-        .filter((profile) => profile !== '')
-        .map((profile) => `プロフィール=${profile}`)
-        .join('\n');
-};
-
-// ジンザイのINIコンテンツを生成する関数
-const generateJinzaiIniContent = (jinzai: Jinzai): string => {
-  const imageRow = `画像=${jinzai.image}`;
-  const nameRow = `名前=${jinzai.name || ''}`;
-  const looksRow = `ルックス${formatRankValue(jinzai.looks)}`;
-  const technicRow = `テクニック${formatRankValue(jinzai.technic)}`;
-  const mentalRow = `メンタル${formatRankValue(jinzai.mental)}`;
-  const attributeRows = formatAttributeRows(jinzai.attributes, '属性', undefinedText);
-  const verginRow = jinzai.isVergin === null ? '処女=' : `処女=${jinzai.isVergin ? '1' : '0'}`;
-  const voiceRow = jinzai.voice ? `音声=${jinzai.voice}` : '音声=';
-  const profileRows = formatProfileRows(jinzai.profile, 3);
-
-  return [
-    imageRow,
-    nameRow,
-    looksRow,
-    technicRow,
-    mentalRow,
-    attributeRows,
-    verginRow,
-    voiceRow,
-    profileRows,
-  ]
-    .filter((row) => row !== '')
-    .join('\n');
-};
-
-// コキャクのINIコンテンツを生成する関数
-const generateKokyakuIniContent = (kokyaku: Kokyaku): string => {
-  const typeRow = `種類=${kokyaku.characterType}`;
-  const imageRow = `画像=${kokyaku.image}`;
-  const nameRow = `名前=${kokyaku.name}`;
-  const incomeRow = `インカム${formatRankValue(kokyaku.income)}`;
-
-  const presentRows = kokyaku.present
-    .filter((present) => present !== '')
-    .map((present) => `プレゼント=${present}`)
-    .join('\n');
-
-  const targetRows = formatAttributeRows(kokyaku.target, 'ターゲット', undefinedText);
-
-  const profileArray = kokyaku.profile as string[];
-  const profileRows = formatProfileRows(profileArray, 2);
-
-  return [typeRow, imageRow, nameRow, incomeRow, presentRows, targetRows, profileRows]
-    .filter((row) => row !== '')
-    .join('\n');
-};
-
 // キャラクタータイプセレクターコンポーネント
 const CharacterTypeSelector = ({
   characterType,
@@ -153,34 +75,24 @@ const CharacterTypeSelector = ({
   characterType: CharacterType;
   onChange: (type: CharacterType) => void;
 }) => (
-  <div className="character-type-selector">
-    <div>
-      <input
-        type="radio"
-        id="jinzai"
-        checked={characterType === 'jinzai'}
-        onChange={() => onChange('jinzai')}
-      />
-      <label htmlFor="jinzai">ジンザイ</label>
-    </div>
-    <div>
-      <input
-        type="radio"
-        id="kokyaku"
-        checked={characterType === 'kokyaku'}
-        onChange={() => onChange('kokyaku')}
-      />
-      <label htmlFor="kokyaku">コキャク</label>
-    </div>
-  </div>
+  <SegmentedControl
+    value={characterType}
+    onChange={onChange as (value: string) => void}
+    data={[
+      { label: 'ジンザイ', value: 'jinzai' },
+      { label: 'コキャク', value: 'kokyaku' },
+    ]}
+    fullWidth
+    mb="md"
+  />
 );
 
 // ファイル生成ボタンコンポーネント
 const GenerateFileButton = ({ onClick }: { onClick: () => void }) => (
-  <div className="generate-button-container">
-    <button onClick={onClick} className="generate-button">
+  <div style={{ textAlign: 'center', marginTop: 30 }}>
+    <Button onClick={onClick} size="lg" color="green">
       .txtファイルを生成してダウンロード
-    </button>
+    </Button>
   </div>
 );
 
@@ -259,31 +171,33 @@ const CharacterEditor = () => {
         jinzai={jinzai}
         onChange={handleJinzaiChange}
         attributes={attributes}
-        rankNames={rankNames}
+        rankNames={rankWithDescription}
         voices={voices}
-        undefinedRandomText={undefinedRandomText}
+        undefinedRandomText={randomText}
       />
     ) : (
       <KokyakuForm
         kokyaku={kokyaku}
         onChange={handleKokyakuChange}
         attributes={attributes}
-        rankNames={rankNames}
-        undefinedRandomText={undefinedRandomText}
+        rankNames={rankWithDescription}
+        undefinedRandomText={randomText}
       />
     );
   };
 
   return (
-    <div className="character-editor">
-      <h1>ドーナドーナ キャラクターエディター</h1>
+    <Container size="md" py="xl">
+      <Title order={1} ta="center" mb="lg">ドーナドーナ キャラクターエディター</Title>
 
       <CharacterTypeSelector characterType={characterType} onChange={setCharacterType} />
 
-      {renderCharacterForm()}
+      <Paper p="md" shadow="xs" radius="md">
+        {renderCharacterForm()}
+      </Paper>
 
       <GenerateFileButton onClick={handleGenerateFile} />
-    </div>
+    </Container>
   );
 };
 
