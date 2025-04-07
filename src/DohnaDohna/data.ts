@@ -1,6 +1,8 @@
 /**
- * ドーナドーナキャラクターエディターの型定義
+ * ドーナドーナのドメイン知識、特に型やデータの定義.
  */
+// キャラクタータイプの定義
+export type CharacterType = 'ジンザイ' | 'コキャク';
 export const randomText = 'ランダム（未設定）';
 export const nullText = 'なし（空欄）';
 
@@ -87,6 +89,33 @@ export const rankWithDescription = [
   'D (能力が皆無)',
 ] as const;
 type RankNameWithDescription = (typeof rankWithDescription)[number];
+
+// スライダー用のランク定義
+export const rankValues = [
+  { value: 'S+', label: 'S+ (神話級)', sliderValue: 10 },
+  { value: 'S', label: 'S (伝説級)', sliderValue: 9 },
+  { value: 'A+', label: 'A+ (世界級)', sliderValue: 8 },
+  { value: 'A', label: 'A (全国級)', sliderValue: 7 },
+  { value: 'B+', label: 'B+ (かなり優秀)', sliderValue: 6 },
+  { value: 'B', label: 'B (優秀)', sliderValue: 5 },
+  { value: 'C+', label: 'C+ (やや優秀)', sliderValue: 4 },
+  { value: 'C', label: 'C (一般的)', sliderValue: 3 },
+  { value: 'D+', label: 'D+ (劣っている)', sliderValue: 2 },
+  { value: 'D', label: 'D (能力が皆無)', sliderValue: 1 },
+] as const;
+
+// スライダー値からランク値への変換
+export const sliderValueToRank = (value: number): string => {
+  const rank = rankValues.find((r) => r.sliderValue === value);
+  return rank ? rank.value : '';
+};
+
+// ランク値からスライダー値への変換
+export const rankToSliderValue = (rank: string | null): number | null => {
+  if (!rank || rank === randomText) return null;
+  const rankObj = rankValues.find((r) => r.value === rank.substring(0, 2));
+  return rankObj ? rankObj.sliderValue : null;
+};
 
 export const voices: Voice[] = [
   randomText,

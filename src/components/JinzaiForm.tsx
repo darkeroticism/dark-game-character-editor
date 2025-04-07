@@ -1,9 +1,21 @@
-import { Jinzai } from '../DohnaDohna/data';
-import { TextInput, Select, Radio, Textarea, Stack, Title, Group, Box } from '@mantine/core';
+import { Jinzai, rankToSliderValue, sliderValueToRank, rankValues } from '../DohnaDohna/data';
+import {
+  TextInput,
+  Textarea,
+  Stack,
+  Title,
+  Box,
+  Slider,
+  Switch,
+  Flex,
+} from '@mantine/core';
+import { AttributeSelector } from './AttributeSelector';
+import { VoiceSelector } from './VoiceSelector';
+import { VirginSelector } from './VirginSelector';
 
 type JinzaiFormProps = {
   jinzai: Jinzai;
-  onChange: (field: keyof Jinzai, value: string | boolean, index?: number) => void;
+  onChange: (field: keyof Jinzai, value: string | boolean | null, index?: number) => void;
   attributes: string[];
   rankNames: readonly string[];
   voices: string[];
@@ -14,31 +26,6 @@ type JinzaiFormProps = {
 const modelToView = (value: string | null, defaultValue: string): string => {
   return value !== null ? value : defaultValue;
 };
-
-// 属性の値を取得
-const attributesToValue = (attributes: string[], index: number): string => {
-  return attributes[index] || '';
-};
-
-// 属性選択コンポーネント
-const AttributeSelector = ({
-  value,
-  onChange,
-  attributes,
-  index,
-}: {
-  value: string;
-  onChange: (value: string, index: number) => void;
-  attributes: string[];
-  index: number;
-}) => (
-  <Select
-    value={value}
-    onChange={(value) => onChange(value || '', index)}
-    data={attributes.map((attribute) => ({ value: attribute, label: attribute }))}
-    mb="xs"
-  />
-);
 
 // プロフィール入力コンポーネント
 const ProfileInput = ({
@@ -66,7 +53,7 @@ export const JinzaiForm = ({
   jinzai,
   onChange,
   attributes,
-  rankNames,
+  rankNames: _rankNames, // eslint-disable-line @typescript-eslint/no-unused-vars
   voices,
   undefinedRandomText,
 }: JinzaiFormProps) => {
@@ -103,73 +90,109 @@ export const JinzaiForm = ({
       </Box>
 
       <Box>
-        <Select
-          label="ルックス"
-          value={modelToView(jinzai.looks, undefinedRandomText)}
-          onChange={(value) => onChange('looks', value || '')}
-          data={rankNames.map((rank) => ({ value: rank, label: rank }))}
+        <Flex align="center" justify="space-between" mb={5}>
+          <Box>ルックス</Box>
+          <Switch
+            label="ランダム"
+            checked={jinzai.looks === null || jinzai.looks === undefinedRandomText}
+            onChange={(event) =>
+              onChange(
+                'looks',
+                event.currentTarget.checked ? undefinedRandomText : sliderValueToRank(5)
+              )
+            }
+          />
+        </Flex>
+        <Slider
+          min={1}
+          max={10}
+          step={1}
+          value={rankToSliderValue(jinzai.looks) || 5}
+          onChange={(value) => onChange('looks', sliderValueToRank(value))}
+          disabled={jinzai.looks === null || jinzai.looks === undefinedRandomText}
+          marks={rankValues.map((rank) => ({ value: rank.sliderValue, label: rank.value }))}
+          mb="md"
         />
       </Box>
 
       <Box>
-        <Select
-          label="テクニック"
-          value={modelToView(jinzai.technic, undefinedRandomText)}
-          onChange={(value) => onChange('technic', value || '')}
-          data={rankNames.map((rank) => ({ value: rank, label: rank }))}
+        <Flex align="center" justify="space-between" mb={5}>
+          <Box>テクニック</Box>
+          <Switch
+            label="ランダム"
+            checked={jinzai.technic === null || jinzai.technic === undefinedRandomText}
+            onChange={(event) =>
+              onChange(
+                'technic',
+                event.currentTarget.checked ? undefinedRandomText : sliderValueToRank(5)
+              )
+            }
+          />
+        </Flex>
+        <Slider
+          min={1}
+          max={10}
+          step={1}
+          value={rankToSliderValue(jinzai.technic) || 5}
+          onChange={(value) => onChange('technic', sliderValueToRank(value))}
+          disabled={jinzai.technic === null || jinzai.technic === undefinedRandomText}
+          marks={rankValues.map((rank) => ({ value: rank.sliderValue, label: rank.value }))}
+          mb="md"
         />
       </Box>
 
       <Box>
-        <Select
-          label="メンタル"
-          value={modelToView(jinzai.mental, undefinedRandomText)}
-          onChange={(value) => onChange('mental', value || '')}
-          data={rankNames.map((rank) => ({ value: rank, label: rank }))}
+        <Flex align="center" justify="space-between" mb={5}>
+          <Box>メンタル</Box>
+          <Switch
+            label="ランダム"
+            checked={jinzai.mental === null || jinzai.mental === undefinedRandomText}
+            onChange={(event) =>
+              onChange(
+                'mental',
+                event.currentTarget.checked ? undefinedRandomText : sliderValueToRank(5)
+              )
+            }
+          />
+        </Flex>
+        <Slider
+          min={1}
+          max={10}
+          step={1}
+          value={rankToSliderValue(jinzai.mental) || 5}
+          onChange={(value) => onChange('mental', sliderValueToRank(value))}
+          disabled={jinzai.mental === null || jinzai.mental === undefinedRandomText}
+          marks={rankValues.map((rank) => ({ value: rank.sliderValue, label: rank.value }))}
+          mb="md"
         />
       </Box>
 
       <Box>
         <Box mb="xs">属性 (最大3つ)</Box>
+        <Box mb="xs">
+          選択中: {jinzai.attributes.filter((attr) => attr !== 'なし（空欄）').join(', ') || 'なし'}
+        </Box>
         <AttributeSelector
-          value={attributesToValue(jinzai.attributes, 0)}
+          selectedAttributes={jinzai.attributes.filter((attr) => attr !== 'なし（空欄）')}
           onChange={handleAttributeChange}
           attributes={attributes}
-          index={0}
-        />
-        <AttributeSelector
-          value={attributesToValue(jinzai.attributes, 1)}
-          onChange={handleAttributeChange}
-          attributes={attributes}
-          index={1}
-        />
-        <AttributeSelector
-          value={attributesToValue(jinzai.attributes, 2)}
-          onChange={handleAttributeChange}
-          attributes={attributes}
-          index={2}
         />
       </Box>
 
       <Box>
-        <Box mb="xs">処女設定</Box>
-        <Radio.Group
-          value={jinzai.isVergin === true ? 'true' : jinzai.isVergin === false ? 'false' : ''}
-          onChange={(value) => onChange('isVergin', value === 'true')}
-        >
-          <Group>
-            <Radio value="true" label="処女 (1)" />
-            <Radio value="false" label="非処女 (0)" />
-          </Group>
-        </Radio.Group>
+        <Box mb="xs">処女設定 {jinzai.isVergin === true ? '(処女)' : jinzai.isVergin === false ? '(非処女)' : '(ランダム（未選択）)'}</Box>
+        <VirginSelector
+          selectedVirgin={jinzai.isVergin}
+          onChange={(value) => onChange('isVergin', value)}
+        />
       </Box>
 
       <Box>
-        <Select
-          label="音声"
-          value={modelToView(jinzai.voice, undefinedRandomText)}
+        <Box mb="xs">音声 {jinzai.voice ? `(${jinzai.voice})` : '(未選択)'}</Box>
+        <VoiceSelector
+          selectedVoice={jinzai.voice}
           onChange={(value) => onChange('voice', value || '')}
-          data={voices.map((voice) => ({ value: voice, label: voice }))}
+          voices={voices}
         />
       </Box>
 

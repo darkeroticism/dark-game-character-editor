@@ -1,4 +1,4 @@
-import CharacterEditor from './components/CharacterEditor';
+import { CharacterEditor } from './components/CharacterEditor';
 import './App.css';
 
 function App() {

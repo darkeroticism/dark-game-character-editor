@@ -1,5 +1,16 @@
-import { Kokyaku } from '../DohnaDohna/data';
-import { TextInput, Select, Textarea, Stack, Title, Box } from '@mantine/core';
+import { Kokyaku, rankToSliderValue, sliderValueToRank, rankValues } from '../DohnaDohna/data';
+import {
+  TextInput,
+  Textarea,
+  Stack,
+  Title,
+  Box,
+  Slider,
+  Switch,
+  Flex,
+  Grid,
+  Button,
+} from '@mantine/core';
 
 type KokyakuFormProps = {
   kokyaku: Kokyaku;
@@ -9,35 +20,100 @@ type KokyakuFormProps = {
   undefinedRandomText: string;
 };
 
-// 値がnullの場合に表示用の値を返す
-const modelToView = (value: string | null, defaultValue: string): string => {
-  return value !== null ? value : defaultValue;
-};
-
-// 属性の値を取得
-const attributesToValue = (attributes: string[], index: number): string => {
-  return attributes[index] || '';
-};
-
-// 属性選択コンポーネント
+// 属性選択テーブルコンポーネント
 const AttributeSelector = ({
-  value,
+  selectedAttributes,
   onChange,
   attributes,
-  index,
 }: {
-  value: string;
+  selectedAttributes: string[];
   onChange: (value: string, index: number) => void;
   attributes: string[];
-  index: number;
-}) => (
-  <Select
-    value={value}
-    onChange={(value) => onChange(value || '', index)}
-    data={attributes.map((attribute) => ({ value: attribute, label: attribute }))}
-    mb="xs"
-  />
-);
+}) => {
+  // 属性の選択/選択解除を処理
+  const handleAttributeClick = (attribute: string) => {
+    // 現在選択されている属性の配列（なし（空欄）を除く）
+    const currentSelected = [...selectedAttributes];
+    
+    if (currentSelected.includes(attribute)) {
+      // 選択解除
+      const newSelected = currentSelected.filter(attr => attr !== attribute);
+      
+      // 新しい配列を作成（最大3つ）
+      const newAttributes = [...newSelected];
+      while (newAttributes.length < 3) {
+        newAttributes.push('なし（空欄）');
+      }
+      
+      // 親コンポーネントに通知
+      newAttributes.forEach((attr, index) => {
+        onChange(attr, index);
+      });
+    } else if (currentSelected.length < 3) {
+      // 新しい属性を選択（最大3つまで）
+      const newSelected = [...currentSelected, attribute];
+      
+      // 新しい配列を作成（最大3つ）
+      const newAttributes = [...newSelected];
+      while (newAttributes.length < 3) {
+        newAttributes.push('なし（空欄）');
+      }
+      
+      // 親コンポーネントに通知
+      newAttributes.forEach((attr, index) => {
+        onChange(attr, index);
+      });
+    }
+  };
+
+  // 属性が選択されているかどうかを確認
+  const isSelected = (attribute: string) => selectedAttributes.includes(attribute);
+
+  // 属性の表示用配列
+  const displayAttributes = attributes.slice(2);
+  const totalRows = Math.ceil(displayAttributes.length / 5);
+
+  return (
+    <Box style={{ border: '1px solid #ced4da' }}>
+      <Grid gutter={0}>
+        {displayAttributes.map((attribute, index) => {
+          const row = Math.floor(index / 5);
+          const col = index % 5;
+          const isLastRow = row === totalRows - 1;
+          const isLastCol = col === 4;
+
+          return (
+            <Grid.Col span={2.4} key={attribute}>
+              <Button
+                variant={isSelected(attribute) ? "filled" : "outline"}
+                color={isSelected(attribute) ? "blue" : "gray"}
+                onClick={() => handleAttributeClick(attribute)}
+                disabled={selectedAttributes.length >= 3 && !isSelected(attribute)}
+                fullWidth
+                styles={{
+                  root: {
+                    height: 'auto',
+                    padding: '8px',
+                    whiteSpace: 'normal',
+                    textAlign: 'center',
+                    lineHeight: 1.2,
+                    borderRadius: 0,
+                    margin: 0,
+                    border: 'none',
+                    borderRight: isLastCol ? 'none' : '1px solid #ced4da',
+                    borderBottom: isLastRow ? 'none' : '1px solid #ced4da',
+                  }
+                }}
+              >
+                {attribute}
+              </Button>
+            </Grid.Col>
+          );
+        })}
+      </Grid>
+    </Box>
+  );
+};
 
 // プレゼント入力コンポーネント
 const PresentInput = ({
@@ -83,7 +159,7 @@ export const KokyakuForm = ({
   kokyaku,
   onChange,
   attributes,
-  rankNames,
+  rankNames: _rankNames, // eslint-disable-line @typescript-eslint/no-unused-vars
   undefinedRandomText,
 }: KokyakuFormProps) => {
   // 属性変更ハンドラー
@@ -131,11 +207,28 @@ export const KokyakuForm = ({
       </Box>
 
       <Box>
-        <Select
-          label="インカム"
-          value={modelToView(kokyaku.income, undefinedRandomText)}
-          onChange={(value) => onChange('income', value || '')}
-          data={rankNames.map((rank) => ({ value: rank, label: rank }))}
+        <Flex align="center" justify="space-between" mb={5}>
+          <Box>インカム</Box>
+          <Switch
+            label="ランダム"
+            checked={kokyaku.income === null || kokyaku.income === undefinedRandomText}
+            onChange={(event) =>
+              onChange(
+                'income',
+                event.currentTarget.checked ? undefinedRandomText : sliderValueToRank(5)
+              )
+            }
+          />
+        </Flex>
+        <Slider
+          min={1}
+          max={10}
+          step={1}
+          value={rankToSliderValue(kokyaku.income) || 5}
+          onChange={(value) => onChange('income', sliderValueToRank(value))}
+          disabled={kokyaku.income === null || kokyaku.income === undefinedRandomText}
+          marks={rankValues.map((rank) => ({ value: rank.sliderValue, label: rank.value }))}
+          mb="md"
         />
       </Box>
 
@@ -148,23 +241,13 @@ export const KokyakuForm = ({
 
       <Box>
         <Box mb="xs">ターゲット (最大3つ)</Box>
+        <Box mb="xs">
+          選択中: {kokyaku.target.filter(attr => attr !== 'なし（空欄）').join(', ') || 'なし'}
+        </Box>
         <AttributeSelector
-          value={attributesToValue(kokyaku.target, 0)}
+          selectedAttributes={kokyaku.target.filter(attr => attr !== 'なし（空欄）')}
           onChange={handleTargetChange}
           attributes={attributes}
-          index={0}
-        />
-        <AttributeSelector
-          value={attributesToValue(kokyaku.target, 1)}
-          onChange={handleTargetChange}
-          attributes={attributes}
-          index={1}
-        />
-        <AttributeSelector
-          value={attributesToValue(kokyaku.target, 2)}
-          onChange={handleTargetChange}
-          attributes={attributes}
-          index={2}
         />
       </Box>
 

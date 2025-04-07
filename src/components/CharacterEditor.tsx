@@ -7,6 +7,7 @@ import {
   attributes,
   rankWithDescription,
   voices,
+  CharacterType,
 } from '../DohnaDohna/data';
 import { downloadWithShiftJIS } from '../utils/shiftJisEncoder';
 import { JinzaiForm } from './JinzaiForm';
@@ -14,11 +15,8 @@ import { KokyakuForm } from './KokyakuForm';
 import { generateJinzaiIniContent, generateKokyakuIniContent } from '../DohnaDohna/logic';
 import { Container, Title, SegmentedControl, Button, Paper } from '@mantine/core';
 
-// キャラクタータイプの定義
-type CharacterType = 'jinzai' | 'kokyaku';
-
 // ジンザイの初期状態を作成する関数
-const createInitialJinzai = (): Jinzai => ({
+const getInitialJinzai = (): Jinzai => ({
   image: '',
   name: null,
   looks: null,
@@ -31,7 +29,7 @@ const createInitialJinzai = (): Jinzai => ({
 });
 
 // コキャクの初期状態を作成する関数
-const createInitialKokyaku = (): Kokyaku => ({
+const getInitialKokyaku = (): Kokyaku => ({
   characterType: 'コキャク',
   image: '',
   name: '',
@@ -42,8 +40,8 @@ const createInitialKokyaku = (): Kokyaku => ({
 });
 
 // 値がnullになるべきかを判定する関数
-const shouldBeNull = (value: string | boolean): boolean =>
-  typeof value === 'string' && (value === nullText || value === randomText || value === '');
+const shouldBeNull = (value: string | boolean | null): boolean =>
+  value === null || (typeof value === 'string' && (value === nullText || value === randomText || value === ''));
 
 // 配列フィールドを更新する関数
 const updateArrayField = <T,>(array: T[], index: number, value: T): T[] => {
@@ -79,8 +77,8 @@ const CharacterTypeSelector = ({
     value={characterType}
     onChange={onChange as (value: string) => void}
     data={[
-      { label: 'ジンザイ', value: 'jinzai' },
-      { label: 'コキャク', value: 'kokyaku' },
+      { label: 'ジンザイ', value: 'ジンザイ' },
+      { label: 'コキャク', value: 'コキャク' },
     ]}
     fullWidth
     mb="md"
@@ -96,18 +94,18 @@ const GenerateFileButton = ({ onClick }: { onClick: () => void }) => (
   </div>
 );
 
-const CharacterEditor = () => {
+export const CharacterEditor = () => {
   // キャラクタータイプの状態
-  const [characterType, setCharacterType] = useState<CharacterType>('jinzai');
+  const [characterType, setCharacterType] = useState<CharacterType>('ジンザイ');
 
   // ジンザイの初期状態
-  const [jinzai, setJinzai] = useState<Jinzai>(createInitialJinzai());
+  const [jinzai, setJinzai] = useState<Jinzai>(getInitialJinzai());
 
   // コキャクの初期状態
-  const [kokyaku, setKokyaku] = useState<Kokyaku>(createInitialKokyaku());
+  const [kokyaku, setKokyaku] = useState<Kokyaku>(getInitialKokyaku());
 
   // ジンザイのフィールド更新ハンドラー
-  const handleJinzaiChange = (field: keyof Jinzai, value: string | boolean, index?: number) => {
+  const handleJinzaiChange = (field: keyof Jinzai, value: string | boolean | null, index?: number) => {
     setJinzai((prev) => {
       const updated = { ...prev };
 
@@ -148,7 +146,7 @@ const CharacterEditor = () => {
 
   // INIファイル形式のコンテンツを生成
   const generateIniContent = (): string => {
-    return characterType === 'jinzai'
+    return characterType === 'ジンザイ'
       ? generateJinzaiIniContent(jinzai)
       : generateKokyakuIniContent(kokyaku);
   };
@@ -156,7 +154,7 @@ const CharacterEditor = () => {
   // ファイル生成とダウンロード処理
   const handleGenerateFile = () => {
     const filename =
-      characterType === 'jinzai'
+      characterType === 'ジンザイ'
         ? `${jinzai.name || 'jinzai'}.txt`
         : `${kokyaku.name || 'kokyaku'}.txt`;
 
@@ -166,7 +164,7 @@ const CharacterEditor = () => {
 
   // 現在のキャラクタータイプに基づいてフォームを表示
   const renderCharacterForm = () => {
-    return characterType === 'jinzai' ? (
+    return characterType === 'ジンザイ' ? (
       <JinzaiForm
         jinzai={jinzai}
         onChange={handleJinzaiChange}
@@ -188,7 +186,9 @@ const CharacterEditor = () => {
 
   return (
     <Container size="md" py="xl">
-      <Title order={1} ta="center" mb="lg">ドーナドーナ キャラクターエディター</Title>
+      <Title order={1} ta="center" mb="lg">
+        ドーナドーナ キャラクターエディター
+      </Title>
 
       <CharacterTypeSelector characterType={characterType} onChange={setCharacterType} />
 
@@ -200,5 +200,3 @@ const CharacterEditor = () => {
     </Container>
   );
 };
-
-export default CharacterEditor;
