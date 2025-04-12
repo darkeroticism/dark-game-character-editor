@@ -14,7 +14,10 @@
 
 # 技術スタック
 
-- Vite + TyperScirpt + React + Mantineの構成
+- ビルドツール: Vite
+- 言語: TyperScirpt
+- フロントエンドフレームワーク: React
+- UIフレームワーク: Mantine
 
 # コーディング規約
 - 関数型プログラミングに寄せる
@@ -24,3 +27,7 @@
 - 型定義はできるだけ厳密に定義する
   - できるだけreadonlyを使う
 - TSXでreturnする部分にロジックを埋め込まず、関数や変数に切り出す
+- Mantine v7でcss modulesを推奨しているのでCSS modulesを使う
+
+# 参考資料
+- [公式サイト（デザインなどを参考している）](https://www.alicesoft.com/dohnadohna/)
