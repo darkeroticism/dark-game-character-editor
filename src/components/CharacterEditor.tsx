@@ -13,8 +13,8 @@ import { downloadWithShiftJIS } from '../utils/shiftJisEncoder';
 import { JinzaiForm } from './JinzaiForm';
 import { KokyakuForm } from './KokyakuForm';
 import { generateJinzaiIniContent, generateKokyakuIniContent } from '../DohnaDohna/logic';
-import { Container, Title, SegmentedControl, Button, Paper } from '@mantine/core';
-import { SlantedBackground } from './SlantedBackground';
+import { Container, SegmentedControl, Button, Paper } from '@mantine/core';
+import styles from '../styles/Button.module.css';
 
 // ジンザイの初期状態を作成する関数
 const getInitialJinzai = (): Jinzai => ({
@@ -90,9 +90,14 @@ const CharacterTypeSelector = ({
 // ファイル生成ボタンコンポーネント
 const GenerateFileButton = ({ onClick }: { onClick: () => void }) => (
   <div style={{ textAlign: 'center', marginTop: 30 }}>
-    <Button onClick={onClick} size="lg" color="green">
+    <Button onClick={onClick} size="lg">
       .txtファイルを生成してダウンロード
     </Button>
+    <Container>
+      <p className={`${styles.parallelogramButton}`}>
+        <a>平行四辺形ボタン</a>
+      </p>
+    </Container>
   </div>
 );
 

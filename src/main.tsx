@@ -17,6 +17,7 @@ const theme = createTheme({
       '#ea6bc8',
       '#e859c1',
       '#e546ba',
+      // 公式サイトで使われているカラー
       '#ce3fa7',
       '#b73895',
       '#a03182',
@@ -29,6 +30,7 @@ const theme = createTheme({
       '#74e9ff',
       '#60e6ff',
       '#4ce3ff',
+      // 公式サイトで使われているカラー
       '#38e0ff',
       '#32cae6',
       '#2db3cc',
@@ -41,6 +43,7 @@ const theme = createTheme({
       '#fefd85',
       '#fefd74',
       '#fefc62',
+      // 公式サイトで使われているカラー
       '#fefc51',
       '#e5e349',
       '#cbca41',
@@ -53,11 +56,25 @@ const theme = createTheme({
       '#171717',
       '#151515',
       '#131313',
+      // 公式サイトで使われているカラー
       '#111111',
       '#0F0F0F',
       '#0E0E0E',
       '#0C0C0C',
       '#0B0B0B',
+    ],
+    white: [
+      '#fafafa',
+      '#f9f9f9',
+      '#f8f8f8',
+      '#f7f7f7',
+      '#f6f6f6',
+      // 公式サイトで使われているカラー
+      '#f5f5f5',
+      '#e7e7e7',
+      '#cdcdcd',
+      '#b2b2b2',
+      '#9a9a9a',
     ],
   },
 

@@ -17,6 +17,8 @@
   padding-bottom: calc(10vw + 10px);
   position: relative;
   overflow: hidden;
+  /* 他の要素に影響を与えない */
+  isolation: isolate;
 }
 .slantedBG::after {
   content: '';

@@ -1,0 +1,50 @@
+.parallelogramButton a {
+  position: relative;
+  display: inline-block;
+  padding: 8px 12px;
+  color: #fff;
+  font-size: 18px;
+  line-height: 1.3em;
+  text-decoration: none;
+  /* テキスト色のスムーズな変更 */
+  transition: color 0.3s ease;
+}
+
+/* 疑似要素に平行四辺形の装飾を指定する */
+.parallelogramButton a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  border: solid 0.2rem var(--mantine-color-black-5);
+  background-color: var(--mantine-color-pink-5);
+  transform: skewX(-15deg);
+  /* 背景色のスムーズな変更 */
+  transition: background-color 0.3s ease;
+}
+
+/* シャドウを追加するための疑似要素 */
+.parallelogramButton a::after {
+  content: '';
+  position: absolute;
+  top: 5px; /* シャドウの位置を調整 */
+  bottom: -5px;
+  left: 5px;
+  right: -5px;
+  z-index: -2; /* 背景より後ろに配置 */
+  background-color: var(--mantine-color-black-5);
+  transform: skewX(-15deg);
+}
+
+.parallelogramButton a:hover,
+.parallelogramButton a:focus {
+  color: var(--mantine-color-black-5);
+}
+
+.parallelogramButton a:hover::before,
+.parallelogramButton a:focus::before {
+  background-color: var(--mantine-color-yellow-5);
+}
