@@ -6,7 +6,9 @@ export const VirginSelector = ({
 }: {
   selectedVirgin: boolean | null;
   onChange: (value: boolean | null) => void;
-}) => {
+  }) => {
+  
+  
   // 処女設定の選択/選択解除を処理
   const handleVirginClick = (value: boolean) => {
     // 現在選択されている値と同じなら選択解除（未選択に）
@@ -23,8 +25,8 @@ export const VirginSelector = ({
 
   // 選択肢の配列
   const options: { value: boolean; label: string }[] = [
-    { value: true, label: '処女 (1)' },
-    { value: false, label: '非処女 (0)' },
+    { value: true, label: '処女' },
+    { value: false, label: '非処女' },
   ];
 
   return (

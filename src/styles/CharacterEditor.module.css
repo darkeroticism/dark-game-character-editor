@@ -1,0 +1,53 @@
+/* セクションタイトル */
+.sectionTitle {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  color: white;
+  font-weight: bold;
+  transform: skew(-15deg);
+}
+
+.titleMagenta {
+  background-color: #ff007d;
+}
+
+.titleYellow {
+  background-color: #ffeb00;
+  color: black;
+}
+
+.titleCyan {
+  background-color: #00d2ff;
+}
+
+/* キャラクタータイプセレクター */
+.characterTypeSelector {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.selectorInner {
+  transform: skew(5deg);
+}
+
+/* ファイル生成ボタン */
+.generateButton {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background: linear-gradient(45deg, #ff007d, #ff5cab);
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  transform: skew(-5deg);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(255, 0, 125, 0.3);
+}
+
+.generateButton:hover {
+  transform: skew(-5deg) translateY(-3px);
+  box-shadow: 0 6px 12px rgba(255, 0, 125, 0.5);
+}

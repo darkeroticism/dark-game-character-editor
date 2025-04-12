@@ -1,4 +1,4 @@
-import { Box, Grid, Button } from '@mantine/core';
+import { Box, Grid, Button, useMantineTheme } from '@mantine/core';
 
 export const AttributeSelector = ({
   selectedAttributes,
@@ -9,6 +9,8 @@ export const AttributeSelector = ({
   onChange: (value: string, index: number) => void;
   attributes: string[];
 }) => {
+  const theme = useMantineTheme();
+
   // 属性の選択/選択解除を処理
   const handleAttributeClick = (attribute: string) => {
     // 現在選択されている属性の配列（なし（空欄）を除く）
@@ -65,7 +67,7 @@ export const AttributeSelector = ({
             <Grid.Col span={2.4} key={attribute}>
               <Button
                 variant={isSelected(attribute) ? 'filled' : 'outline'}
-                color={isSelected(attribute) ? 'blue' : 'gray'}
+                color={isSelected(attribute) ? theme.colors.yellow[5] : 'gray'}
                 onClick={() => handleAttributeClick(attribute)}
                 disabled={selectedAttributes.length >= 3 && !isSelected(attribute)}
                 fullWidth

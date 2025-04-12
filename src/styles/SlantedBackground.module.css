@@ -1,0 +1,44 @@
+/* 
+* 平行四辺形の背景の元ネタ
+* @link https://web-saku.net/css-slantbackground/
+* @link https://cocotiie.com/css-diagonal-design/#index_id3
+* 
+* mantineのthemeとして色を登録するとCSS変数として公開される。
+* @link https://mantine.dev/theming/colors/
+*/
+:root {
+  --first: var(--mantine-color-pink-5);
+  --second: var(--mantine-color-cyan-5);
+  --third: var(--mantine-color-yellow-5);
+  --forth: var(--mantine-color-black-5);
+}
+
+.slantedBG {
+  padding-bottom: calc(10vw + 10px);
+  position: relative;
+  overflow: hidden;
+}
+.slantedBG::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-left: 100vw solid transparent;
+  border-bottom: 10vw solid;
+}
+
+.slantedHeaderBG {
+  background-color: var(--first);
+}
+
+.slantedHeaderBG::after {
+  border-bottom-color: var(--second);
+}
+
+.slantedNormalBG {
+  background-color: var(--second);
+}
+
+.slantedNormalBG::after {
+  border-bottom-color: var(--third);
+}

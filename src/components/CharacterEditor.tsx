@@ -14,6 +14,7 @@ import { JinzaiForm } from './JinzaiForm';
 import { KokyakuForm } from './KokyakuForm';
 import { generateJinzaiIniContent, generateKokyakuIniContent } from '../DohnaDohna/logic';
 import { Container, Title, SegmentedControl, Button, Paper } from '@mantine/core';
+import { SlantedBackground } from './SlantedBackground';
 
 // ジンザイの初期状態を作成する関数
 const getInitialJinzai = (): Jinzai => ({
@@ -41,7 +42,8 @@ const getInitialKokyaku = (): Kokyaku => ({
 
 // 値がnullになるべきかを判定する関数
 const shouldBeNull = (value: string | boolean | null): boolean =>
-  value === null || (typeof value === 'string' && (value === nullText || value === randomText || value === ''));
+  value === null ||
+  (typeof value === 'string' && (value === nullText || value === randomText || value === ''));
 
 // 配列フィールドを更新する関数
 const updateArrayField = <T,>(array: T[], index: number, value: T): T[] => {
@@ -105,7 +107,11 @@ export const CharacterEditor = () => {
   const [kokyaku, setKokyaku] = useState<Kokyaku>(getInitialKokyaku());
 
   // ジンザイのフィールド更新ハンドラー
-  const handleJinzaiChange = (field: keyof Jinzai, value: string | boolean | null, index?: number) => {
+  const handleJinzaiChange = (
+    field: keyof Jinzai,
+    value: string | boolean | null,
+    index?: number
+  ) => {
     setJinzai((prev) => {
       const updated = { ...prev };
 
@@ -186,10 +192,6 @@ export const CharacterEditor = () => {
 
   return (
     <Container size="md" py="xl">
-      <Title order={1} ta="center" mb="lg">
-        ドーナドーナ キャラクターエディター
-      </Title>
-
       <CharacterTypeSelector characterType={characterType} onChange={setCharacterType} />
 
       <Paper p="md" shadow="xs" radius="md">

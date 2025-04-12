@@ -1,4 +1,4 @@
-import { Box, Grid, Button } from '@mantine/core';
+import { Box, Grid, Button, useMantineTheme } from '@mantine/core';
 
 export const VoiceSelector = ({
   selectedVoice,
@@ -9,6 +9,8 @@ export const VoiceSelector = ({
   onChange: (value: string | null) => void;
   voices: string[];
 }) => {
+  const theme = useMantineTheme();
+
   // 音声の選択/選択解除を処理
   const handleVoiceClick = (voice: string) => {
     // 現在選択されている音声と同じなら選択解除（未選択に）
@@ -40,7 +42,7 @@ export const VoiceSelector = ({
             <Grid.Col span={4} key={voice}>
               <Button
                 variant={isSelected(voice) ? 'filled' : 'outline'}
-                color={isSelected(voice) ? 'blue' : 'gray'}
+                color={isSelected(voice) ? theme.colors.yellow[5] : 'gray'}
                 onClick={() => handleVoiceClick(voice)}
                 disabled={selectedVoice !== null && selectedVoice !== voice}
                 fullWidth
