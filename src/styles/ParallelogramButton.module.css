@@ -39,8 +39,8 @@
   transform: skewX(-15deg);
 }
 
-.parallelogramButton:hover,
-.parallelogramButton:focus {
+.parallelogramButton:hover span,
+.parallelogramButton:focus span {
   color: var(--mantine-color-black-5);
 }
 

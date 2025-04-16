@@ -90,19 +90,12 @@ const CharacterTypeSelector = ({
 // ファイル生成ボタンコンポーネント
 const GenerateFileButton = ({ onClick }: { onClick: () => void }) => (
   <div style={{ textAlign: 'center', marginTop: 30 }}>
-    <Button onClick={onClick} size="lg">
-      .txtファイルを生成してダウンロード
-    </Button>
     <Container>
-      <p>
-        <Button onClick={onClick} size="lg" className={`${styles.parallelogramButton}`}>
+      <div className={styles.parallelogramButton}>
+        <Button onClick={onClick} size="lg" style={{ background: 'transparent', border: 'none' }}>
           .txtファイルを生成してダウンロード
         </Button>
-      </p>
-
-      <p className={`${styles.parallelogramButton}`}>
-        <span>平行四辺形ボタン</span>
-      </p>
+      </div>
     </Container>
   </div>
 );
