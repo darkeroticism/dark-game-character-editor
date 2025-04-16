@@ -58,6 +58,11 @@ export const JinzaiForm = ({
     onChange('profile', value, index);
   };
 
+  // スライダーのスタイル
+  const sliderStyles = {
+    markLabel: { color: '#111111' }, // theme.colors.black[5]の値
+  };
+
   return (
     <Stack gap="xl">
       <Box>
@@ -116,7 +121,9 @@ export const JinzaiForm = ({
           onChange={(value) => onChange('looks', sliderValueToRank(value))}
           disabled={jinzai.looks === null || jinzai.looks === undefinedRandomText}
           marks={rankValues.map((rank) => ({ value: rank.sliderValue, label: rank.value }))}
+          label={null}
           mb="md"
+          styles={sliderStyles}
         />
       </Box>
 
@@ -146,7 +153,9 @@ export const JinzaiForm = ({
           onChange={(value) => onChange('technic', sliderValueToRank(value))}
           disabled={jinzai.technic === null || jinzai.technic === undefinedRandomText}
           marks={rankValues.map((rank) => ({ value: rank.sliderValue, label: rank.value }))}
+          label={null}
           mb="md"
+          styles={sliderStyles}
         />
       </Box>
 
@@ -176,7 +185,9 @@ export const JinzaiForm = ({
           onChange={(value) => onChange('mental', sliderValueToRank(value))}
           disabled={jinzai.mental === null || jinzai.mental === undefinedRandomText}
           marks={rankValues.map((rank) => ({ value: rank.sliderValue, label: rank.value }))}
+          label={null}
           mb="md"
+          styles={sliderStyles}
         />
       </Box>
 
