@@ -59,7 +59,7 @@ export const JinzaiForm = ({
   };
 
   return (
-    <Stack gap="lg">
+    <Stack gap="xl">
       <Box>
         <Title order={3} c="pink">
           画像
