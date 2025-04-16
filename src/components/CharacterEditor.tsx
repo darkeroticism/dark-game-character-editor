@@ -198,9 +198,7 @@ export const CharacterEditor = () => {
     <Container size="md" py="xl">
       <CharacterTypeSelector characterType={characterType} onChange={setCharacterType} />
 
-      <Paper p="md" shadow="xs" radius="md">
-        {renderCharacterForm()}
-      </Paper>
+      <Container p="md">{renderCharacterForm()}</Container>
 
       <GenerateFileButton onClick={handleGenerateFile} />
     </Container>

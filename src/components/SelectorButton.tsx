@@ -24,9 +24,11 @@ export const SelectorButton = ({
 
   return (
     <Button
-      variant={isSelected ? 'filled' : 'outline'}
-      color={isSelected ? (color === 'yellow' ? theme.colors.yellow[5] : color) : 'gray'}
-      autoContrast={isSelected}
+      variant="filled"
+      color={
+        isSelected ? (color === 'yellow' ? theme.colors.yellow[5] : color) : theme.colors.white[5]
+      }
+      autoContrast
       onClick={onClick}
       disabled={isDisabled}
       fullWidth
