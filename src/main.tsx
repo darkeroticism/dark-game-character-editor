@@ -86,11 +86,6 @@ const theme = createTheme({
     fontWeight: '700',
   },
   components: {
-    Button: {
-      defaultProps: {
-        color: 'pink',
-      },
-    },
     SegmentedControl: {
       defaultProps: {
         color: 'pink',

@@ -14,7 +14,7 @@ import { JinzaiForm } from './JinzaiForm';
 import { KokyakuForm } from './KokyakuForm';
 import { generateJinzaiIniContent, generateKokyakuIniContent } from '../DohnaDohna/logic';
 import { Container, SegmentedControl, Button, Paper } from '@mantine/core';
-import styles from '../styles/Button.module.css';
+import styles from '../styles/ParallelogramButton.module.css';
 
 // ジンザイの初期状態を作成する関数
 const getInitialJinzai = (): Jinzai => ({
@@ -94,8 +94,14 @@ const GenerateFileButton = ({ onClick }: { onClick: () => void }) => (
       .txtファイルを生成してダウンロード
     </Button>
     <Container>
+      <p>
+        <Button onClick={onClick} size="lg" className={`${styles.parallelogramButton}`}>
+          .txtファイルを生成してダウンロード
+        </Button>
+      </p>
+
       <p className={`${styles.parallelogramButton}`}>
-        <a>平行四辺形ボタン</a>
+        <span>平行四辺形ボタン</span>
       </p>
     </Container>
   </div>

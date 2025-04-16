@@ -1,4 +1,4 @@
-.parallelogramButton a {
+.parallelogramButton {
   position: relative;
   display: inline-block;
   padding: 8px 12px;
@@ -11,7 +11,7 @@
 }
 
 /* 疑似要素に平行四辺形の装飾を指定する */
-.parallelogramButton a::before {
+.parallelogramButton::before {
   content: '';
   position: absolute;
   top: 0;
@@ -27,7 +27,7 @@
 }
 
 /* シャドウを追加するための疑似要素 */
-.parallelogramButton a::after {
+.parallelogramButton::after {
   content: '';
   position: absolute;
   top: 5px; /* シャドウの位置を調整 */
@@ -39,12 +39,12 @@
   transform: skewX(-15deg);
 }
 
-.parallelogramButton a:hover,
-.parallelogramButton a:focus {
+.parallelogramButton:hover,
+.parallelogramButton:focus {
   color: var(--mantine-color-black-5);
 }
 
-.parallelogramButton a:hover::before,
-.parallelogramButton a:focus::before {
+.parallelogramButton:hover::before,
+.parallelogramButton:focus::before {
   background-color: var(--mantine-color-yellow-5);
 }
