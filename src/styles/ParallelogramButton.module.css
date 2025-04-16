@@ -1,10 +1,6 @@
 .parallelogramButton {
   position: relative;
   display: inline-block;
-  padding: 8px 12px;
-  color: #fff;
-  font-size: 18px;
-  line-height: 1.3em;
   text-decoration: none;
   /* テキスト色のスムーズな変更 */
   transition: color 0.3s ease;
