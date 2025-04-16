@@ -44,3 +44,12 @@
 .slantedNormalBG::after {
   border-bottom-color: var(--third);
 }
+
+.slantedFooterBG {
+  background-color: var(--third);
+  padding-bottom: 0;
+}
+
+.slantedFooterBG::after {
+  display: none;
+}

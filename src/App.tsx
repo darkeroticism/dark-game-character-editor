@@ -1,7 +1,6 @@
 import { CharacterEditor } from './components/CharacterEditor';
-import { Title } from '@mantine/core';
+import { Anchor, Center, Title } from '@mantine/core';
 import { SlantedBackground } from './components/SlantedBackground';
-
 function App() {
   return (
     <div className="App">
@@ -16,6 +15,19 @@ function App() {
         <main>
           <CharacterEditor />
         </main>
+      </SlantedBackground>
+      <SlantedBackground type="footer">
+        <footer>
+          <Center>
+            <p>
+              連絡は{' '}
+              <Anchor href="https://x.com/darkeroticism" target="_blank" rel="noopener noreferrer">
+                @darkeroticism
+              </Anchor>{' '}
+              まで
+            </p>
+          </Center>
+        </footer>
       </SlantedBackground>
     </div>
   );
