@@ -1,4 +1,5 @@
-import { Box, Grid, Button, useMantineTheme } from '@mantine/core';
+import { Box, Grid } from '@mantine/core';
+import { SelectorButton } from './SelectorButton';
 
 export const VoiceSelector = ({
   selectedVoice,
@@ -9,8 +10,6 @@ export const VoiceSelector = ({
   onChange: (value: string | null) => void;
   voices: string[];
 }) => {
-  const theme = useMantineTheme();
-
   // 音声の選択/選択解除を処理
   const handleVoiceClick = (voice: string) => {
     // 現在選択されている音声と同じなら選択解除（未選択に）
@@ -21,9 +20,6 @@ export const VoiceSelector = ({
       onChange(voice);
     }
   };
-
-  // 音声が選択されているかどうかを確認
-  const isSelected = (voice: string) => selectedVoice === voice;
 
   // 音声の表示用配列（ランダムを除く）
   const displayVoices = voices.slice(1);
@@ -40,29 +36,15 @@ export const VoiceSelector = ({
 
           return (
             <Grid.Col span={4} key={voice}>
-              <Button
-                variant={isSelected(voice) ? 'filled' : 'outline'}
-                color={isSelected(voice) ? theme.colors.yellow[5] : 'gray'}
+              <SelectorButton
+                isSelected={selectedVoice === voice}
                 onClick={() => handleVoiceClick(voice)}
-                disabled={selectedVoice !== null && selectedVoice !== voice}
-                fullWidth
-                styles={{
-                  root: {
-                    height: 'auto',
-                    padding: '8px',
-                    whiteSpace: 'normal',
-                    textAlign: 'center',
-                    lineHeight: 1.2,
-                    borderRadius: 0,
-                    margin: 0,
-                    border: 'none',
-                    borderRight: isLastCol ? 'none' : '1px solid #ced4da',
-                    borderBottom: isLastRow ? 'none' : '1px solid #ced4da',
-                  },
-                }}
+                isDisabled={selectedVoice !== null && selectedVoice !== voice}
+                isLastCol={isLastCol}
+                isLastRow={isLastRow}
               >
                 {voice}
-              </Button>
+              </SelectorButton>
             </Grid.Col>
           );
         })}

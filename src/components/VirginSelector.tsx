@@ -1,4 +1,5 @@
-import { Box, Grid, Button } from '@mantine/core';
+import { Box, Grid } from '@mantine/core';
+import { SelectorButton } from './SelectorButton';
 
 export const VirginSelector = ({
   selectedVirgin,
@@ -6,9 +7,7 @@ export const VirginSelector = ({
 }: {
   selectedVirgin: boolean | null;
   onChange: (value: boolean | null) => void;
-  }) => {
-  
-  
+}) => {
   // 処女設定の選択/選択解除を処理
   const handleVirginClick = (value: boolean) => {
     // 現在選択されている値と同じなら選択解除（未選択に）
@@ -19,9 +18,6 @@ export const VirginSelector = ({
       onChange(value);
     }
   };
-
-  // 選択されているかどうかを確認
-  const isSelected = (value: boolean) => selectedVirgin === value;
 
   // 選択肢の配列
   const options: { value: boolean; label: string }[] = [
@@ -37,28 +33,15 @@ export const VirginSelector = ({
 
           return (
             <Grid.Col span={6} key={String(option.value)}>
-              <Button
-                variant={isSelected(option.value) ? 'filled' : 'outline'}
-                color={isSelected(option.value) ? 'blue' : 'gray'}
+              <SelectorButton
+                isSelected={selectedVirgin === option.value}
                 onClick={() => handleVirginClick(option.value)}
-                disabled={selectedVirgin !== null && selectedVirgin !== option.value}
-                fullWidth
-                styles={{
-                  root: {
-                    height: 'auto',
-                    padding: '8px',
-                    whiteSpace: 'normal',
-                    textAlign: 'center',
-                    lineHeight: 1.2,
-                    borderRadius: 0,
-                    margin: 0,
-                    border: 'none',
-                    borderRight: isLastCol ? 'none' : '1px solid #ced4da',
-                  },
-                }}
+                isDisabled={selectedVirgin !== null && selectedVirgin !== option.value}
+                isLastCol={isLastCol}
+                isLastRow={true}
               >
                 {option.label}
-              </Button>
+              </SelectorButton>
             </Grid.Col>
           );
         })}
