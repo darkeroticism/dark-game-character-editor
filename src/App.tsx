@@ -1,5 +1,5 @@
 import { CharacterEditor } from './components/CharacterEditor';
-import { Anchor, Center, Title } from '@mantine/core';
+import { Anchor, Center, Container, Title } from '@mantine/core';
 import { SlantedBackground } from './components/SlantedBackground';
 
 export const App = () => {
@@ -56,14 +56,32 @@ export const App = () => {
       </SlantedBackground>
       <SlantedBackground type="footer">
         <footer>
-          <Center>
-            <p>
+          <Container size="md" py="xl">
+            <Center>
               連絡先:{' '}
               <Anchor href="https://x.com/darkeroticism" target="_blank" rel="noopener noreferrer">
                 @darkeroticism
               </Anchor>{' '}
-            </p>
-          </Center>
+            </Center>
+            <Center>
+              感謝:{' '}
+              <Anchor
+                href="https://wikiwiki7-r.net/dohnadohna/index.php?%E3%83%89%E3%83%BC%E3%83%8A%E3%83%89%E3%83%BC%E3%83%8A%20%E6%94%BB%E7%95%A5wiki"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                ドーナドーナ 攻略wiki
+              </Anchor>
+              {','}
+              <Anchor
+                href="http://alice.xfu.jp/doku.php?id=%E3%83%89%E3%83%BC%E3%83%8A%E3%83%89%E3%83%BC%E3%83%8A:index"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                アリスまとめ
+              </Anchor>{' '}
+            </Center>
+          </Container>
         </footer>
       </SlantedBackground>
     </div>
