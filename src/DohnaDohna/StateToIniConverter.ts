@@ -27,7 +27,6 @@ const formatAttributeRows = (attributes: Array<Attribute | null>, fieldName: str
 
   // 有効な属性（nullでない、かつランダムでない）を抽出
   const validAttributes = attributes.filter((attr) => !isRandom(attr));
-  console.info(validAttributes);
   // 有効な属性を出力し、足りない分は空欄で埋める
   const result: string[] = [];
   // 有効な属性を追加

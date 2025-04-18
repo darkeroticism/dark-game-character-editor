@@ -44,7 +44,6 @@ export const downloadWithShiftJIS = (filename: string, content: string): void =>
     });
 
     download(blob, filename);
-    console.log('ファイルをShift-JISでダウンロードしました: ' + filename);
   } catch (e) {
     console.error('Shift-JIS変換エラー:', e);
 
