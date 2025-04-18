@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react';
 // https://vite.dev/config/
 export default defineConfig({
   // CD用に必要な設定
-  base: '/dohna-dohna-character-editor/',
+  base: '/dark-game-character-editor/',
   plugins: [react()],
   test: {
     globals: true,
