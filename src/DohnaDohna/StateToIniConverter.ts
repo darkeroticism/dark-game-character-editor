@@ -1,15 +1,18 @@
-import { Jinzai, Kokyaku, nullText } from './data';
+import { HaruuriCharacterParameter, Jinzai, JinzaiProfileTexts, Kokyaku, rankInfo } from './data';
 
 // ランク値からINI用の文字列を生成する関数
-const formatRankValue = (value: string | null): string => {
-  return value ? `=${value.substring(0, 2)}` : '=';
+const formatRankValue = (value: HaruuriCharacterParameter): string => {
+  const rank = rankInfo.find((rank) => {
+    return rank.value === value;
+  });
+  return rank ? `${rank.name}` : '';
 };
 
 // 属性配列からINI用の文字列を生成する関数
 const formatAttributeRows = (
-  attributes: string[],
+  attributes: Array<string | null>,
   fieldName: string,
-  undefinedValue: string
+  undefinedValue: null
 ): string => {
   return attributes.every((attr) => attr === undefinedValue)
     ? Array(3).fill(`${fieldName}=`).join('\n')
@@ -20,7 +23,7 @@ const formatAttributeRows = (
 };
 
 // プロフィール配列からINI用の文字列を生成する関数
-const formatProfileRows = (profiles: string[], count: number): string => {
+const formatProfileRows = (profiles: JinzaiProfileTexts, count: number): string => {
   return profiles.every((profile) => profile === '')
     ? Array(count).fill('プロフィール=').join('\n')
     : profiles
@@ -36,7 +39,7 @@ export const generateJinzaiIniContent = (jinzai: Jinzai): string => {
   const looksRow = `ルックス${formatRankValue(jinzai.looks)}`;
   const technicRow = `テクニック${formatRankValue(jinzai.technic)}`;
   const mentalRow = `メンタル${formatRankValue(jinzai.mental)}`;
-  const attributeRows = formatAttributeRows(jinzai.attributes, '属性', nullText);
+  const attributeRows = formatAttributeRows(jinzai.attributes, '属性', null);
   const verginRow = jinzai.isVergin === null ? '処女=' : `処女=${jinzai.isVergin ? '1' : '0'}`;
   const voiceRow = jinzai.voice ? `音声=${jinzai.voice}` : '音声=';
   const profileRows = formatProfileRows(jinzai.profile, 3);
@@ -68,7 +71,7 @@ export const generateKokyakuIniContent = (kokyaku: Kokyaku): string => {
     .map((present) => `プレゼント=${present}`)
     .join('\n');
 
-  const targetRows = formatAttributeRows(kokyaku.target, 'ターゲット', nullText);
+  const targetRows = formatAttributeRows(kokyaku.target, 'ターゲット', null);
 
   const profileArray = kokyaku.profile as string[];
   const profileRows = formatProfileRows(profileArray, 2);

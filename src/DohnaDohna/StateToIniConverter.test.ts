@@ -1,23 +1,23 @@
 import { describe, it, expect } from 'vitest';
-import { generateJinzaiIniContent, generateKokyakuIniContent } from './logic';
-import { Jinzai, Kokyaku, nullText } from './data';
+import { generateJinzaiIniContent, generateKokyakuIniContent } from './StateToIniConverter';
+import { Jinzai, Kokyaku } from './data';
 
 describe('generateJinzaiIniContent', () => {
   it('正しいINIコンテンツを生成する - 基本的なケース', () => {
     const jinzai: Jinzai = {
       image: 'test.png',
       name: 'テスト',
-      looks: 'S+ (神話級)',
-      technic: 'A (全国級)',
-      mental: 'B+ (かなり優秀)',
-      attributes: ['巨乳', '令嬢', nullText],
+      looks: 10,
+      technic: 8,
+      mental: 6,
+      attributes: ['巨乳', '令嬢', null],
       isVergin: true,
       voice: '女子汎用／高／真面目',
       profile: ['テスト1', 'テスト2', ''],
     };
 
     const result = generateJinzaiIniContent(jinzai);
-    
+
     // 期待される出力を検証
     expect(result).toContain('画像=test.png');
     expect(result).toContain('名前=テスト');
@@ -30,10 +30,10 @@ describe('generateJinzaiIniContent', () => {
     expect(result).toContain('音声=女子汎用／高／真面目');
     expect(result).toContain('プロフィール=テスト1');
     expect(result).toContain('プロフィール=テスト2');
-    
+
     // 空の属性は含まれないことを確認
     expect(result.match(/属性=/g)?.length).toBe(2);
-    
+
     // 空のプロフィールは含まれないことを確認
     expect(result.match(/プロフィール=/g)?.length).toBe(2);
   });
@@ -45,14 +45,14 @@ describe('generateJinzaiIniContent', () => {
       looks: null,
       technic: null,
       mental: null,
-      attributes: [nullText, nullText, nullText],
+      attributes: [null, null, null],
       isVergin: null,
       voice: null,
       profile: ['', '', ''],
     };
 
     const result = generateJinzaiIniContent(jinzai);
-    
+
     // 期待される出力を検証
     expect(result).toContain('画像=');
     expect(result).toContain('名前=');
@@ -63,10 +63,10 @@ describe('generateJinzaiIniContent', () => {
     expect(result).toContain('処女=');
     expect(result).toContain('音声=');
     expect(result).toContain('プロフィール=');
-    
+
     // 属性は3つあることを確認
     expect(result.match(/属性=/g)?.length).toBe(3);
-    
+
     // プロフィールは3つあることを確認
     expect(result.match(/プロフィール=/g)?.length).toBe(3);
   });
@@ -79,14 +79,14 @@ describe('generateJinzaiIniContent', () => {
       looks: null,
       technic: null,
       mental: null,
-      attributes: [nullText, nullText, nullText],
+      attributes: [null, null, null],
       isVergin: true,
       voice: null,
       profile: ['', '', ''],
     };
-    
+
     expect(generateJinzaiIniContent(jinzaiVergin)).toContain('処女=1');
-    
+
     // 非処女の場合
     const jinzaiNonVergin: Jinzai = {
       image: '',
@@ -94,14 +94,14 @@ describe('generateJinzaiIniContent', () => {
       looks: null,
       technic: null,
       mental: null,
-      attributes: [nullText, nullText, nullText],
+      attributes: [null, null, null],
       isVergin: false,
       voice: null,
       profile: ['', '', ''],
     };
-    
+
     expect(generateJinzaiIniContent(jinzaiNonVergin)).toContain('処女=0');
-    
+
     // 未設定の場合
     const jinzaiUnknownVergin: Jinzai = {
       image: '',
@@ -109,12 +109,12 @@ describe('generateJinzaiIniContent', () => {
       looks: null,
       technic: null,
       mental: null,
-      attributes: [nullText, nullText, nullText],
+      attributes: [null, null, null],
       isVergin: null,
       voice: null,
       profile: ['', '', ''],
     };
-    
+
     expect(generateJinzaiIniContent(jinzaiUnknownVergin)).toContain('処女=');
   });
 });
@@ -125,14 +125,14 @@ describe('generateKokyakuIniContent', () => {
       characterType: 'コキャク',
       image: 'kokyaku.png',
       name: 'コキャク',
-      income: 'S (伝説級)',
+      income: 9,
       present: ['LKS↑↑', 'TEC↓'],
-      target: ['巨乳', '令嬢', nullText],
+      target: ['巨乳', '令嬢', null],
       profile: ['コキャクプロフィール1', 'コキャクプロフィール2'],
     };
 
     const result = generateKokyakuIniContent(kokyaku);
-    
+
     // 期待される出力を検証
     expect(result).toContain('種類=コキャク');
     expect(result).toContain('画像=kokyaku.png');
@@ -144,7 +144,7 @@ describe('generateKokyakuIniContent', () => {
     expect(result).toContain('ターゲット=令嬢');
     expect(result).toContain('プロフィール=コキャクプロフィール1');
     expect(result).toContain('プロフィール=コキャクプロフィール2');
-    
+
     // 空のターゲットは含まれないことを確認
     expect(result.match(/ターゲット=/g)?.length).toBe(2);
   });
@@ -156,12 +156,12 @@ describe('generateKokyakuIniContent', () => {
       name: '',
       income: null,
       present: [''],
-      target: [nullText, nullText, nullText],
+      target: [null, null, null],
       profile: ['', ''],
     };
 
     const result = generateKokyakuIniContent(kokyaku);
-    
+
     // 期待される出力を検証
     expect(result).toContain('種類=コキャク');
     expect(result).toContain('画像=');
@@ -170,10 +170,10 @@ describe('generateKokyakuIniContent', () => {
     expect(result).not.toContain('プレゼント='); // 空のプレゼントは含まれない
     expect(result).toContain('ターゲット=');
     expect(result).toContain('プロフィール=');
-    
+
     // ターゲットは3つあることを確認
     expect(result.match(/ターゲット=/g)?.length).toBe(3);
-    
+
     // プロフィールは2つあることを確認
     expect(result.match(/プロフィール=/g)?.length).toBe(2);
   });
@@ -186,16 +186,16 @@ describe('generateKokyakuIniContent', () => {
       name: '',
       income: null,
       present: ['LKS↑↑', 'TEC↓', 'MNT↑'],
-      target: [nullText, nullText, nullText],
+      target: [null, null, null],
       profile: ['', ''],
     };
-    
+
     const result = generateKokyakuIniContent(kokyakuWithPresents);
     expect(result.match(/プレゼント=/g)?.length).toBe(3);
     expect(result).toContain('プレゼント=LKS↑↑');
     expect(result).toContain('プレゼント=TEC↓');
     expect(result).toContain('プレゼント=MNT↑');
-    
+
     // 空のプレゼントがある場合
     const kokyakuWithEmptyPresents: Kokyaku = {
       characterType: 'コキャク',
@@ -203,10 +203,10 @@ describe('generateKokyakuIniContent', () => {
       name: '',
       income: null,
       present: ['LKS↑↑', '', 'MNT↑'],
-      target: [nullText, nullText, nullText],
+      target: [null, null, null],
       profile: ['', ''],
     };
-    
+
     const resultWithEmpty = generateKokyakuIniContent(kokyakuWithEmptyPresents);
     expect(resultWithEmpty.match(/プレゼント=/g)?.length).toBe(2);
     expect(resultWithEmpty).toContain('プレゼント=LKS↑↑');
@@ -215,6 +215,6 @@ describe('generateKokyakuIniContent', () => {
     // 注: 'プレゼント='という文字列は他のプレゼントの一部として含まれるため、
     // 完全な行として'プレゼント=\n'が含まれていないことを確認する
     expect(resultWithEmpty).not.toContain('プレゼント=\n');
-    expect(resultWithEmpty.split('\n').some(line => line === 'プレゼント=')).toBe(false);
+    expect(resultWithEmpty.split('\n').some((line) => line === 'プレゼント=')).toBe(false);
   });
 });

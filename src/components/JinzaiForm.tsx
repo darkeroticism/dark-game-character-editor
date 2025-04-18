@@ -1,4 +1,4 @@
-import { Jinzai, rankToSliderValue, sliderValueToRank, rankValues } from '../DohnaDohna/data';
+import { initialRankParamter, Jinzai, rankInfo } from '../DohnaDohna/data';
 import { TextInput, Textarea, Stack, Title, Box, Slider, Switch, Flex, Text } from '@mantine/core';
 import { AttributeSelector } from './AttributeSelector';
 import { VoiceSelector } from './VoiceSelector';
@@ -6,11 +6,9 @@ import { VirginSelector } from './VirginSelector';
 
 type JinzaiFormProps = {
   jinzai: Jinzai;
-  onChange: (field: keyof Jinzai, value: string | boolean | null, index?: number) => void;
+  onChange: (field: keyof Jinzai, value: string | boolean | null | number, index?: number) => void;
   attributes: string[];
-  rankNames: readonly string[];
   voices: string[];
-  undefinedRandomText: string;
 };
 
 // 値がnullの場合に表示用の値を返す
@@ -40,14 +38,7 @@ const ProfileInput = ({
   />
 );
 
-export const JinzaiForm = ({
-  jinzai,
-  onChange,
-  attributes,
-  rankNames: _rankNames, // eslint-disable-line @typescript-eslint/no-unused-vars
-  voices,
-  undefinedRandomText,
-}: JinzaiFormProps) => {
+export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormProps) => {
   // 属性変更ハンドラー
   const handleAttributeChange = (value: string, index: number) => {
     onChange('attributes', value, index);
@@ -75,7 +66,7 @@ export const JinzaiForm = ({
         <TextInput
           label="ファイル名"
           placeholder="画像ファイル名を入力してください"
-          value={jinzai.image}
+          value={jinzai.image || ''}
           onChange={(e) => onChange('image', e.target.value)}
         />
       </Box>
@@ -104,12 +95,9 @@ export const JinzaiForm = ({
           </Box>
           <Switch
             label="ランダム"
-            checked={jinzai.looks === null || jinzai.looks === undefinedRandomText}
+            checked={jinzai.looks === null}
             onChange={(event) =>
-              onChange(
-                'looks',
-                event.currentTarget.checked ? undefinedRandomText : sliderValueToRank(5)
-              )
+              onChange('looks', event.currentTarget.checked ? null : initialRankParamter)
             }
           />
         </Flex>
@@ -117,11 +105,14 @@ export const JinzaiForm = ({
           min={1}
           max={10}
           step={1}
-          value={rankToSliderValue(jinzai.looks) || 5}
-          onChange={(value) => onChange('looks', sliderValueToRank(value))}
-          disabled={jinzai.looks === null || jinzai.looks === undefinedRandomText}
-          marks={rankValues.map((rank) => ({ value: rank.sliderValue, label: rank.value }))}
-          label={null}
+          value={jinzai.looks !== null ? jinzai.looks : initialRankParamter}
+          onChange={(value) => onChange('looks', value)}
+          disabled={jinzai.looks === null}
+          marks={rankInfo.map((r) => ({ value: r.value, label: r.name }))}
+          label={(val: number) => {
+            const rank = rankInfo.find((r) => r.value === val);
+            return rank ? rank.description : '';
+          }}
           mb="md"
           styles={sliderStyles}
         />
@@ -136,12 +127,9 @@ export const JinzaiForm = ({
           </Box>
           <Switch
             label="ランダム"
-            checked={jinzai.technic === null || jinzai.technic === undefinedRandomText}
+            checked={jinzai.technic === null}
             onChange={(event) =>
-              onChange(
-                'technic',
-                event.currentTarget.checked ? undefinedRandomText : sliderValueToRank(5)
-              )
+              onChange('technic', event.currentTarget.checked ? null : initialRankParamter)
             }
           />
         </Flex>
@@ -149,11 +137,14 @@ export const JinzaiForm = ({
           min={1}
           max={10}
           step={1}
-          value={rankToSliderValue(jinzai.technic) || 5}
-          onChange={(value) => onChange('technic', sliderValueToRank(value))}
-          disabled={jinzai.technic === null || jinzai.technic === undefinedRandomText}
-          marks={rankValues.map((rank) => ({ value: rank.sliderValue, label: rank.value }))}
-          label={null}
+          value={jinzai.technic !== null ? jinzai.technic : initialRankParamter}
+          onChange={(value) => onChange('technic', value)}
+          disabled={jinzai.technic === null}
+          marks={rankInfo.map((r) => ({ value: r.value, label: r.name }))}
+          label={(val: number) => {
+            const rank = rankInfo.find((r) => r.value === val);
+            return rank ? rank.description : '';
+          }}
           mb="md"
           styles={sliderStyles}
         />
@@ -168,12 +159,9 @@ export const JinzaiForm = ({
           </Box>
           <Switch
             label="ランダム"
-            checked={jinzai.mental === null || jinzai.mental === undefinedRandomText}
+            checked={jinzai.mental === null}
             onChange={(event) =>
-              onChange(
-                'mental',
-                event.currentTarget.checked ? undefinedRandomText : sliderValueToRank(5)
-              )
+              onChange('mental', event.currentTarget.checked ? null : initialRankParamter)
             }
           />
         </Flex>
@@ -181,11 +169,14 @@ export const JinzaiForm = ({
           min={1}
           max={10}
           step={1}
-          value={rankToSliderValue(jinzai.mental) || 5}
-          onChange={(value) => onChange('mental', sliderValueToRank(value))}
-          disabled={jinzai.mental === null || jinzai.mental === undefinedRandomText}
-          marks={rankValues.map((rank) => ({ value: rank.sliderValue, label: rank.value }))}
-          label={null}
+          value={jinzai.mental !== null ? jinzai.mental : initialRankParamter}
+          onChange={(value) => onChange('mental', value)}
+          disabled={jinzai.mental === null}
+          marks={rankInfo.map((r) => ({ value: r.value, label: r.name }))}
+          label={(val: number) => {
+            const rank = rankInfo.find((r) => r.value === val);
+            return rank ? rank.description : '';
+          }}
           mb="md"
           styles={sliderStyles}
         />
@@ -197,11 +188,14 @@ export const JinzaiForm = ({
             属性
           </Title>
           <Text size="sm">
-            最大3つ。未選択の場合は空欄となります。ランダムにしたい場合はランダムを選択してください
+            最大3つ。
+            <strong>
+              未選択の場合は空欄となります。ランダムにしたい場合はランダムを選択してください
+            </strong>
           </Text>
         </Box>
         <AttributeSelector
-          selectedAttributes={jinzai.attributes.filter((attr) => attr !== 'なし（空欄）')}
+          selectedAttributes={jinzai.attributes.filter((attr) => attr !== null)}
           onChange={handleAttributeChange}
           attributes={attributes}
         />

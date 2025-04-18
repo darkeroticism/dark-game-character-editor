@@ -1,4 +1,4 @@
-import { Kokyaku, rankToSliderValue, sliderValueToRank, rankValues } from '../DohnaDohna/data';
+import { Kokyaku, rankInfo } from '../DohnaDohna/data';
 import {
   TextInput,
   Textarea,
@@ -16,10 +16,8 @@ import styles from '../styles/KokyakuForm.module.css';
 
 type KokyakuFormProps = {
   kokyaku: Kokyaku;
-  onChange: (field: keyof Kokyaku, value: string, index?: number) => void;
+  onChange: (field: keyof Kokyaku, value: string | number | null, index?: number) => void;
   attributes: string[];
-  rankNames: readonly string[];
-  undefinedRandomText: string;
 };
 
 // 属性選択テーブルコンポーネント
@@ -36,17 +34,17 @@ const AttributeSelector = ({
   const handleAttributeClick = (attribute: string) => {
     // 現在選択されている属性の配列（なし（空欄）を除く）
     const currentSelected = [...selectedAttributes];
-    
+
     if (currentSelected.includes(attribute)) {
       // 選択解除
-      const newSelected = currentSelected.filter(attr => attr !== attribute);
-      
+      const newSelected = currentSelected.filter((attr) => attr !== attribute);
+
       // 新しい配列を作成（最大3つ）
       const newAttributes = [...newSelected];
       while (newAttributes.length < 3) {
         newAttributes.push('なし（空欄）');
       }
-      
+
       // 親コンポーネントに通知
       newAttributes.forEach((attr, index) => {
         onChange(attr, index);
@@ -54,13 +52,13 @@ const AttributeSelector = ({
     } else if (currentSelected.length < 3) {
       // 新しい属性を選択（最大3つまで）
       const newSelected = [...currentSelected, attribute];
-      
+
       // 新しい配列を作成（最大3つ）
       const newAttributes = [...newSelected];
       while (newAttributes.length < 3) {
         newAttributes.push('なし（空欄）');
       }
-      
+
       // 親コンポーネントに通知
       newAttributes.forEach((attr, index) => {
         onChange(attr, index);
@@ -87,8 +85,8 @@ const AttributeSelector = ({
           return (
             <Grid.Col span={2.4} key={attribute}>
               <Button
-                variant={isSelected(attribute) ? "filled" : "outline"}
-                color={isSelected(attribute) ? "pink" : "gray"}
+                variant={isSelected(attribute) ? 'filled' : 'outline'}
+                color={isSelected(attribute) ? 'pink' : 'gray'}
                 onClick={() => handleAttributeClick(attribute)}
                 disabled={selectedAttributes.length >= 3 && !isSelected(attribute)}
                 fullWidth
@@ -112,8 +110,8 @@ const AttributeSelector = ({
                     '&:disabled': {
                       backgroundColor: 'rgba(0, 0, 0, 0.5)',
                       color: '#666',
-                    }
-                  }
+                    },
+                  },
                 }}
               >
                 {attribute}
@@ -186,13 +184,7 @@ const ProfileInput = ({
   />
 );
 
-export const KokyakuForm = ({
-  kokyaku,
-  onChange,
-  attributes,
-  rankNames: _rankNames, // eslint-disable-line @typescript-eslint/no-unused-vars
-  undefinedRandomText,
-}: KokyakuFormProps) => {
+export const KokyakuForm = ({ kokyaku, onChange, attributes }: KokyakuFormProps) => {
   // 属性変更ハンドラー
   const handleTargetChange = (value: string, index: number) => {
     onChange('target', value, index);
@@ -219,13 +211,13 @@ export const KokyakuForm = ({
   const sliderStyles = {
     track: { backgroundColor: 'rgba(255, 235, 0, 0.2)' },
     bar: { backgroundColor: '#FFEB00' },
-    thumb: { 
+    thumb: {
       borderColor: '#FFEB00',
       backgroundColor: '#FFEB00',
-      '&:hover': { backgroundColor: '#FFF68A' }
+      '&:hover': { backgroundColor: '#FFF68A' },
     },
     mark: { borderColor: '#00D2FF' },
-    markLabel: { color: '#ccc' }
+    markLabel: { color: '#ccc' },
   };
 
   // スイッチのスタイル
@@ -234,19 +226,23 @@ export const KokyakuForm = ({
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
       '&[data-checked]': {
         backgroundColor: '#FFEB00',
-      }
-    }
+      },
+    },
   };
 
   return (
     <Stack gap="lg">
       <Box>
-        <Title order={3} style={{ color: '#FF007D', fontWeight: 'bold' }}>画像</Title>
-        <Text size="sm" mb="xs" style={{ color: '#ccc' }}>未入力の場合はランダムとなります</Text>
+        <Title order={3} style={{ color: '#FF007D', fontWeight: 'bold' }}>
+          画像
+        </Title>
+        <Text size="sm" mb="xs" style={{ color: '#ccc' }}>
+          未入力の場合はランダムとなります
+        </Text>
         <TextInput
           label="ファイル名"
           placeholder="画像ファイル名を入力してください"
-          value={kokyaku.image}
+          value={kokyaku.image || ''}
           onChange={(e) => onChange('image', e.target.value)}
           styles={{
             input: {
@@ -259,18 +255,22 @@ export const KokyakuForm = ({
             },
             label: {
               color: '#FFEB00',
-            }
+            },
           }}
         />
       </Box>
 
       <Box>
-        <Title order={3} style={{ color: '#FF007D', fontWeight: 'bold' }}>名前</Title>
-        <Text size="sm" mb="xs" style={{ color: '#ccc' }}>未入力の場合はランダムとなります</Text>
+        <Title order={3} style={{ color: '#FF007D', fontWeight: 'bold' }}>
+          名前
+        </Title>
+        <Text size="sm" mb="xs" style={{ color: '#ccc' }}>
+          未入力の場合はランダムとなります
+        </Text>
         <TextInput
           label="名前 (最大6文字)"
           placeholder="名前を入力してください"
-          value={kokyaku.name}
+          value={kokyaku.name || ''}
           onChange={(e) => onChange('name', e.target.value)}
           styles={{
             input: {
@@ -283,7 +283,7 @@ export const KokyakuForm = ({
             },
             label: {
               color: '#FFEB00',
-            }
+            },
           }}
         />
       </Box>
@@ -292,17 +292,14 @@ export const KokyakuForm = ({
         <Box>
           <Flex align="center" justify="space-between" mb={5}>
             <Box>
-              <Title order={3} style={{ color: '#FFEB00', fontWeight: 'bold' }}>インカム</Title>
+              <Title order={3} style={{ color: '#FFEB00', fontWeight: 'bold' }}>
+                インカム
+              </Title>
             </Box>
             <Switch
               label="ランダム"
-              checked={kokyaku.income === null || kokyaku.income === undefinedRandomText}
-              onChange={(event) =>
-                onChange(
-                  'income',
-                  event.currentTarget.checked ? undefinedRandomText : sliderValueToRank(5)
-                )
-              }
+              checked={kokyaku.income === null}
+              onChange={(event) => onChange('income', event.currentTarget.checked ? null : 5)}
               styles={switchStyles}
             />
           </Flex>
@@ -310,41 +307,63 @@ export const KokyakuForm = ({
             min={1}
             max={10}
             step={1}
-            value={rankToSliderValue(kokyaku.income) || 5}
-            onChange={(value) => onChange('income', sliderValueToRank(value))}
-            disabled={kokyaku.income === null || kokyaku.income === undefinedRandomText}
-            marks={rankValues.map((rank) => ({ value: rank.sliderValue, label: rank.value }))}
+            value={kokyaku.income || 5}
+            onChange={(value) => onChange('income', value)}
+            disabled={kokyaku.income === null}
+            marks={rankInfo.map((r) => ({ value: r.value, label: r.description }))}
+            label={(val: number) => {
+              const rank = rankInfo.find((r) => r.value === val);
+              return rank ? rank.description : '';
+            }}
             mb="md"
             styles={sliderStyles}
           />
         </Box>
 
         <Box mt="lg">
-          <Title order={3} style={{ color: '#FFEB00', fontWeight: 'bold' }}>プレゼント</Title>
-          <Text size="sm" mb="xs" style={{ color: '#ccc' }}>例: LKS↑↑, TEC↓</Text>
+          <Title order={3} style={{ color: '#FFEB00', fontWeight: 'bold' }}>
+            プレゼント
+          </Title>
+          <Text size="sm" mb="xs" style={{ color: '#ccc' }}>
+            例: LKS↑↑, TEC↓
+          </Text>
           {kokyaku.present.map((present, index) => (
-            <PresentInput key={index} value={present} onChange={handlePresentChange} index={index} />
+            <PresentInput
+              key={index}
+              value={present || ''}
+              onChange={handlePresentChange}
+              index={index}
+            />
           ))}
         </Box>
       </section>
 
       <section className={`${styles.slantedSection} ${styles.cyan}`}>
         <Box>
-          <Title order={3} style={{ color: '#00D2FF', fontWeight: 'bold' }}>ターゲット</Title>
-          <Text size="sm" mb="xs" style={{ color: '#ccc' }}>最大3つ選択できます</Text>
-          <Box mb="md" style={{ 
-            padding: '8px', 
-            backgroundColor: 'rgba(0, 0, 0, 0.3)', 
-            borderRadius: '4px',
-            border: '1px solid #00D2FF'
-          }}>
-            <Text size="sm" style={{ color: '#00D2FF', fontWeight: 'bold' }}>選択中:</Text>
+          <Title order={3} style={{ color: '#00D2FF', fontWeight: 'bold' }}>
+            ターゲット
+          </Title>
+          <Text size="sm" mb="xs" style={{ color: '#ccc' }}>
+            最大3つ選択できます
+          </Text>
+          <Box
+            mb="md"
+            style={{
+              padding: '8px',
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              borderRadius: '4px',
+              border: '1px solid #00D2FF',
+            }}
+          >
+            <Text size="sm" style={{ color: '#00D2FF', fontWeight: 'bold' }}>
+              選択中:
+            </Text>
             <Text style={{ color: 'white' }}>
-              {kokyaku.target.filter(attr => attr !== 'なし（空欄）').join(', ') || 'なし'}
+              {kokyaku.target.filter((attr) => attr !== null).join(', ') || 'なし'}
             </Text>
           </Box>
           <AttributeSelector
-            selectedAttributes={kokyaku.target.filter(attr => attr !== 'なし（空欄）')}
+            selectedAttributes={kokyaku.target.filter((attr) => attr !== null)}
             onChange={handleTargetChange}
             attributes={attributes}
           />
@@ -353,8 +372,12 @@ export const KokyakuForm = ({
 
       <section className={`${styles.slantedSection} ${styles.magenta}`}>
         <Box>
-          <Title order={3} style={{ color: '#FF007D', fontWeight: 'bold' }}>プロフィール</Title>
-          <Text size="sm" mb="xs" style={{ color: '#ccc' }}>最大2行です。未入力の場合「空欄（なし）」となります</Text>
+          <Title order={3} style={{ color: '#FF007D', fontWeight: 'bold' }}>
+            プロフィール
+          </Title>
+          <Text size="sm" mb="xs" style={{ color: '#ccc' }}>
+            最大2行です。未入力の場合「空欄（なし）」となります
+          </Text>
           <ProfileInput
             value={getProfileValue(0)}
             onChange={handleProfileChange}

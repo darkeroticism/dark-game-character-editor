@@ -3,12 +3,8 @@
  */
 // キャラクタータイプの定義
 export type CharacterType = 'ジンザイ' | 'コキャク';
-export const randomText = 'ランダム（未設定）';
-export const nullText = 'なし（空欄）';
 
 export const attributes: string[] = [
-  nullText,
-  randomText,
   '巨乳',
   '貧乳',
   '安産型',
@@ -73,52 +69,40 @@ export const attributes: string[] = [
   '無双',
   '無相',
   '無想',
-];
-
-export const rankWithDescription = [
-  randomText,
-  'S+ (神話級)',
-  'S (伝説級)',
-  'A+ (世界級)',
-  'A (全国級)',
-  'B+ (かなり優秀)',
-  'B (優秀)',
-  'C+ (やや優秀)',
-  'C (一般的)',
-  'D+ (劣っている)',
-  'D (能力が皆無)',
-] as const;
-type RankNameWithDescription = (typeof rankWithDescription)[number];
-
-// スライダー用のランク定義
-export const rankValues = [
-  { value: 'S+', label: 'S+ (神話級)', sliderValue: 10 },
-  { value: 'S', label: 'S (伝説級)', sliderValue: 9 },
-  { value: 'A+', label: 'A+ (世界級)', sliderValue: 8 },
-  { value: 'A', label: 'A (全国級)', sliderValue: 7 },
-  { value: 'B+', label: 'B+ (かなり優秀)', sliderValue: 6 },
-  { value: 'B', label: 'B (優秀)', sliderValue: 5 },
-  { value: 'C+', label: 'C+ (やや優秀)', sliderValue: 4 },
-  { value: 'C', label: 'C (一般的)', sliderValue: 3 },
-  { value: 'D+', label: 'D+ (劣っている)', sliderValue: 2 },
-  { value: 'D', label: 'D (能力が皆無)', sliderValue: 1 },
 ] as const;
 
-// スライダー値からランク値への変換
-export const sliderValueToRank = (value: number): string => {
-  const rank = rankValues.find((r) => r.sliderValue === value);
-  return rank ? rank.value : '';
+// ランク情報の一元管理
+type Rank = {
+  name: string;
+  description: string;
+  value: number;
 };
+
+// ルックス、テクニック、メンタル、インカム等、ランク表記の初期値とかスライダーをリセットした時の値とか
+// 3 = 一般的
+export const initialRankParamter = 3;
+
+export const rankInfo: ReadonlyArray<Rank> = [
+  { name: 'S+', description: '神話級', value: 10 },
+  { name: 'S', description: '伝説級', value: 9 },
+  { name: 'A+', description: '世界級', value: 8 },
+  { name: 'A', description: '全国級', value: 7 },
+  { name: 'B+', description: 'かなり優秀', value: 6 },
+  { name: 'B', description: '優秀', value: 5 },
+  { name: 'C+', description: 'やや優秀', value: 4 },
+  { name: 'C', description: '一般的', value: 3 },
+  { name: 'D+', description: '劣っている', value: 2 },
+  { name: 'D', description: '能力が皆無', value: 1 },
+] as const;
 
 // ランク値からスライダー値への変換
 export const rankToSliderValue = (rank: string | null): number | null => {
-  if (!rank || rank === randomText) return null;
-  const rankObj = rankValues.find((r) => r.value === rank.substring(0, 2));
-  return rankObj ? rankObj.sliderValue : null;
+  if (!rank) return null;
+  const rankObj = rankInfo.find((r) => r.name === rank.substring(0, 2));
+  return rankObj ? rankObj.value : null;
 };
 
 export const voices: Voice[] = [
-  randomText,
   '女子汎用／大／真面目',
   '女子汎用／大／陽気',
   '女子汎用／大／強気',
@@ -160,22 +144,23 @@ export const voices: Voice[] = [
 
 export type Image = string;
 export type Name = string;
-export type Looks = RankNameWithDescription;
-export type Techinc = RankNameWithDescription;
-export type Mental = RankNameWithDescription;
-export type JinzaiAttribute = string;
+export type HaruuriCharacterParameter = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | null;
+export type Looks = HaruuriCharacterParameter;
+export type Techinc = HaruuriCharacterParameter;
+export type Mental = HaruuriCharacterParameter;
+export type JinzaiAttribute = string | null;
 export type JinzaiAttributes = JinzaiAttribute[];
 export type IsVergin = boolean;
 export type Voice = string;
-export type ProfileText = string;
+export type ProfileText = string | null;
 export type JinzaiProfileTexts = ProfileText[];
-export type Present = string;
+export type Present = string | null;
 export type Presents = Present[];
 
-export type KokyakuProfileTexts = ProfileText[] | string;
+export type KokyakuProfileTexts = ProfileText[];
 
 export type Jinzai = {
-  image: Image;
+  image: Image | null;
   name: Name | null;
   looks: Looks | null;
   technic: Techinc | null;
@@ -188,10 +173,10 @@ export type Jinzai = {
 
 export type Kokyaku = {
   characterType: string;
-  image: Image;
-  name: Name;
-  income: RankNameWithDescription | null;
+  image: Image | null;
+  name: Name | null;
+  income: HaruuriCharacterParameter | null;
   present: Presents;
   target: JinzaiAttributes;
-  profile: KokyakuProfileTexts | null;
+  profile: KokyakuProfileTexts;
 };

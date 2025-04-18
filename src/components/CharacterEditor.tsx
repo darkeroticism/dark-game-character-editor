@@ -2,48 +2,45 @@ import { useState } from 'react';
 import {
   Jinzai,
   Kokyaku,
-  randomText,
-  nullText,
   attributes,
-  rankWithDescription,
   voices,
   CharacterType,
+  initialRankParamter,
 } from '../DohnaDohna/data';
 import { downloadWithShiftJIS } from '../utils/shiftJisEncoder';
 import { JinzaiForm } from './JinzaiForm';
 import { KokyakuForm } from './KokyakuForm';
-import { generateJinzaiIniContent, generateKokyakuIniContent } from '../DohnaDohna/logic';
-import { Container, SegmentedControl, Button, Paper } from '@mantine/core';
+import {
+  generateJinzaiIniContent,
+  generateKokyakuIniContent,
+} from '../DohnaDohna/StateToIniConverter';
+import { Container, SegmentedControl, Button } from '@mantine/core';
 import styles from '../styles/ParallelogramButton.module.css';
 
 // ジンザイの初期状態を作成する関数
+
 const getInitialJinzai = (): Jinzai => ({
-  image: '',
+  image: null,
   name: null,
-  looks: null,
-  technic: null,
-  mental: null,
-  attributes: [nullText, nullText, nullText],
+  looks: initialRankParamter,
+  technic: initialRankParamter,
+  mental: initialRankParamter,
+  attributes: [null, null, null],
   isVergin: null,
   voice: null,
-  profile: ['', '', ''],
+  profile: [null, null, null],
 });
 
 // コキャクの初期状態を作成する関数
 const getInitialKokyaku = (): Kokyaku => ({
   characterType: 'コキャク',
-  image: '',
-  name: '',
-  income: null,
-  present: [''],
-  target: [nullText, nullText, nullText],
-  profile: ['', ''],
+  image: null,
+  name: null,
+  income: initialRankParamter,
+  present: [null],
+  target: [null, null, null],
+  profile: [null, null],
 });
-
-// 値がnullになるべきかを判定する関数
-const shouldBeNull = (value: string | boolean | null): boolean =>
-  value === null ||
-  (typeof value === 'string' && (value === nullText || value === randomText || value === ''));
 
 // 配列フィールドを更新する関数
 const updateArrayField = <T,>(array: T[], index: number, value: T): T[] => {
@@ -53,7 +50,11 @@ const updateArrayField = <T,>(array: T[], index: number, value: T): T[] => {
 };
 
 // プレゼント配列を更新する関数（最後の要素に入力があれば新しい入力欄を追加）
-const updatePresentArray = (presents: string[], index: number, value: string): string[] => {
+const updatePresentArray = (
+  presents: Array<string | null>,
+  index: number,
+  value: string | null
+): Array<string | null> => {
   const newPresents = [...presents];
 
   // 最後のフィールドに入力があり、新しい入力欄が必要な場合
@@ -113,7 +114,7 @@ export const CharacterEditor = () => {
   // ジンザイのフィールド更新ハンドラー
   const handleJinzaiChange = (
     field: keyof Jinzai,
-    value: string | boolean | null,
+    value: string | boolean | null | number,
     index?: number
   ) => {
     setJinzai((prev) => {
@@ -125,7 +126,7 @@ export const CharacterEditor = () => {
         updated.profile = updateArrayField(prev.profile, index, value as string);
       } else {
         // @ts-expect-error - 動的なフィールド更新
-        updated[field] = shouldBeNull(value) ? null : value;
+        updated[field] = value;
       }
 
       return updated;
@@ -133,21 +134,25 @@ export const CharacterEditor = () => {
   };
 
   // コキャクのフィールド更新ハンドラー
-  const handleKokyakuChange = (field: keyof Kokyaku, value: string, index?: number) => {
+  const handleKokyakuChange = (
+    field: keyof Kokyaku,
+    value: string | number | null,
+    index?: number
+  ) => {
     setKokyaku((prev) => {
       const updated = { ...prev };
 
-      if (field === 'target' && typeof index === 'number') {
+      if (field === 'target' && typeof value === 'string' && typeof index === 'number') {
         updated.target = updateArrayField(prev.target, index, value);
-      } else if (field === 'present' && typeof index === 'number') {
+      } else if (field === 'present' && typeof value === 'string' && typeof index === 'number') {
         updated.present = updatePresentArray(prev.present, index, value);
-      } else if (field === 'profile' && typeof index === 'number') {
+      } else if (field === 'profile' && typeof value === 'string' && typeof index === 'number') {
         const newProfile = [...(prev.profile as string[])];
-        newProfile[index] = value;
+        newProfile[index] = value || '';
         updated.profile = newProfile;
       } else {
         // @ts-expect-error - 動的なフィールド更新
-        updated[field] = shouldBeNull(value) ? null : value;
+        updated[field] = value;
       }
 
       return updated;
@@ -179,18 +184,10 @@ export const CharacterEditor = () => {
         jinzai={jinzai}
         onChange={handleJinzaiChange}
         attributes={attributes}
-        rankNames={rankWithDescription}
         voices={voices}
-        undefinedRandomText={randomText}
       />
     ) : (
-      <KokyakuForm
-        kokyaku={kokyaku}
-        onChange={handleKokyakuChange}
-        attributes={attributes}
-        rankNames={rankWithDescription}
-        undefinedRandomText={randomText}
-      />
+      <KokyakuForm kokyaku={kokyaku} onChange={handleKokyakuChange} attributes={attributes} />
     );
   };
 
