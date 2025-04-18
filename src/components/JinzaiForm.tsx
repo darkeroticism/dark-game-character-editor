@@ -1,4 +1,4 @@
-import { initialRankParamter, Jinzai, rankInfo } from '../DohnaDohna/data';
+import { initialRankParamter, Jinzai, rankInfo, Attribute } from '../DohnaDohna/data';
 import { TextInput, Textarea, Stack, Title, Box, Slider, Switch, Flex, Text } from '@mantine/core';
 import { AttributeSelector } from './AttributeSelector';
 import { VoiceSelector } from './VoiceSelector';
@@ -6,8 +6,8 @@ import { VirginSelector } from './VirginSelector';
 
 type JinzaiFormProps = {
   jinzai: Jinzai;
-  onChange: (field: keyof Jinzai, value: string | boolean | null | number, index?: number) => void;
-  attributes: string[];
+  onChange: (field: keyof Jinzai, value: string | boolean | null | number | Attribute, index?: number) => void;
+  attributes: Attribute[];
   voices: string[];
 };
 
@@ -55,23 +55,23 @@ const ProfileInput = ({
 
 export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormProps) => {
   // 属性変更ハンドラー
-  const handleAttributeChange = (value: string | null, index: number) => {
+  const handleAttributeChange = (value: Attribute | null, index: number) => {
     onChange('attributes', value, index);
   };
 
   // プロフィール変更ハンドラー
   const handleProfileChange = (value: string, index: number) => {
-    onChange('profile', value, index);
+    onChange('profiles', value, index);
   };
 
   // プロフィールのランダム設定変更ハンドラー
   const handleProfileRandomChange = (isRandom: boolean, index: number) => {
-    onChange('profile', isRandom ? null : '', index);
+    onChange('profiles', isRandom ? null : '', index);
   };
 
   // プロフィールがランダム設定かどうかを判定
   const isProfileRandom = (index: number): boolean => {
-    return jinzai.profile[index] === null;
+    return jinzai.profiles[index] === null;
   };
 
   // スライダーのスタイル
@@ -260,7 +260,7 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
           <Text size="sm">最大3行です。未入力の場合「空欄（なし）」となります</Text>
         </Box>
         <ProfileInput
-          value={jinzai.profile[0]}
+          value={jinzai.profiles[0]}
           onChange={handleProfileChange}
           index={0}
           placeholder="1行目"
@@ -268,7 +268,7 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
           onRandomChange={handleProfileRandomChange}
         />
         <ProfileInput
-          value={jinzai.profile[1]}
+          value={jinzai.profiles[1]}
           onChange={handleProfileChange}
           index={1}
           placeholder="2行目"
@@ -276,7 +276,7 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
           onRandomChange={handleProfileRandomChange}
         />
         <ProfileInput
-          value={jinzai.profile[2]}
+          value={jinzai.profiles[2]}
           onChange={handleProfileChange}
           index={2}
           placeholder="3行目"

@@ -1,31 +1,39 @@
 import { Box, Grid } from '@mantine/core';
 import { SelectorButton } from './SelectorButton';
+import { Attribute } from '../DohnaDohna/data';
 
 export const AttributeSelector = ({
   selectedAttributes,
   onChange,
   attributes,
 }: {
-  selectedAttributes: string[];
-  onChange: (value: string | null, index: number) => void;
-  attributes: string[];
+  selectedAttributes: Attribute[];
+  onChange: (value: Attribute | null, index: number) => void;
+  attributes: Attribute[];
 }) => {
   // 属性の表示用配列（ランダムを追加）
-  const displayAttributes = [...attributes, 'ランダム1', 'ランダム2', 'ランダム3'];
+  const randomAttributes = [
+    { name: 'ランダム1', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
+    { name: 'ランダム2', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
+    { name: 'ランダム3', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
+  ];
+  const displayAttributes = [...attributes, ...randomAttributes];
   const totalRows = Math.ceil(displayAttributes.length / 5);
 
   // ランダム属性かどうかを判定
-  const isRandomAttribute = (attr: string | null): boolean =>
-    attr === 'ランダム1' || attr === 'ランダム2' || attr === 'ランダム3';
+  const isRandomAttribute = (attr: Attribute | null): boolean =>
+    attr?.name === 'ランダム1' || attr?.name === 'ランダム2' || attr?.name === 'ランダム3';
 
   // 属性の選択/選択解除を処理
-  const handleAttributeClick = (attribute: string) => {
+  const handleAttributeClick = (attribute: Attribute) => {
     // 現在選択されている属性の配列
     const currentSelected = [...selectedAttributes];
 
-    if (currentSelected.includes(attribute)) {
+    const isSelected = currentSelected.some(attr => attr.name === attribute.name);
+
+    if (isSelected) {
       // 選択解除
-      const newSelected = currentSelected.filter((attr) => attr !== attribute);
+      const newSelected = currentSelected.filter((attr) => attr.name !== attribute.name);
 
       // 親コンポーネントに通知
       // 選択されている属性を更新
@@ -67,18 +75,20 @@ export const AttributeSelector = ({
             return null;
           }
 
+          const isSelected = selectedAttributes.some(attr => attr.name === attribute.name);
+
           return (
-            <Grid.Col span={2.4} key={`${attribute}-${index}`}>
+            <Grid.Col span={2.4} key={`${attribute.name}-${index}`}>
               <SelectorButton
-                isSelected={selectedAttributes.includes(attribute)}
+                isSelected={isSelected}
                 onClick={() => handleAttributeClick(attribute)}
                 isDisabled={
-                  selectedAttributes.length >= 3 && !selectedAttributes.includes(attribute)
+                  selectedAttributes.length >= 3 && !isSelected
                 }
                 isLastCol={isLastCol}
                 isLastRow={isLastRow}
               >
-                {isRandom ? 'ランダム' : attribute}
+                {isRandom ? 'ランダム' : attribute.name}
               </SelectorButton>
             </Grid.Col>
           );

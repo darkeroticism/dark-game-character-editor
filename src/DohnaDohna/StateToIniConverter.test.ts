@@ -13,7 +13,7 @@ describe('generateJinzaiIniContent', () => {
       attributes: ['巨乳', '令嬢', null],
       isVergin: true,
       voice: '女子汎用／高／真面目',
-      profile: ['テスト1', 'テスト2', ''],
+      profiles: ['テスト1', 'テスト2', ''],
     };
 
     const result = generateJinzaiIniContent(jinzai);
@@ -48,7 +48,7 @@ describe('generateJinzaiIniContent', () => {
       attributes: [null, null, null],
       isVergin: null,
       voice: null,
-      profile: ['', '', ''],
+      profiles: ['', '', ''],
     };
 
     const result = generateJinzaiIniContent(jinzai);
@@ -82,7 +82,7 @@ describe('generateJinzaiIniContent', () => {
       attributes: [null, null, null],
       isVergin: true,
       voice: null,
-      profile: ['', '', ''],
+      profiles: ['', '', ''],
     };
 
     expect(generateJinzaiIniContent(jinzaiVergin)).toContain('処女=1');
@@ -97,7 +97,7 @@ describe('generateJinzaiIniContent', () => {
       attributes: [null, null, null],
       isVergin: false,
       voice: null,
-      profile: ['', '', ''],
+      profiles: ['', '', ''],
     };
 
     expect(generateJinzaiIniContent(jinzaiNonVergin)).toContain('処女=0');
@@ -112,7 +112,7 @@ describe('generateJinzaiIniContent', () => {
       attributes: [null, null, null],
       isVergin: null,
       voice: null,
-      profile: ['', '', ''],
+      profiles: ['', '', ''],
     };
 
     expect(generateJinzaiIniContent(jinzaiUnknownVergin)).toContain('処女=');
@@ -127,8 +127,8 @@ describe('generateKokyakuIniContent', () => {
       name: 'コキャク',
       income: 9,
       present: ['LKS↑↑', 'TEC↓'],
-      target: ['巨乳', '令嬢', null],
-      profile: ['コキャクプロフィール1', 'コキャクプロフィール2'],
+      targets: ['巨乳', '令嬢', null],
+      profiles: ['コキャクプロフィール1', 'コキャクプロフィール2'],
     };
 
     const result = generateKokyakuIniContent(kokyaku);
@@ -156,8 +156,8 @@ describe('generateKokyakuIniContent', () => {
       name: '',
       income: null,
       present: [''],
-      target: [null, null, null],
-      profile: ['', ''],
+      targets: [null, null, null],
+      profiles: ['', ''],
     };
 
     const result = generateKokyakuIniContent(kokyaku);
@@ -186,8 +186,8 @@ describe('generateKokyakuIniContent', () => {
       name: '',
       income: null,
       present: ['LKS↑↑', 'TEC↓', 'MNT↑'],
-      target: [null, null, null],
-      profile: ['', ''],
+      targets: [null, null, null],
+      profiles: ['', ''],
     };
 
     const result = generateKokyakuIniContent(kokyakuWithPresents);
@@ -203,8 +203,8 @@ describe('generateKokyakuIniContent', () => {
       name: '',
       income: null,
       present: ['LKS↑↑', '', 'MNT↑'],
-      target: [null, null, null],
-      profile: ['', ''],
+      targets: [null, null, null],
+      profiles: ['', ''],
     };
 
     const resultWithEmpty = generateKokyakuIniContent(kokyakuWithEmptyPresents);

@@ -1,4 +1,4 @@
-import { HaruuriCharacterParameter, Jinzai, JinzaiProfileTexts, Kokyaku, rankInfo } from './data';
+import { HaruuriCharacterParameter, Jinzai, JinzaiProfileTexts, Kokyaku, rankInfo, Attribute } from './data';
 
 // ランク値からINI用の文字列を生成する関数
 const formatRankValue = (value: HaruuriCharacterParameter): string => {
@@ -10,18 +10,18 @@ const formatRankValue = (value: HaruuriCharacterParameter): string => {
 
 // 属性配列からINI用の文字列を生成する関数
 const formatAttributeRows = (
-  attributes: Array<string | null>,
+  attributes: Array<Attribute | null>,
   fieldName: string,
   undefinedValue: null
 ): string => {
   // 全ての属性がnullまたは「ランダム」の場合、属性行を出力しない（ランダム設定）
-  if (attributes.every((attr) => attr === undefinedValue || attr === 'ランダム')) {
+  if (attributes.every((attr) => attr === undefinedValue || (attr && attr.name === 'ランダム1') || (attr && attr.name === 'ランダム2') || (attr && attr.name === 'ランダム3'))) {
     return '';
   }
 
   // 属性が選択されている場合（nullでない、かつ「ランダム」でない属性のみを出力）
   const validAttributes = attributes.filter(
-    (attr) => attr !== undefinedValue && attr !== 'ランダム'
+    (attr) => attr !== undefinedValue && !(attr && (attr.name === 'ランダム1' || attr.name === 'ランダム2' || attr.name === 'ランダム3'))
   );
 
   // 有効な属性がない場合は空欄（属性なし）を表現
@@ -30,11 +30,11 @@ const formatAttributeRows = (
   }
 
   // 有効な属性を出力
-  return validAttributes.map((attr) => `${fieldName}=${attr}`).join('\n');
+  return validAttributes.map((attr) => `${fieldName}=${attr ? attr.name : ''}`).join('\n');
 };
 
 // プロフィール配列からINI用の文字列を生成する関数
-const formatProfileRows = (profiles: JinzaiProfileTexts, count: number): string => {
+const formatProfileRows = (profiles: JinzaiProfileTexts): string => {
   return profiles
     .filter((profile) => profile !== null)
     .map((profile) => `プロフィール=${profile}`)
@@ -52,7 +52,7 @@ export const generateJinzaiIniContent = (jinzai: Jinzai): string => {
   const attributeRows = formatAttributeRows(jinzai.attributes, '属性', null);
   const verginRow = jinzai.isVergin === null ? null : `処女=${jinzai.isVergin ? '1' : '0'}`;
   const voiceRow = jinzai.voice === null ? null : jinzai.voice ? `音声=${jinzai.voice}` : '音声=';
-  const profileRows = formatProfileRows(jinzai.profile, 3);
+  const profileRows = formatProfileRows(jinzai.profiles);
 
   return [
     imageRow,
@@ -76,17 +76,17 @@ export const generateKokyakuIniContent = (kokyaku: Kokyaku): string => {
   const nameRow = `名前=${kokyaku.name}`;
   const incomeRow = `インカム${formatRankValue(kokyaku.income)}`;
 
-  const presentRows = kokyaku.present
-    .filter((present) => present !== '')
-    .map((present) => `プレゼント=${present}`)
-    .join('\n');
+  // プレゼントが「ランダム」または空の場合は出力しない
+  const presentRow = kokyaku.present !== 'ランダム' && kokyaku.present !== null && kokyaku.present !== ''
+    ? `プレゼント=${kokyaku.present}`
+    : '';
 
-  const targetRows = formatAttributeRows(kokyaku.target, 'ターゲット', null);
+  const targetRows = formatAttributeRows(kokyaku.targets, 'ターゲット', null);
 
-  const profileArray = kokyaku.profile as string[];
-  const profileRows = formatProfileRows(profileArray, 2);
+  const profileArray = kokyaku.profiles as string[];
+  const profileRows = formatProfileRows(profileArray);
 
-  return [typeRow, imageRow, nameRow, incomeRow, presentRows, targetRows, profileRows]
+  return [typeRow, imageRow, nameRow, incomeRow, presentRow, targetRows, profileRows]
     .filter((row) => row !== null && row !== '')
     .join('\n');
 };
