@@ -28,7 +28,7 @@ const getInitialJinzai = (): Jinzai => ({
   attributes: [null, null, null],
   isVergin: null,
   voice: null,
-  profile: [null, null, null],
+  profile: ['', '', ''],
 });
 
 // コキャクの初期状態を作成する関数

@@ -92,7 +92,7 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
           label="ファイル名"
           placeholder="画像ファイル名を入力してください"
           value={jinzai.image || ''}
-          onChange={(e) => onChange('image', e.target.value)}
+          onChange={(e) => onChange('image', e.target.value === '' ? null : e.target.value)}
         />
       </Box>
 
@@ -107,7 +107,7 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
           label="名前 (最大6文字)"
           placeholder="名前を入力してください"
           value={modelToView(jinzai.name, '')}
-          onChange={(e) => onChange('name', e.target.value)}
+          onChange={(e) => onChange('name', e.target.value === '' ? null : e.target.value)}
         />
       </Box>
 
