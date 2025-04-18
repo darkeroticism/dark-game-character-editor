@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { generateJinzaiIniContent, generateKokyakuIniContent } from './StateToIniConverter';
+import { generateJinzaiIniContent, generateKokyakuIniContent } from './StateToTxtConverter';
 import type { Jinzai, Kokyaku } from './data';
 
 describe('generateJinzaiIniContent', () => {
@@ -11,9 +11,29 @@ describe('generateJinzaiIniContent', () => {
       technic: 8,
       mental: 6,
       attributes: [
-        { name: '巨乳', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-        { name: '令嬢', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-        null
+        {
+          name: '巨乳',
+          isCongenital: true,
+          isSecret: false,
+          basicLooks: 0,
+          basicTechnic: 0,
+          basicMental: 0,
+          fluctuatedLooks: 0,
+          fluctuatedTechnic: 0,
+          fluctuatedMental: 0,
+        },
+        {
+          name: '令嬢',
+          isCongenital: true,
+          isSecret: false,
+          basicLooks: 0,
+          basicTechnic: 0,
+          basicMental: 0,
+          fluctuatedLooks: 0,
+          fluctuatedTechnic: 0,
+          fluctuatedMental: 0,
+        },
+        null,
       ],
       isVergin: true,
       voice: '女子汎用／高／真面目',
@@ -134,9 +154,29 @@ describe('generateKokyakuIniContent', () => {
       income: 9,
       present: 'LKS↑↑',
       targets: [
-        { name: '巨乳', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-        { name: '令嬢', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-        null
+        {
+          name: '巨乳',
+          isCongenital: true,
+          isSecret: false,
+          basicLooks: 0,
+          basicTechnic: 0,
+          basicMental: 0,
+          fluctuatedLooks: 0,
+          fluctuatedTechnic: 0,
+          fluctuatedMental: 0,
+        },
+        {
+          name: '令嬢',
+          isCongenital: true,
+          isSecret: false,
+          basicLooks: 0,
+          basicTechnic: 0,
+          basicMental: 0,
+          fluctuatedLooks: 0,
+          fluctuatedTechnic: 0,
+          fluctuatedMental: 0,
+        },
+        null,
       ],
       profiles: ['コキャクプロフィール1', 'コキャクプロフィール2'],
     };

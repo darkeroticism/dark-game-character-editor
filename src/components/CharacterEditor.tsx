@@ -14,7 +14,7 @@ import { KokyakuForm } from './KokyakuForm';
 import {
   generateJinzaiIniContent,
   generateKokyakuIniContent,
-} from '../DohnaDohna/StateToIniConverter';
+} from '../DohnaDohna/StateToTxtConverter';
 import { Container, SegmentedControl, Button } from '@mantine/core';
 import styles from '../styles/ParallelogramButton.module.css';
 
