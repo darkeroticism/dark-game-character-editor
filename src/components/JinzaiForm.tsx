@@ -6,7 +6,11 @@ import { VirginSelector } from './VirginSelector';
 
 type JinzaiFormProps = {
   jinzai: Jinzai;
-  onChange: (field: keyof Jinzai, value: string | boolean | null | number | Attribute, index?: number) => void;
+  onChange: (
+    field: keyof Jinzai,
+    value: string | boolean | null | number | Attribute,
+    index?: number
+  ) => void;
   attributes: Attribute[];
   voices: string[];
 };
@@ -216,6 +220,9 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
             最大3つ。
             未選択の場合は属性なしとなります。ランダムにしたい場合はランダムボタンを選択してください。
             全ての属性をランダムにしたい場合は、ランダムボタンを3つ選択してください。
+          </Text>
+          <Text size="sm">
+            先天性属性はレアコキャク「曲輪」しかプレゼントしないため、上書きに注意
           </Text>
         </Box>
         <AttributeSelector
