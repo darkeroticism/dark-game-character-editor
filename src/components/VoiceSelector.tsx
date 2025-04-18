@@ -21,8 +21,8 @@ export const VoiceSelector = ({
     }
   };
 
-  // 音声の表示用配列（ランダムを除く）
-  const displayVoices = voices.slice(1);
+  // 音声の表示用配列
+  const displayVoices = voices;
   const totalRows = Math.ceil(displayVoices.length / 3);
 
   return (

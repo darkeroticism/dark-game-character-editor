@@ -14,12 +14,21 @@ const formatAttributeRows = (
   fieldName: string,
   undefinedValue: null
 ): string => {
-  return attributes.every((attr) => attr === undefinedValue)
-    ? Array(3).fill(`${fieldName}=`).join('\n')
-    : attributes
-        .filter((attr) => attr !== undefinedValue)
-        .map((attr) => `${fieldName}=${attr}`)
-        .join('\n');
+  // 全ての属性がnullまたは「ランダム」の場合、属性行を出力しない（ランダム設定）
+  if (attributes.every((attr) => attr === undefinedValue || attr === 'ランダム')) {
+    return '';
+  }
+  
+  // 属性が選択されている場合（nullでない、かつ「ランダム」でない属性のみを出力）
+  const validAttributes = attributes.filter((attr) => attr !== undefinedValue && attr !== 'ランダム');
+  
+  // 有効な属性がない場合は空欄（属性なし）を表現
+  if (validAttributes.length === 0) {
+    return Array(3).fill(`${fieldName}=`).join('\n');
+  }
+  
+  // 有効な属性を出力
+  return validAttributes.map((attr) => `${fieldName}=${attr}`).join('\n');
 };
 
 // プロフィール配列からINI用の文字列を生成する関数

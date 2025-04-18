@@ -22,31 +22,56 @@ const ProfileInput = ({
   onChange,
   index,
   placeholder,
+  isRandom,
+  onRandomChange,
 }: {
-  value: string;
+  value: string | null;
   onChange: (value: string, index: number) => void;
   index: number;
   placeholder: string;
+  isRandom: boolean;
+  onRandomChange: (isRandom: boolean, index: number) => void;
 }) => (
-  <Textarea
-    placeholder={placeholder}
-    value={value}
-    onChange={(e) => onChange(e.target.value, index)}
-    mb="xs"
-    autosize
-    minRows={2}
-  />
+  <Box mb="xs">
+    <Flex align="center" justify="space-between" mb={5}>
+      <Textarea
+        placeholder={placeholder}
+        value={isRandom ? '' : value || ''}
+        onChange={(e) => onChange(e.target.value, index)}
+        disabled={isRandom}
+        autosize
+        minRows={2}
+        style={{ flex: 1 }}
+      />
+      <Switch
+        label="ランダム"
+        checked={isRandom}
+        onChange={(event) => onRandomChange(event.currentTarget.checked, index)}
+        ml="md"
+      />
+    </Flex>
+  </Box>
 );
 
 export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormProps) => {
   // 属性変更ハンドラー
-  const handleAttributeChange = (value: string, index: number) => {
+  const handleAttributeChange = (value: string | null, index: number) => {
     onChange('attributes', value, index);
   };
 
   // プロフィール変更ハンドラー
   const handleProfileChange = (value: string, index: number) => {
     onChange('profile', value, index);
+  };
+
+  // プロフィールのランダム設定変更ハンドラー
+  const handleProfileRandomChange = (isRandom: boolean, index: number) => {
+    onChange('profile', isRandom ? null : '', index);
+  };
+
+  // プロフィールがランダム設定かどうかを判定
+  const isProfileRandom = (index: number): boolean => {
+    return jinzai.profile[index] === null;
   };
 
   // スライダーのスタイル
@@ -189,9 +214,8 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
           </Title>
           <Text size="sm">
             最大3つ。
-            <strong>
-              未選択の場合は空欄となります。ランダムにしたい場合はランダムを選択してください
-            </strong>
+            未選択の場合は属性なしとなります。ランダムにしたい場合はランダムボタンを選択してください。
+            全ての属性をランダムにしたい場合は、ランダムボタンを3つ選択してください。
           </Text>
         </Box>
         <AttributeSelector
@@ -223,7 +247,7 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
         </Box>
         <VoiceSelector
           selectedVoice={jinzai.voice}
-          onChange={(value) => onChange('voice', value || '')}
+          onChange={(value) => onChange('voice', value)}
           voices={voices}
         />
       </Box>
@@ -236,22 +260,28 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
           <Text size="sm">最大3行です。未入力の場合「空欄（なし）」となります</Text>
         </Box>
         <ProfileInput
-          value={jinzai.profile[0] || ''}
+          value={jinzai.profile[0]}
           onChange={handleProfileChange}
           index={0}
           placeholder="1行目"
+          isRandom={isProfileRandom(0)}
+          onRandomChange={handleProfileRandomChange}
         />
         <ProfileInput
-          value={jinzai.profile[1] || ''}
+          value={jinzai.profile[1]}
           onChange={handleProfileChange}
           index={1}
           placeholder="2行目"
+          isRandom={isProfileRandom(1)}
+          onRandomChange={handleProfileRandomChange}
         />
         <ProfileInput
-          value={jinzai.profile[2] || ''}
+          value={jinzai.profile[2]}
           onChange={handleProfileChange}
           index={2}
           placeholder="3行目"
+          isRandom={isProfileRandom(2)}
+          onRandomChange={handleProfileRandomChange}
         />
       </Box>
     </Stack>
