@@ -2,12 +2,11 @@ import { useState } from 'react';
 import {
   Jinzai,
   Kokyaku,
-  attributes,
   voices,
   CharacterType,
   initialRankParamter,
-  Attribute,
 } from '../DohnaDohna/data';
+import { Attribute, attributes } from '../DohnaDohna/Attribute';
 import { downloadWithShiftJIS } from '../utils/shiftJisEncoder';
 import { JinzaiForm } from './JinzaiForm';
 import { KokyakuForm } from './KokyakuForm';

@@ -1,4 +1,5 @@
-import { initialRankParamter, Kokyaku, rankInfo, Attribute } from '../DohnaDohna/data';
+import { initialRankParamter, Kokyaku, rankInfo } from '../DohnaDohna/data';
+import { Attribute } from '../DohnaDohna/Attribute';
 import { TextInput, Textarea, Stack, Title, Box, Slider, Switch, Flex, Text } from '@mantine/core';
 import { AttributeSelector } from './AttributeSelector';
 import { PresentSelector } from './PresentSelector';

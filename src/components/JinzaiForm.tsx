@@ -1,5 +1,7 @@
-import { initialRankParamter, Jinzai, rankInfo, Attribute } from '../DohnaDohna/data';
+import { initialRankParamter, Jinzai, rankInfo } from '../DohnaDohna/data';
+import { Attribute } from '../DohnaDohna/Attribute';
 import { TextInput, Textarea, Stack, Title, Box, Slider, Switch, Flex, Text } from '@mantine/core';
+import { AttributeDetailTable } from './AttributeDetailTable';
 import { AttributeSelector } from './AttributeSelector';
 import { VoiceSelector } from './VoiceSelector';
 import { VirginSelector } from './VirginSelector';
@@ -230,6 +232,17 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
           onChange={handleAttributeChange}
           attributes={attributes}
         />
+        <Box mt="md">
+          <Title order={4}>選択された属性の基礎値と変動値</Title>
+          <Text size="sm" mb="xs">
+            各種基礎ステータスはステータスにそのまま加算され、変動ステータスはハルウリした際のステータス変動にかかる補正値となります。
+            なお妊娠している場合はハルウリ時のステータス変動値に更にマイナス補正がかかります。
+          </Text>
+          {/* 選択された属性の値テーブル */}
+          <AttributeDetailTable
+            attributes={jinzai.attributes.filter((attr): attr is Attribute => attr !== null)}
+          />
+        </Box>
       </Box>
 
       <Box mt="lg">
