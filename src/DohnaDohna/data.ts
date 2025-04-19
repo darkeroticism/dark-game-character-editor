@@ -1,86 +1,10 @@
+import { Attribute } from './attribute';
+
 /**
  * ドーナドーナのドメイン知識、特に型やデータの定義.
  */
 // キャラクタータイプの定義
 export type CharacterType = 'ジンザイ' | 'コキャク';
-
-export type Attribute = {
-  name: string;
-  congenital: boolean;
-  isSecret: boolean;
-  basicLooks: number;
-  basicTechnic: number;
-  basicMental: number;
-  fluctuatedLooks: number;
-  fluctuatedTechnic: number;
-  fluctuatedMental: number;
-};
-export const attributes: Attribute[] = [
-  { name: '巨乳', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '貧乳', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '安産型', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '脚線美', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '玉の肌', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '筋肉質', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '着やせ', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '名器', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '外傷', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '骨折', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '車椅子', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '低血圧', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '病弱', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '失明', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: 'タトゥ', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: 'ピアス', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '敏感', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '体臭', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '令嬢', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '有名人', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '委員長', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '優等生', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '運動部', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '補導歴', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '生活難', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '彼氏有', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '彼女有', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '既婚', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '経産婦', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '人気者', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '王子様', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '愛嬌', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: 'クール', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '無口', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '強情', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '前向き', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '一途', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '照れ屋', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '臆病', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '従順', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '正義感', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '真面目', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '小悪魔', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '高飛車', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '潔癖', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '無垢', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: 'えっち', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '変態', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '癒し系', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: 'ゆるい', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '不思議', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '心の闇', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '自虐的', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: 'サイコ', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '上品', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '家庭的', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '魔性', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  // マニュアルに記載されていない隠し属性
-  { name: '二形', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '男の娘', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '泥中蓮', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '無双', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '無相', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-  { name: '無想', congenital: true, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-] as const;
 
 // ランク情報の一元管理
 type Rank = {
@@ -112,6 +36,12 @@ export const rankToSliderValue = (rank: string | null): number | null => {
   const rankObj = rankInfo.find((r) => r.name === rank.substring(0, 2));
   return rankObj ? rankObj.value : null;
 };
+
+export const HaruuriFluctuatedParameterInfo = {
+  looks: -200,
+  technic: 400,
+  mental: -800,
+} as const;
 
 export const voices: Voice[] = [
   '女子汎用／大／真面目',
@@ -159,6 +89,7 @@ export type HaruuriCharacterParameter = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
 export type Looks = HaruuriCharacterParameter;
 export type Techinc = HaruuriCharacterParameter;
 export type Mental = HaruuriCharacterParameter;
+
 export type JinzaiAttribute = Attribute | null;
 export type JinzaiAttributes = JinzaiAttribute[];
 export type IsVergin = boolean;

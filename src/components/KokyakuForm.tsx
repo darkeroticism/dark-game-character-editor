@@ -1,11 +1,16 @@
-import { initialRankParamter, Kokyaku, rankInfo, Attribute } from '../DohnaDohna/data';
+import { initialRankParamter, Kokyaku, rankInfo } from '../DohnaDohna/data';
+import { Attribute } from '../DohnaDohna/attribute';
 import { TextInput, Textarea, Stack, Title, Box, Slider, Switch, Flex, Text } from '@mantine/core';
 import { AttributeSelector } from './AttributeSelector';
 import { PresentSelector } from './PresentSelector';
 
 type KokyakuFormProps = {
   kokyaku: Kokyaku;
-  onChange: (field: keyof Kokyaku, value: string | number | null | Attribute, index?: number) => void;
+  onChange: (
+    field: keyof Kokyaku,
+    value: string | number | null | Attribute,
+    index?: number
+  ) => void;
   attributes: Attribute[];
 };
 
@@ -156,6 +161,9 @@ export const KokyakuForm = ({ kokyaku, onChange, attributes }: KokyakuFormProps)
           </Title>
           <Text size="sm">
             未設定の場合はプレゼント無しになります。ランダムにしたい場合は「ランダム」を選択してください。
+          </Text>
+          <Text size="sm">
+            先天性属性は通常、レアコキャク「曲輪」しかプレゼントしないため、カスタムコキャクがプレゼントするとゲームバランスが変わるので注意。
           </Text>
         </Box>
         <PresentSelector selectedPresent={kokyaku.present} onChange={handlePresentChange} />

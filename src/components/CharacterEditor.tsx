@@ -2,19 +2,18 @@ import { useState } from 'react';
 import {
   Jinzai,
   Kokyaku,
-  attributes,
   voices,
   CharacterType,
   initialRankParamter,
-  Attribute,
 } from '../DohnaDohna/data';
+import { Attribute, attributes } from '../DohnaDohna/attribute';
 import { downloadWithShiftJIS } from '../utils/shiftJisEncoder';
 import { JinzaiForm } from './JinzaiForm';
 import { KokyakuForm } from './KokyakuForm';
 import {
   generateJinzaiIniContent,
   generateKokyakuIniContent,
-} from '../DohnaDohna/StateToIniConverter';
+} from '../DohnaDohna/StateToTxtConverter';
 import { Container, SegmentedControl, Button } from '@mantine/core';
 import styles from '../styles/ParallelogramButton.module.css';
 

@@ -1,6 +1,6 @@
-import { Box, Grid } from '@mantine/core';
+import { Box, Grid, Badge } from '@mantine/core';
 import { SelectorButton } from './SelectorButton';
-import { attributes as allAttributes } from '../DohnaDohna/data';
+import { Attribute, attributes } from '../DohnaDohna/attribute';
 
 export const PresentSelector = ({
   selectedPresent,
@@ -27,7 +27,7 @@ export const PresentSelector = ({
 
   // 属性とステータス変化とランダムを合わせたプレゼントの選択肢
   const presentOptions = [
-    ...allAttributes.map((attr) => attr.name),
+    ...attributes.map((attr) => attr.name),
     ...optionsOnlyPresents,
     'ランダム',
   ];
@@ -45,6 +45,16 @@ export const PresentSelector = ({
 
   const totalRows = Math.ceil(presentOptions.length / 5);
 
+  // 属性名から属性オブジェクトを取得する関数
+  const getAttributeByName = (name: string): Attribute | undefined => {
+    return attributes.find((attr) => attr.name === name);
+  };
+
+  // 属性かどうかを判定する関数
+  const isAttribute = (name: string): boolean => {
+    return attributes.some((attr) => attr.name === name);
+  };
+
   return (
     <Box style={{ border: '1px solid #ced4da' }} mb="xs">
       <Grid gutter={0}>
@@ -53,6 +63,7 @@ export const PresentSelector = ({
           const col = idx % 5;
           const isLastRow = row === totalRows - 1;
           const isLastCol = col === 4;
+          const attribute = isAttribute(present) ? getAttributeByName(present) : undefined;
 
           return (
             <Grid.Col span={2.4} key={present}>
@@ -63,7 +74,21 @@ export const PresentSelector = ({
                 isLastCol={isLastCol}
                 isLastRow={isLastRow}
               >
-                {present}
+                <>
+                  {present}
+                  {attribute?.isCongenital && (
+                    <Badge
+                      size="xs"
+                      color="pink.5"
+                      style={{
+                        marginLeft: '4px',
+                        color: 'white',
+                      }}
+                    >
+                      先天性
+                    </Badge>
+                  )}
+                </>
               </SelectorButton>
             </Grid.Col>
           );

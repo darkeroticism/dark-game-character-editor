@@ -1,6 +1,6 @@
-import { Box, Grid } from '@mantine/core';
+import { Box, Grid, Badge } from '@mantine/core';
 import { SelectorButton } from './SelectorButton';
-import { Attribute } from '../DohnaDohna/data';
+import { Attribute } from '../DohnaDohna/attribute';
 
 export const AttributeSelector = ({
   selectedAttributes,
@@ -12,10 +12,40 @@ export const AttributeSelector = ({
   attributes: Attribute[];
 }) => {
   // 属性の表示用配列（ランダムを追加）
-  const randomAttributes = [
-    { name: 'ランダム1', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-    { name: 'ランダム2', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
-    { name: 'ランダム3', congenital: false, isSecret: false, basicLooks: 0, basicTechnic: 0, basicMental: 0, fluctuatedLooks: 0, fluctuatedTechnic: 0, fluctuatedMental: 0 },
+  const randomAttributes: ReadonlyArray<Attribute> = [
+    {
+      name: 'ランダム1',
+      isCongenital: false,
+      isSecret: false,
+      basicLooks: 0,
+      basicTechnic: 0,
+      basicMental: 0,
+      fluctuatedLooks: 0,
+      fluctuatedTechnic: 0,
+      fluctuatedMental: 0,
+    },
+    {
+      name: 'ランダム2',
+      isCongenital: false,
+      isSecret: false,
+      basicLooks: 0,
+      basicTechnic: 0,
+      basicMental: 0,
+      fluctuatedLooks: 0,
+      fluctuatedTechnic: 0,
+      fluctuatedMental: 0,
+    },
+    {
+      name: 'ランダム3',
+      isCongenital: false,
+      isSecret: false,
+      basicLooks: 0,
+      basicTechnic: 0,
+      basicMental: 0,
+      fluctuatedLooks: 0,
+      fluctuatedTechnic: 0,
+      fluctuatedMental: 0,
+    },
   ];
   const displayAttributes = [...attributes, ...randomAttributes];
   const totalRows = Math.ceil(displayAttributes.length / 5);
@@ -29,7 +59,7 @@ export const AttributeSelector = ({
     // 現在選択されている属性の配列
     const currentSelected = [...selectedAttributes];
 
-    const isSelected = currentSelected.some(attr => attr.name === attribute.name);
+    const isSelected = currentSelected.some((attr) => attr.name === attribute.name);
 
     if (isSelected) {
       // 選択解除
@@ -75,20 +105,34 @@ export const AttributeSelector = ({
             return null;
           }
 
-          const isSelected = selectedAttributes.some(attr => attr.name === attribute.name);
+          const isSelected = selectedAttributes.some((attr) => attr.name === attribute.name);
 
           return (
             <Grid.Col span={2.4} key={`${attribute.name}-${index}`}>
               <SelectorButton
                 isSelected={isSelected}
                 onClick={() => handleAttributeClick(attribute)}
-                isDisabled={
-                  selectedAttributes.length >= 3 && !isSelected
-                }
+                isDisabled={selectedAttributes.length >= 3 && !isSelected}
                 isLastCol={isLastCol}
                 isLastRow={isLastRow}
               >
-                {isRandom ? 'ランダム' : attribute.name}
+                {isRandom ? 'ランダム' : (
+                  <>
+                    {attribute.name}
+                    {attribute.isCongenital && (
+                      <Badge 
+                        size="xs" 
+                        color="pink.5" 
+                        style={{ 
+                          marginLeft: '4px',
+                          color: 'white'
+                        }}
+                      >
+                        先天性
+                      </Badge>
+                    )}
+                  </>
+                )}
               </SelectorButton>
             </Grid.Col>
           );
