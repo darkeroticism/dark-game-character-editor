@@ -1,7 +1,6 @@
 import { Box, Grid, Badge } from '@mantine/core';
 import { SelectorButton } from './SelectorButton';
-import { Attribute } from '../DohnaDohna/Attribute';
-import { attributes as allAttributes } from '../DohnaDohna/Attribute';
+import { Attribute, attributes } from '../DohnaDohna/attribute';
 
 export const PresentSelector = ({
   selectedPresent,
@@ -28,7 +27,7 @@ export const PresentSelector = ({
 
   // 属性とステータス変化とランダムを合わせたプレゼントの選択肢
   const presentOptions = [
-    ...allAttributes.map((attr) => attr.name),
+    ...attributes.map((attr) => attr.name),
     ...optionsOnlyPresents,
     'ランダム',
   ];
@@ -48,12 +47,12 @@ export const PresentSelector = ({
 
   // 属性名から属性オブジェクトを取得する関数
   const getAttributeByName = (name: string): Attribute | undefined => {
-    return allAttributes.find(attr => attr.name === name);
+    return attributes.find((attr) => attr.name === name);
   };
 
   // 属性かどうかを判定する関数
   const isAttribute = (name: string): boolean => {
-    return allAttributes.some(attr => attr.name === name);
+    return attributes.some((attr) => attr.name === name);
   };
 
   return (
@@ -78,12 +77,12 @@ export const PresentSelector = ({
                 <>
                   {present}
                   {attribute?.isCongenital && (
-                    <Badge 
-                      size="xs" 
-                      color="pink.5" 
-                      style={{ 
+                    <Badge
+                      size="xs"
+                      color="pink.5"
+                      style={{
                         marginLeft: '4px',
-                        color: 'white'
+                        color: 'white',
                       }}
                     >
                       先天性

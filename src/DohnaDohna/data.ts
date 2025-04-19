@@ -1,3 +1,5 @@
+import { Attribute } from './attribute';
+
 /**
  * ドーナドーナのドメイン知識、特に型やデータの定義.
  */
@@ -87,7 +89,6 @@ export type HaruuriCharacterParameter = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
 export type Looks = HaruuriCharacterParameter;
 export type Techinc = HaruuriCharacterParameter;
 export type Mental = HaruuriCharacterParameter;
-import { Attribute } from './Attribute';
 
 export type JinzaiAttribute = Attribute | null;
 export type JinzaiAttributes = JinzaiAttribute[];

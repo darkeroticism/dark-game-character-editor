@@ -1,5 +1,5 @@
 import { initialRankParamter, Jinzai, rankInfo } from '../DohnaDohna/data';
-import { Attribute } from '../DohnaDohna/Attribute';
+import { Attribute } from '../DohnaDohna/attribute';
 import { TextInput, Textarea, Stack, Title, Box, Slider, Switch, Flex, Text } from '@mantine/core';
 import { AttributeDetailTable } from './AttributeDetailTable';
 import { AttributeSelector } from './AttributeSelector';

@@ -5,7 +5,7 @@ import {
   Kokyaku,
   rankInfo,
 } from './data';
-import { Attribute } from './Attribute';
+import { Attribute } from './attribute';
 
 // ランク値からINI用の文字列を生成する関数
 const formatRankValue = (value: HaruuriCharacterParameter): string => {

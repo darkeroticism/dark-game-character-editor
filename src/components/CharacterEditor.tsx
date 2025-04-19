@@ -6,7 +6,7 @@ import {
   CharacterType,
   initialRankParamter,
 } from '../DohnaDohna/data';
-import { Attribute, attributes } from '../DohnaDohna/Attribute';
+import { Attribute, attributes } from '../DohnaDohna/attribute';
 import { downloadWithShiftJIS } from '../utils/shiftJisEncoder';
 import { JinzaiForm } from './JinzaiForm';
 import { KokyakuForm } from './KokyakuForm';
