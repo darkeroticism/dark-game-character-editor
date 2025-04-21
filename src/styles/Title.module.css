@@ -1,0 +1,17 @@
+:root {
+  --main: var(--mantine-color-pink-5);
+  --sub: var(--mantine-color-cyan-5);
+  --accent1: var(--mantine-color-yellow-5);
+  --accent2: var(--mantine-color-black-5);
+}
+
+.blackYellowTitle {
+  background-color: var(--accent2);
+  color: var(--accent1);
+  padding: 8px 20px;
+  display: inline-block;
+  position: relative;
+  margin: 5px 0 15px 0;
+  clip-path: polygon(0% 0%, 95% 10%, 90% 80%, 10% 100%);
+  transform: rotate(-5deg);
+}

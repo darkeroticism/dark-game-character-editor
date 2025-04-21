@@ -3,6 +3,9 @@ import { Attribute } from './attribute';
 /**
  * ドーナドーナのドメイン知識、特に型やデータの定義.
  */
+// 名前の最大文字数
+export const maxNameCount = 6;
+
 // キャラクタータイプの定義
 export type CharacterType = 'ジンザイ' | 'コキャク';
 
