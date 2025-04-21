@@ -1,6 +1,7 @@
 import { initialRankParamter, Jinzai, rankInfo } from '../DohnaDohna/data';
 import { Attribute } from '../DohnaDohna/attribute';
 import { TextInput, Textarea, Stack, Title, Box, Slider, Switch, Flex, Text } from '@mantine/core';
+import styles from '../styles/Title.module.css';
 import { AttributeDetailTable } from './AttributeDetailTable';
 import { AttributeSelector } from './AttributeSelector';
 import { VoiceSelector } from './VoiceSelector';
@@ -88,7 +89,7 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
   return (
     <Stack gap="xl">
       <Box>
-        <Title order={3} c="pink">
+        <Title order={3} className={styles.blackYellowTitle}>
           画像
         </Title>
         <Text size="sm" mb="xs">
@@ -103,7 +104,7 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
       </Box>
 
       <Box>
-        <Title order={3} c="pink">
+        <Title order={3} className={styles.blackYellowTitle}>
           名前
         </Title>
         <Text size="sm" mb="xs">
@@ -120,7 +121,7 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
       <Box>
         <Flex align="center" justify="space-between" mb={5}>
           <Box>
-            <Title order={3} c="pink">
+            <Title order={3} className={styles.blackYellowTitle}>
               ルックス
             </Title>
           </Box>
@@ -152,7 +153,7 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
       <Box>
         <Flex align="center" justify="space-between" mb={5}>
           <Box>
-            <Title order={3} c="pink">
+            <Title order={3} className={styles.blackYellowTitle}>
               テクニック
             </Title>
           </Box>
@@ -184,7 +185,7 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
       <Box>
         <Flex align="center" justify="space-between" mb={5}>
           <Box>
-            <Title order={3} c="pink">
+            <Title order={3} className={styles.blackYellowTitle}>
               メンタル
             </Title>
           </Box>
@@ -215,7 +216,7 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
 
       <Box>
         <Box mb="xs">
-          <Title order={3} c="pink">
+          <Title order={3} className={styles.blackYellowTitle}>
             属性
           </Title>
           <Text size="sm">
@@ -247,7 +248,7 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
 
       <Box mt="lg">
         <Box mb="xs">
-          <Title order={3} c="pink">
+          <Title order={3} className={styles.blackYellowTitle}>
             処女
           </Title>
           <Text size="sm">未選択の場合はランダムとなります</Text>
@@ -260,7 +261,7 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
 
       <Box>
         <Box mb="xs">
-          <Title order={3} c="pink">
+          <Title order={3} className={styles.blackYellowTitle}>
             音声
           </Title>
           <Text size="sm">未選択の場合はランダムとなります</Text>
@@ -274,7 +275,7 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
 
       <Box mt="lg">
         <Box mb="xs">
-          <Title order={3} c="pink">
+          <Title order={3} className={styles.blackYellowTitle}>
             プロフィール
           </Title>
           <Text size="sm">最大3行です。未入力の場合「空欄（なし）」となります</Text>

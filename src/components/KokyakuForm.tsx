@@ -1,6 +1,7 @@
 import { initialRankParamter, Kokyaku, rankInfo } from '../DohnaDohna/data';
 import { Attribute } from '../DohnaDohna/attribute';
 import { TextInput, Textarea, Stack, Title, Box, Slider, Switch, Flex, Text } from '@mantine/core';
+import styles from '../styles/Title.module.css';
 import { AttributeSelector } from './AttributeSelector';
 import { PresentSelector } from './PresentSelector';
 
@@ -93,7 +94,7 @@ export const KokyakuForm = ({ kokyaku, onChange, attributes }: KokyakuFormProps)
   return (
     <Stack gap="xl">
       <Box>
-        <Title order={3} c="pink">
+        <Title order={3} className={styles.blackYellowTitle}>
           画像
         </Title>
         <Text size="sm" mb="xs">
@@ -108,7 +109,7 @@ export const KokyakuForm = ({ kokyaku, onChange, attributes }: KokyakuFormProps)
       </Box>
 
       <Box>
-        <Title order={3} c="pink">
+        <Title order={3} className={styles.blackYellowTitle}>
           名前
         </Title>
         <Text size="sm" mb="xs">
@@ -125,7 +126,7 @@ export const KokyakuForm = ({ kokyaku, onChange, attributes }: KokyakuFormProps)
       <Box>
         <Flex align="center" justify="space-between" mb={5}>
           <Box>
-            <Title order={3} c="pink">
+            <Title order={3} className={styles.blackYellowTitle}>
               インカム
             </Title>
           </Box>
@@ -156,7 +157,7 @@ export const KokyakuForm = ({ kokyaku, onChange, attributes }: KokyakuFormProps)
 
       <Box>
         <Box mb="xs">
-          <Title order={3} c="pink">
+          <Title order={3} className={styles.blackYellowTitle}>
             プレゼント
           </Title>
           <Text size="sm">
@@ -171,7 +172,7 @@ export const KokyakuForm = ({ kokyaku, onChange, attributes }: KokyakuFormProps)
 
       <Box>
         <Box mb="xs">
-          <Title order={3} c="pink">
+          <Title order={3} className={styles.blackYellowTitle}>
             ターゲット
           </Title>
           <Text size="sm">
@@ -189,7 +190,7 @@ export const KokyakuForm = ({ kokyaku, onChange, attributes }: KokyakuFormProps)
 
       <Box>
         <Box mb="xs">
-          <Title order={3} c="pink">
+          <Title order={3} className={styles.blackYellowTitle}>
             プロフィール
           </Title>
           <Text size="sm">最大2行です。未入力の場合「空欄（なし）」となります</Text>
