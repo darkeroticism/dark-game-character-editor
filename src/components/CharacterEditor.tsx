@@ -5,6 +5,7 @@ import {
   voices,
   CharacterType,
   initialRankParamter,
+  maxNameCount,
 } from '../DohnaDohna/data';
 import { Attribute, attributes } from '../DohnaDohna/attribute';
 import { downloadWithShiftJIS } from '../utils/shiftJisEncoder';
@@ -14,7 +15,7 @@ import {
   generateJinzaiIniContent,
   generateKokyakuIniContent,
 } from '../DohnaDohna/StateToTxtConverter';
-import { Container, SegmentedControl, Button } from '@mantine/core';
+import { Container, SegmentedControl, Button, Alert } from '@mantine/core';
 import styles from '../styles/ParallelogramButton.module.css';
 
 // ジンザイの初期状態を作成する関数
@@ -92,6 +93,9 @@ export const CharacterEditor = () => {
   // コキャクの初期状態
   const [kokyaku, setKokyaku] = useState<Kokyaku>(getInitialKokyaku());
 
+  // アラートメッセージの状態
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+
   // ジンザイのフィールド更新ハンドラー
   const handleJinzaiChange = (
     field: keyof Jinzai,
@@ -145,8 +149,26 @@ export const CharacterEditor = () => {
       : generateKokyakuIniContent(kokyaku);
   };
 
+  // 名前の長さをバリデーションする関数
+  const validateName = (name: string | null): boolean => {
+    if (name === null) return true; // nullの場合はランダム生成なので問題なし
+    return name.length <= maxNameCount;
+  };
+
   // ファイル生成とダウンロード処理
   const handleGenerateFile = () => {
+    // 現在のキャラクタータイプに基づいて名前を取得
+    const name = characterType === 'ジンザイ' ? jinzai.name : kokyaku.name;
+    
+    // 名前の長さをバリデーション
+    if (!validateName(name)) {
+      setAlertMessage(`名前は${maxNameCount}文字以内で入力してください`);
+      return;
+    }
+
+    // アラートをクリア
+    setAlertMessage(null);
+
     const filename =
       characterType === 'ジンザイ'
         ? `${jinzai.name || 'jinzai'}.txt`
@@ -175,6 +197,20 @@ export const CharacterEditor = () => {
       <CharacterTypeSelector characterType={characterType} onChange={setCharacterType} />
 
       <Container p="md">{renderCharacterForm()}</Container>
+
+      {alertMessage && (
+        <Container mb="md">
+          <Alert
+            title="バリデーションエラー"
+            color="red"
+            variant="filled"
+            withCloseButton
+            onClose={() => setAlertMessage(null)}
+          >
+            {alertMessage}
+          </Alert>
+        </Container>
+      )}
 
       <GenerateFileButton onClick={handleGenerateFile} />
     </Container>

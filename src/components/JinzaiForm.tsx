@@ -1,4 +1,4 @@
-import { initialRankParamter, Jinzai, rankInfo } from '../DohnaDohna/data';
+import { initialRankParamter, Jinzai, rankInfo, maxNameCount } from '../DohnaDohna/data';
 import { Attribute } from '../DohnaDohna/attribute';
 import { TextInput, Textarea, Stack, Title, Box, Slider, Switch, Flex, Text } from '@mantine/core';
 import styles from '../styles/Title.module.css';
@@ -110,12 +110,21 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
         <Text size="sm" mb="xs">
           未入力の場合はランダムとなります
         </Text>
-        <TextInput
-          label="名前 (最大6文字)"
-          placeholder="名前を入力してください"
-          value={modelToView(jinzai.name, '')}
-          onChange={(e) => onChange('name', e.target.value === '' ? null : e.target.value)}
-        />
+<TextInput
+  label={`名前 (最大${maxNameCount}文字)`}
+  placeholder="名前を入力してください"
+  value={modelToView(jinzai.name, '')}
+  onChange={(e) => {
+    const value = e.target.value;
+    if (value === '') {
+      onChange('name', null);
+    } else if (value.length <= maxNameCount) {
+      onChange('name', value);
+    }
+  }}
+  error={jinzai.name && jinzai.name.length > maxNameCount ? `名前は${maxNameCount}文字以内で入力してください` : ''}
+  maxLength={maxNameCount}
+/>
       </Box>
 
       <Box>
