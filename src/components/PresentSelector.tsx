@@ -19,10 +19,10 @@ export const PresentSelector = ({
     'TEC↑',
     'TEC↓',
     'TEC↓↓',
-    'MNT↑↑',
-    'MNT↑',
-    'MNT↓',
-    'MNT↓↓',
+    'MEN↑↑',
+    'MEN↑',
+    'MEN↓',
+    'MEN↓↓',
   ];
 
   // 属性とステータス変化とランダムを合わせたプレゼントの選択肢
