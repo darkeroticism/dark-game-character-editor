@@ -1,10 +1,4 @@
-import {
-  HaruuriCharacterParameter,
-  Jinzai,
-  JinzaiProfileTexts,
-  Kokyaku,
-  rankInfo,
-} from './data';
+import { HaruuriCharacterParameter, Jinzai, JinzaiProfileTexts, Kokyaku, rankInfo } from './data';
 import { Attribute } from './attribute';
 
 // ランク値からINI用の文字列を生成する関数
@@ -47,7 +41,14 @@ const formatProfileRows = (profiles: JinzaiProfileTexts): string => {
 
 // ジンザイのINIコンテンツを生成する関数
 export const generateJinzaiIniContent = (jinzai: Jinzai): string => {
-  const imageRow = jinzai.image === null ? null : `画像=${jinzai.image}`;
+  // 画像ファイル名に.pngがついていなければ付与する
+  const imageFileName =
+    jinzai.image === null
+      ? null
+      : jinzai.image.toLowerCase().endsWith('.png')
+        ? jinzai.image
+        : `${jinzai.image}.png`;
+  const imageRow = imageFileName === null ? null : `画像=${imageFileName}`;
   const nameRow = jinzai.name === null ? null : `名前=${jinzai.name || ''}`;
   const looksRow = jinzai.looks === null ? null : `ルックス=${formatRankValue(jinzai.looks)}`;
   const technicRow =
@@ -76,7 +77,14 @@ export const generateJinzaiIniContent = (jinzai: Jinzai): string => {
 // コキャクのINIコンテンツを生成する関数
 export const generateKokyakuIniContent = (kokyaku: Kokyaku): string => {
   const typeRow = `種類=${kokyaku.characterType}`;
-  const imageRow = kokyaku.image === null ? null : `画像=${kokyaku.image}`;
+  // 画像ファイル名に.pngがついていなければ付与する
+  const imageFileName =
+    kokyaku.image === null
+      ? null
+      : kokyaku.image.toLowerCase().endsWith('.png')
+        ? kokyaku.image
+        : `${kokyaku.image}.png`;
+  const imageRow = imageFileName === null ? null : `画像=${imageFileName}`;
   const nameRow = kokyaku.name === null ? null : `名前=${kokyaku.name}`;
   const incomeRow = kokyaku.income === null ? null : `インカム=${formatRankValue(kokyaku.income)}`;
 

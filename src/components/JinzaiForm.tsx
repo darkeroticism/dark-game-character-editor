@@ -1,6 +1,17 @@
 import { initialRankParamter, Jinzai, rankInfo, maxNameCount } from '../DohnaDohna/data';
 import { Attribute } from '../DohnaDohna/attribute';
-import { TextInput, Textarea, Stack, Title, Box, Slider, Switch, Flex, Text } from '@mantine/core';
+import {
+  TextInput,
+  Textarea,
+  Stack,
+  Title,
+  Box,
+  Slider,
+  Switch,
+  Flex,
+  Text,
+  List,
+} from '@mantine/core';
 import styles from '../styles/Title.module.css';
 import { AttributeDetailTable } from './AttributeDetailTable';
 import { AttributeSelector } from './AttributeSelector';
@@ -92,9 +103,23 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
         <Title order={3} className={styles.blackYellowTitle}>
           画像
         </Title>
-        <Text size="sm" mb="xs">
-          未入力の場合はランダムとなります
-        </Text>
+        <List>
+          <List.Item>
+            <Text size="sm" mb="xs">
+              未入力の場合はランダムとなります
+            </Text>
+          </List.Item>
+          <List.Item>
+            <Text size="sm" mb="xs">
+              .pngファイルのみ対応しています
+            </Text>
+          </List.Item>
+          <List.Item>
+            <Text size="sm" mb="xs">
+              拡張子は未入力でもファイル出力時に自動で付与されます（入力されていた場合は付与しません）
+            </Text>
+          </List.Item>
+        </List>
         <TextInput
           label="ファイル名"
           placeholder="画像ファイル名を入力してください"
@@ -110,21 +135,25 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
         <Text size="sm" mb="xs">
           未入力の場合はランダムとなります
         </Text>
-<TextInput
-  label={`名前 (最大${maxNameCount}文字)`}
-  placeholder="名前を入力してください"
-  value={modelToView(jinzai.name, '')}
-  onChange={(e) => {
-    const value = e.target.value;
-    if (value === '') {
-      onChange('name', null);
-    } else if (value.length <= maxNameCount) {
-      onChange('name', value);
-    }
-  }}
-  error={jinzai.name && jinzai.name.length > maxNameCount ? `名前は${maxNameCount}文字以内で入力してください` : ''}
-  maxLength={maxNameCount}
-/>
+        <TextInput
+          label={`名前 (最大${maxNameCount}文字)`}
+          placeholder="名前を入力してください"
+          value={modelToView(jinzai.name, '')}
+          onChange={(e) => {
+            const value = e.target.value;
+            if (value === '') {
+              onChange('name', null);
+            } else if (value.length <= maxNameCount) {
+              onChange('name', value);
+            }
+          }}
+          error={
+            jinzai.name && jinzai.name.length > maxNameCount
+              ? `名前は${maxNameCount}文字以内で入力してください`
+              : ''
+          }
+          maxLength={maxNameCount}
+        />
       </Box>
 
       <Box>
