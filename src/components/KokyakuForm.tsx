@@ -1,8 +1,8 @@
 import { initialRankParamter, Kokyaku, rankInfo, maxNameCount } from '../DohnaDohna/data';
 import { Attribute } from '../DohnaDohna/attribute';
+import { KokyakuErrors } from './CharacterEditor'; // エラー型をインポート
 import {
   TextInput,
-  Textarea,
   Stack,
   Title,
   Box,
@@ -11,6 +11,7 @@ import {
   Flex,
   Text,
   List,
+  useMantineTheme,
 } from '@mantine/core';
 import styles from '../styles/Title.module.css';
 import { AttributeSelector } from './AttributeSelector';
@@ -24,6 +25,7 @@ type KokyakuFormProps = {
     index?: number
   ) => void;
   attributes: Attribute[];
+  errors: KokyakuErrors; // errors プロパティを追加
 };
 
 // 値がnullの場合に表示用の値を返す
@@ -39,6 +41,7 @@ const ProfileInput = ({
   placeholder,
   isRandom,
   onRandomChange,
+  error,
 }: {
   value: string | null;
   onChange: (value: string, index: number) => void;
@@ -46,17 +49,17 @@ const ProfileInput = ({
   placeholder: string;
   isRandom: boolean;
   onRandomChange: (isRandom: boolean, index: number) => void;
+  error?: string; // error プロパティの型定義を追加
 }) => (
   <Box mb="xs">
     <Flex align="center" justify="space-between" mb={5}>
-      <Textarea
+      <TextInput
         placeholder={placeholder}
         value={isRandom ? '' : value || ''}
         onChange={(e) => onChange(e.target.value, index)}
         disabled={isRandom}
-        autosize
-        minRows={2}
         style={{ flex: 1 }}
+        error={error} // error プロパティを TextInput に渡す
       />
       <Switch
         label="ランダム"
@@ -68,7 +71,8 @@ const ProfileInput = ({
   </Box>
 );
 
-export const KokyakuForm = ({ kokyaku, onChange, attributes }: KokyakuFormProps) => {
+export const KokyakuForm = ({ kokyaku, onChange, attributes, errors }: KokyakuFormProps) => {
+  // errors を受け取る
   // 属性変更ハンドラー
   const handleTargetChange = (value: Attribute | null, index: number) => {
     // nullはそのまま渡す
@@ -77,7 +81,6 @@ export const KokyakuForm = ({ kokyaku, onChange, attributes }: KokyakuFormProps)
 
   // プレゼント変更ハンドラー
   const handlePresentChange = (value: string | null) => {
-    // presentに直接値を設定
     onChange('present', value);
   };
 
@@ -97,9 +100,10 @@ export const KokyakuForm = ({ kokyaku, onChange, attributes }: KokyakuFormProps)
     return kokyaku.profiles[index] === null;
   };
 
+  const theme = useMantineTheme();
   // スライダーのスタイル
   const sliderStyles = {
-    markLabel: { color: '#111111' },
+    markLabel: { color: theme.colors.black[5] },
   };
 
   return (
@@ -148,16 +152,11 @@ export const KokyakuForm = ({ kokyaku, onChange, attributes }: KokyakuFormProps)
             const value = e.target.value;
             if (value === '') {
               onChange('name', null);
-            } else if (value.length <= maxNameCount) {
+            } else {
               onChange('name', value);
             }
           }}
-          error={
-            kokyaku.name && kokyaku.name.length > maxNameCount
-              ? `名前は${maxNameCount}文字以内で入力してください`
-              : ''
-          }
-          maxLength={maxNameCount}
+          error={errors.name} // name のエラーメッセージを渡す
         />
       </Box>
 
@@ -231,7 +230,7 @@ export const KokyakuForm = ({ kokyaku, onChange, attributes }: KokyakuFormProps)
           <Title order={3} className={styles.blackYellowTitle}>
             プロフィール
           </Title>
-          <Text size="sm">最大2行です。未入力の場合「空欄（なし）」となります</Text>
+          <Text size="sm">最大2行、各行6文字までです。未入力の場合「空欄（なし）」となります</Text>
         </Box>
         <ProfileInput
           value={(kokyaku.profiles || [])[0]}
@@ -240,6 +239,7 @@ export const KokyakuForm = ({ kokyaku, onChange, attributes }: KokyakuFormProps)
           placeholder="1行目"
           isRandom={isProfileRandom(0)}
           onRandomChange={handleProfileRandomChange}
+          error={errors.profiles?.[0]} // profile[0] のエラーメッセージを渡す
         />
         <ProfileInput
           value={(kokyaku.profiles || [])[1]}
@@ -248,6 +248,7 @@ export const KokyakuForm = ({ kokyaku, onChange, attributes }: KokyakuFormProps)
           placeholder="2行目"
           isRandom={isProfileRandom(1)}
           onRandomChange={handleProfileRandomChange}
+          error={errors.profiles?.[1]} // profile[1] のエラーメッセージを渡す
         />
       </Box>
     </Stack>

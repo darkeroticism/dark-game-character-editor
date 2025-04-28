@@ -6,6 +6,7 @@ import {
   CharacterType,
   initialRankParamter,
   maxNameCount,
+  maxProfileLineLength,
 } from '../DohnaDohna/data';
 import { Attribute, attributes } from '../DohnaDohna/attribute';
 import { downloadWithShiftJIS } from '../utils/shiftJisEncoder';
@@ -15,11 +16,18 @@ import {
   generateJinzaiIniContent,
   generateKokyakuIniContent,
 } from '../DohnaDohna/StateToTxtConverter';
-import { Container, SegmentedControl, Button, Alert } from '@mantine/core';
+import { Container, SegmentedControl, Button } from '@mantine/core';
 import styles from '../styles/ParallelogramButton.module.css';
 
-// ジンザイの初期状態を作成する関数
+export type JinzaiErrors = {
+  name?: string;
+};
+export type KokyakuErrors = {
+  name?: string;
+  profiles?: (string | undefined)[];
+};
 
+// ジンザイの初期状態を作成する関数
 const getInitialJinzai = (): Jinzai => ({
   image: null,
   name: null,
@@ -93,8 +101,9 @@ export const CharacterEditor = () => {
   // コキャクの初期状態
   const [kokyaku, setKokyaku] = useState<Kokyaku>(getInitialKokyaku());
 
-  // アラートメッセージの状態
-  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  // エラーメッセージの状態
+  const [jinzaiErrors, setJinzaiErrors] = useState<JinzaiErrors>({});
+  const [kokyakuErrors, setKokyakuErrors] = useState<KokyakuErrors>({});
 
   // ジンザイのフィールド更新ハンドラー
   const handleJinzaiChange = (
@@ -102,6 +111,11 @@ export const CharacterEditor = () => {
     value: string | boolean | null | number | Attribute,
     index?: number
   ) => {
+    // エラーをクリア
+    if (field === 'name' && jinzaiErrors.name) {
+      setJinzaiErrors((prev) => ({ ...prev, name: undefined }));
+    }
+
     setJinzai((prev) => {
       const updated = { ...prev };
 
@@ -124,6 +138,18 @@ export const CharacterEditor = () => {
     value: string | number | null | Attribute,
     index?: number
   ) => {
+    // エラーをクリア
+    if (field === 'name' && kokyakuErrors.name) {
+      setKokyakuErrors((prev) => ({ ...prev, name: undefined }));
+    }
+    if (field === 'profiles' && typeof index === 'number' && kokyakuErrors.profiles?.[index]) {
+      setKokyakuErrors((prev) => {
+        const newProfileErrors = [...(prev.profiles || [])];
+        newProfileErrors[index] = undefined;
+        return { ...prev, profiles: newProfileErrors };
+      });
+    }
+
     setKokyaku((prev) => {
       const updated = { ...prev };
 
@@ -155,19 +181,58 @@ export const CharacterEditor = () => {
     return name.length <= maxNameCount;
   };
 
-  // ファイル生成とダウンロード処理
-  const handleGenerateFile = () => {
-    // 現在のキャラクタータイプに基づいて名前を取得
-    const name = characterType === 'ジンザイ' ? jinzai.name : kokyaku.name;
-    
-    // 名前の長さをバリデーション
-    if (!validateName(name)) {
-      setAlertMessage(`名前は${maxNameCount}文字以内で入力してください`);
-      return;
+  // プロフィール行の長さをバリデーションする関数
+  const validateProfileLine = (line: string | null): boolean => {
+    if (line === null) return true; // nullは許容 (ランダムまたは空欄)
+    return line.length <= maxProfileLineLength;
+  };
+
+  // バリデーションを実行し、エラーがあればエラーstateを更新する関数
+  const validateForm = (): boolean => {
+    let isValid = true;
+    const newJinzaiErrors: JinzaiErrors = {};
+    const newKokyakuErrors: KokyakuErrors = { profiles: [] };
+
+    if (characterType === 'ジンザイ') {
+      // ジンザイの名前バリデーション
+      if (!validateName(jinzai.name)) {
+        newJinzaiErrors.name = `名前は${maxNameCount}文字以内で入力してください`;
+        isValid = false;
+      }
+      setJinzaiErrors(newJinzaiErrors);
+      setKokyakuErrors({}); // コキャクのエラーはクリア
+    } else {
+      // コキャクの名前バリデーション
+      if (!validateName(kokyaku.name)) {
+        newKokyakuErrors.name = `名前は${maxNameCount}文字以内で入力してください`;
+        isValid = false;
+      }
+      // コキャクのプロフィールバリデーション
+      const profileErrors: (string | undefined)[] = [];
+      for (let i = 0; i < kokyaku.profiles.length; i++) {
+        if (!validateProfileLine(kokyaku.profiles[i])) {
+          profileErrors[i] =
+            `プロフィールの${i + 1}行目は${maxProfileLineLength}文字以内で入力してください`;
+          isValid = false;
+        } else {
+          profileErrors[i] = undefined;
+        }
+      }
+      if (profileErrors.some((err) => err !== undefined)) {
+        newKokyakuErrors.profiles = profileErrors;
+      }
+      setKokyakuErrors(newKokyakuErrors);
+      setJinzaiErrors({}); // ジンザイのエラーはクリア
     }
 
-    // アラートをクリア
-    setAlertMessage(null);
+    return isValid;
+  };
+
+  // ファイル生成とダウンロード処理
+  const handleGenerateFile = () => {
+    if (!validateForm()) {
+      return; // バリデーションエラーがあれば処理を中断
+    }
 
     const filename =
       characterType === 'ジンザイ'
@@ -186,9 +251,15 @@ export const CharacterEditor = () => {
         onChange={handleJinzaiChange}
         attributes={attributes}
         voices={voices}
+        errors={jinzaiErrors} // errors props を渡す
       />
     ) : (
-      <KokyakuForm kokyaku={kokyaku} onChange={handleKokyakuChange} attributes={attributes} />
+      <KokyakuForm
+        kokyaku={kokyaku}
+        onChange={handleKokyakuChange}
+        attributes={attributes}
+        errors={kokyakuErrors} // errors props を渡す
+      />
     );
   };
 
@@ -197,20 +268,6 @@ export const CharacterEditor = () => {
       <CharacterTypeSelector characterType={characterType} onChange={setCharacterType} />
 
       <Container p="md">{renderCharacterForm()}</Container>
-
-      {alertMessage && (
-        <Container mb="md">
-          <Alert
-            title="バリデーションエラー"
-            color="red"
-            variant="filled"
-            withCloseButton
-            onClose={() => setAlertMessage(null)}
-          >
-            {alertMessage}
-          </Alert>
-        </Container>
-      )}
 
       <GenerateFileButton onClick={handleGenerateFile} />
     </Container>
