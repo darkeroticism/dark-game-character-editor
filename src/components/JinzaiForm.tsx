@@ -1,5 +1,6 @@
 import { initialRankParamter, Jinzai, rankInfo, maxNameCount } from '../DohnaDohna/data';
 import { Attribute } from '../DohnaDohna/attribute';
+import { JinzaiErrors } from './CharacterEditor';
 import {
   TextInput,
   Textarea,
@@ -11,6 +12,7 @@ import {
   Flex,
   Text,
   List,
+  useMantineTheme,
 } from '@mantine/core';
 import styles from '../styles/Title.module.css';
 import { AttributeDetailTable } from './AttributeDetailTable';
@@ -27,6 +29,7 @@ type JinzaiFormProps = {
   ) => void;
   attributes: Attribute[];
   voices: string[];
+  errors: JinzaiErrors;
 };
 
 // 値がnullの場合に表示用の値を返す
@@ -71,7 +74,8 @@ const ProfileInput = ({
   </Box>
 );
 
-export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormProps) => {
+export const JinzaiForm = ({ jinzai, onChange, attributes, voices, errors }: JinzaiFormProps) => {
+  // errors を受け取る
   // 属性変更ハンドラー
   const handleAttributeChange = (value: Attribute | null, index: number) => {
     onChange('attributes', value, index);
@@ -79,6 +83,7 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
 
   // プロフィール変更ハンドラー
   const handleProfileChange = (value: string, index: number) => {
+    // 文字数チェックを削除
     onChange('profiles', value, index);
   };
 
@@ -92,9 +97,10 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
     return jinzai.profiles[index] === null;
   };
 
+  const theme = useMantineTheme();
   // スライダーのスタイル
   const sliderStyles = {
-    markLabel: { color: '#111111' }, // theme.colors.black[5]の値
+    markLabel: { color: theme.colors.black[5] },
   };
 
   return (
@@ -143,16 +149,12 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
             const value = e.target.value;
             if (value === '') {
               onChange('name', null);
-            } else if (value.length <= maxNameCount) {
+            } else {
+              // 文字数チェックを削除
               onChange('name', value);
             }
           }}
-          error={
-            jinzai.name && jinzai.name.length > maxNameCount
-              ? `名前は${maxNameCount}文字以内で入力してください`
-              : ''
-          }
-          maxLength={maxNameCount}
+          error={errors.name} // name のエラーメッセージを渡す
         />
       </Box>
 
@@ -277,7 +279,6 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices }: JinzaiFormP
             各種基礎ステータスはステータスにそのまま加算され、変動ステータスはハルウリした際のステータス変動にかかる補正値となります。
             なお妊娠している場合はハルウリ時のステータス変動値に更にマイナス補正がかかります。
           </Text>
-          {/* 選択された属性の値テーブル */}
           <AttributeDetailTable
             attributes={jinzai.attributes.filter((attr): attr is Attribute => attr !== null)}
           />
