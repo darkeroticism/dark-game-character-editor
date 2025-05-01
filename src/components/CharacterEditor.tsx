@@ -6,7 +6,8 @@ import {
   CharacterType,
   initialRankParamter,
   maxNameCount,
-  maxProfileLineLength,
+  maxProfileLineLengthForKokyaku,
+  maxProfileLineLengthForJinzai,
 } from '../DohnaDohna/data';
 import { Attribute, attributes } from '../DohnaDohna/attribute';
 import { downloadWithShiftJIS } from '../utils/shiftJisEncoder';
@@ -21,6 +22,7 @@ import styles from '../styles/ParallelogramButton.module.css';
 
 export type JinzaiErrors = {
   name?: string;
+  profiles?: (string | undefined)[];
 };
 export type KokyakuErrors = {
   name?: string;
@@ -116,13 +118,24 @@ export const CharacterEditor = () => {
       setJinzaiErrors((prev) => ({ ...prev, name: undefined }));
     }
 
+    if (field === 'profiles' && typeof index === 'number' && jinzaiErrors.profiles?.[index]) {
+      setJinzaiErrors((prev) => {
+        const newProfileErrors = [...(prev.profiles || [])];
+        newProfileErrors[index] = undefined;
+        return { ...prev, profiles: newProfileErrors };
+      });
+    }
+
     setJinzai((prev) => {
       const updated = { ...prev };
 
       if (field === 'attributes' && typeof index === 'number') {
         updated.attributes = updateArrayField(prev.attributes, index, value as Attribute);
       } else if (field === 'profiles' && typeof index === 'number') {
-        updated.profiles = updateArrayField(prev.profiles, index, value as string);
+        // プロフィール更新ロジックを修正
+        const newProfile = [...prev.profiles];
+        newProfile[index] = value as string | null;
+        updated.profiles = newProfile;
       } else {
         // @ts-expect-error - 動的なフィールド更新
         updated[field] = value;
@@ -182,7 +195,7 @@ export const CharacterEditor = () => {
   };
 
   // プロフィール行の長さをバリデーションする関数
-  const validateProfileLine = (line: string | null): boolean => {
+  const validateProfileLine = (line: string | null, maxProfileLineLength: number): boolean => {
     if (line === null) return true; // nullは許容 (ランダムまたは空欄)
     return line.length <= maxProfileLineLength;
   };
@@ -190,7 +203,7 @@ export const CharacterEditor = () => {
   // バリデーションを実行し、エラーがあればエラーstateを更新する関数
   const validateForm = (): boolean => {
     let isValid = true;
-    const newJinzaiErrors: JinzaiErrors = {};
+    const newJinzaiErrors: JinzaiErrors = { profiles: [] }; // profiles を初期化
     const newKokyakuErrors: KokyakuErrors = { profiles: [] };
 
     if (characterType === 'ジンザイ') {
@@ -199,6 +212,21 @@ export const CharacterEditor = () => {
         newJinzaiErrors.name = `名前は${maxNameCount}文字以内で入力してください`;
         isValid = false;
       }
+      // ジンザイのプロフィールバリデーション
+      const jinzaiProfileErrors: (string | undefined)[] = [];
+      for (let i = 0; i < jinzai.profiles.length; i++) {
+        if (!validateProfileLine(jinzai.profiles[i], maxProfileLineLengthForJinzai)) {
+          jinzaiProfileErrors[i] =
+            `プロフィールの${i + 1}行目は${maxProfileLineLengthForJinzai}文字以内で入力してください`;
+          isValid = false;
+        } else {
+          jinzaiProfileErrors[i] = undefined;
+        }
+      }
+      if (jinzaiProfileErrors.some((err) => err !== undefined)) {
+        newJinzaiErrors.profiles = jinzaiProfileErrors;
+      }
+
       setJinzaiErrors(newJinzaiErrors);
       setKokyakuErrors({}); // コキャクのエラーはクリア
     } else {
@@ -210,9 +238,9 @@ export const CharacterEditor = () => {
       // コキャクのプロフィールバリデーション
       const profileErrors: (string | undefined)[] = [];
       for (let i = 0; i < kokyaku.profiles.length; i++) {
-        if (!validateProfileLine(kokyaku.profiles[i])) {
+        if (!validateProfileLine(kokyaku.profiles[i], maxProfileLineLengthForKokyaku)) {
           profileErrors[i] =
-            `プロフィールの${i + 1}行目は${maxProfileLineLength}文字以内で入力してください`;
+            `プロフィールの${i + 1}行目は${maxProfileLineLengthForKokyaku}文字以内で入力してください`;
           isValid = false;
         } else {
           profileErrors[i] = undefined;

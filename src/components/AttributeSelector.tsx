@@ -11,7 +11,7 @@ export const AttributeSelector = ({
   onChange: (value: Attribute | null, index: number) => void;
   attributes: Attribute[];
 }) => {
-  // 属性の表示用配列（ランダムを追加）
+  // 属性の表示用配列
   const randomAttributes: ReadonlyArray<Attribute> = [
     {
       name: 'ランダム1',
