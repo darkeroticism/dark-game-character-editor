@@ -1,4 +1,10 @@
-import { initialRankParamter, Jinzai, rankInfo, maxNameCount } from '../DohnaDohna/data';
+import {
+  initialRankParamter,
+  Jinzai,
+  rankInfo,
+  maxNameCount,
+  maxProfileLineLengthForJinzai,
+} from '../DohnaDohna/data';
 import { Attribute } from '../DohnaDohna/attribute';
 import { JinzaiErrors } from './CharacterEditor';
 import {
@@ -53,29 +59,41 @@ const ProfileInput = ({
   placeholder: string;
   isRandom: boolean;
   onRandomChange: (isRandom: boolean, index: number) => void;
-  error?: string; 
-}) => (
-  <Box mb="xs">
-    <Flex align="center" justify="space-between" mb={5}>
-      <Textarea
-        placeholder={placeholder}
-        value={isRandom ? '' : value || ''}
-        onChange={(e) => onChange(e.target.value, index)}
-        disabled={isRandom}
-        autosize
-        minRows={2}
-        style={{ flex: 1 }}
-        error={error}
-      />
-      <Switch
-        label="ランダム"
-        checked={isRandom}
-        onChange={(event) => onRandomChange(event.currentTarget.checked, index)}
-        ml="md"
-      />
-    </Flex>
-  </Box>
-);
+  error?: string;
+}) => {
+  const count = value?.length ?? 0;
+  const maxCount = maxProfileLineLengthForJinzai;
+
+  return (
+    <Box mb="xs">
+      <Flex align="center" gap="md" mb={5}>
+        {' '}
+        <Textarea
+          placeholder={placeholder}
+          value={isRandom ? '' : value || ''}
+          onChange={(e) => onChange(e.target.value, index)}
+          disabled={isRandom}
+          autosize
+          minRows={2}
+          style={{ flex: 1 }} // Textareaがスペースを最大限使うように
+        />
+        <Text size="sm" style={{ whiteSpace: 'nowrap' }} c={count > maxCount ? 'red' : undefined}>
+          {`${count} / ${maxCount}`}
+        </Text>
+        <Switch
+          label="ランダム"
+          checked={isRandom}
+          onChange={(event) => onRandomChange(event.currentTarget.checked, index)}
+        />
+      </Flex>
+      {error && (
+        <Text c="red" size="xs">
+          {error}
+        </Text>
+      )}
+    </Box>
+  );
+};
 
 export const JinzaiForm = ({ jinzai, onChange, attributes, voices, errors }: JinzaiFormProps) => {
   // errors を受け取る
@@ -317,38 +335,37 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices, errors }: Jin
       <Box mt="lg">
         <Box mb="xs">
           <Title order={3} className={styles.blackYellowTitle}>
-             プロフィール
-           </Title>
-           {/* 説明文を修正 */}
-           <Text size="sm">最大3行、各行20文字までです。未入力の場合「空欄（なし）」となります</Text>
-         </Box>
-         <ProfileInput
+            プロフィール
+          </Title>
+          <Text size="sm">最大3行、各行20文字までです。未入力の場合「空欄（なし）」となります</Text>
+        </Box>
+        <ProfileInput
           value={jinzai.profiles[0]}
           onChange={handleProfileChange}
           index={0}
-           placeholder="1行目"
-           isRandom={isProfileRandom(0)}
-           onRandomChange={handleProfileRandomChange}
-           error={errors.profiles?.[0]}
-         />
-         <ProfileInput
+          placeholder="1行目"
+          isRandom={isProfileRandom(0)}
+          onRandomChange={handleProfileRandomChange}
+          error={errors.profiles?.[0]}
+        />
+        <ProfileInput
           value={jinzai.profiles[1]}
           onChange={handleProfileChange}
           index={1}
-           placeholder="2行目"
-           isRandom={isProfileRandom(1)}
-           onRandomChange={handleProfileRandomChange}
-           error={errors.profiles?.[1]}
-         />
-         <ProfileInput
+          placeholder="2行目"
+          isRandom={isProfileRandom(1)}
+          onRandomChange={handleProfileRandomChange}
+          error={errors.profiles?.[1]}
+        />
+        <ProfileInput
           value={jinzai.profiles[2]}
           onChange={handleProfileChange}
           index={2}
-           placeholder="3行目"
-           isRandom={isProfileRandom(2)}
-           onRandomChange={handleProfileRandomChange}
-           error={errors.profiles?.[2]} 
-         />
+          placeholder="3行目"
+          isRandom={isProfileRandom(2)}
+          onRandomChange={handleProfileRandomChange}
+          error={errors.profiles?.[2]}
+        />
       </Box>
     </Stack>
   );
