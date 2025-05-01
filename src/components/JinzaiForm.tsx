@@ -45,6 +45,7 @@ const ProfileInput = ({
   placeholder,
   isRandom,
   onRandomChange,
+  error,
 }: {
   value: string | null;
   onChange: (value: string, index: number) => void;
@@ -52,6 +53,7 @@ const ProfileInput = ({
   placeholder: string;
   isRandom: boolean;
   onRandomChange: (isRandom: boolean, index: number) => void;
+  error?: string; 
 }) => (
   <Box mb="xs">
     <Flex align="center" justify="space-between" mb={5}>
@@ -63,6 +65,7 @@ const ProfileInput = ({
         autosize
         minRows={2}
         style={{ flex: 1 }}
+        error={error}
       />
       <Switch
         label="ランダム"
@@ -81,9 +84,8 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices, errors }: Jin
     onChange('attributes', value, index);
   };
 
-  // プロフィール変更ハンドラー
+  // プロフィール変更ハンドラー (文字数チェックは CharacterEditor.tsx で行う想定)
   const handleProfileChange = (value: string, index: number) => {
-    // 文字数チェックを削除
     onChange('profiles', value, index);
   };
 
@@ -315,34 +317,38 @@ export const JinzaiForm = ({ jinzai, onChange, attributes, voices, errors }: Jin
       <Box mt="lg">
         <Box mb="xs">
           <Title order={3} className={styles.blackYellowTitle}>
-            プロフィール
-          </Title>
-          <Text size="sm">最大3行です。未入力の場合「空欄（なし）」となります</Text>
-        </Box>
-        <ProfileInput
+             プロフィール
+           </Title>
+           {/* 説明文を修正 */}
+           <Text size="sm">最大3行、各行20文字までです。未入力の場合「空欄（なし）」となります</Text>
+         </Box>
+         <ProfileInput
           value={jinzai.profiles[0]}
           onChange={handleProfileChange}
           index={0}
-          placeholder="1行目"
-          isRandom={isProfileRandom(0)}
-          onRandomChange={handleProfileRandomChange}
-        />
-        <ProfileInput
+           placeholder="1行目"
+           isRandom={isProfileRandom(0)}
+           onRandomChange={handleProfileRandomChange}
+           error={errors.profiles?.[0]}
+         />
+         <ProfileInput
           value={jinzai.profiles[1]}
           onChange={handleProfileChange}
           index={1}
-          placeholder="2行目"
-          isRandom={isProfileRandom(1)}
-          onRandomChange={handleProfileRandomChange}
-        />
-        <ProfileInput
+           placeholder="2行目"
+           isRandom={isProfileRandom(1)}
+           onRandomChange={handleProfileRandomChange}
+           error={errors.profiles?.[1]}
+         />
+         <ProfileInput
           value={jinzai.profiles[2]}
           onChange={handleProfileChange}
           index={2}
-          placeholder="3行目"
-          isRandom={isProfileRandom(2)}
-          onRandomChange={handleProfileRandomChange}
-        />
+           placeholder="3行目"
+           isRandom={isProfileRandom(2)}
+           onRandomChange={handleProfileRandomChange}
+           error={errors.profiles?.[2]} 
+         />
       </Box>
     </Stack>
   );

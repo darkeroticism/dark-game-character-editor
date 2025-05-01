@@ -49,7 +49,7 @@ const ProfileInput = ({
   placeholder: string;
   isRandom: boolean;
   onRandomChange: (isRandom: boolean, index: number) => void;
-  error?: string; // error プロパティの型定義を追加
+  error?: string; 
 }) => (
   <Box mb="xs">
     <Flex align="center" justify="space-between" mb={5}>

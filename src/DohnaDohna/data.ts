@@ -5,7 +5,9 @@ import { Attribute } from './attribute';
  */
 // 名前の最大文字数
 export const maxNameCount = 6;
-export const maxProfileLineLength = 6; // プロフィール各行の最大文字数
+// プロフィール各行の最大文字数
+export const maxProfileLineLengthForKokyaku = 6;
+export const maxProfileLineLengthForJinzai = 20;
 
 // キャラクタータイプの定義
 export type CharacterType = 'ジンザイ' | 'コキャク';
