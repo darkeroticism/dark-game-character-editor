@@ -93,6 +93,19 @@ const GenerateFileButton = ({ onClick }: { onClick: () => void }) => (
   </div>
 );
 
+const getFileName = (type: CharacterType, name: string | null): string => {
+  switch (type) {
+    case 'ジンザイ':
+      return name ? `ジンザイ-${name}.txt` : 'ジンザイ.txt';
+    case 'コキャク':
+      return name ? `コキャク-${name}.txt` : 'コキャク.txt';
+    default:
+      // exhaustive check
+      // @link https://zenn.dev/qnighy/articles/462baa685c80e2
+      throw new Error(`Unknown type: ${(type as { type: '__invalid__' }).type}`);
+  }
+};
+
 export const CharacterEditor = () => {
   // キャラクタータイプの状態
   const [characterType, setCharacterType] = useState<CharacterType>('ジンザイ');
@@ -262,13 +275,11 @@ export const CharacterEditor = () => {
       return; // バリデーションエラーがあれば処理を中断
     }
 
-    const filename =
-      characterType === 'ジンザイ'
-        ? `${jinzai.name || 'jinzai'}.txt`
-        : `${kokyaku.name || 'kokyaku'}.txt`;
+    const name = characterType === 'ジンザイ' ? jinzai.name : kokyaku.name;
+    const fileName = getFileName(characterType, name);
 
     const content = generateIniContent();
-    downloadWithShiftJIS(filename, content);
+    downloadWithShiftJIS(fileName, content);
   };
 
   // 現在のキャラクタータイプに基づいてフォームを表示
