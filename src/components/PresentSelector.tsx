@@ -11,18 +11,24 @@ export const PresentSelector = ({
 }) => {
   // プレゼントの選択肢
   const optionsOnlyPresents = [
+    'LKS↑↑↑',
     'LKS↑↑',
     'LKS↑',
     'LKS↓',
     'LKS↓↓',
+    'LKS↓↓↓',
+    'TEC↑↑↑',
     'TEC↑↑',
     'TEC↑',
     'TEC↓',
     'TEC↓↓',
+    'TEC↓↓↓',
+    'MEN↑↑↑',
     'MEN↑↑',
     'MEN↑',
     'MEN↓',
     'MEN↓↓',
+    'MEN↓↓↓',
   ];
 
   // 属性とステータス変化とランダムを合わせたプレゼントの選択肢
