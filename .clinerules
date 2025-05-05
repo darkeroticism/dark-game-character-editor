@@ -28,7 +28,7 @@
   - できるだけreadonlyを使う
 - TSXでreturnする部分にロジックを埋め込まず、関数や変数に切り出す
 - Mantine v7でcss modulesを推奨しているのでCSS modulesを使う
-- Git管理しているのでコメントで変更内容を残すことを禁止します
+- コメントで変更内容を残すことを禁止
 
 # 参考資料
 - [公式サイト（デザインなどを参考している）](https://www.alicesoft.com/dohnadohna/)
