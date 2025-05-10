@@ -1,6 +1,6 @@
 import { Box, Grid, Badge } from '@mantine/core';
-import { SelectorButton } from './SelectorButton';
-import { Attribute } from '../DohnaDohna/attribute';
+import { SelectorButton } from '../SelectorButton';
+import { Attribute } from '../../DohnaDohna/attribute';
 
 export const AttributeSelector = ({
   selectedAttributes,
@@ -116,16 +116,18 @@ export const AttributeSelector = ({
                 isLastCol={isLastCol}
                 isLastRow={isLastRow}
               >
-                {isRandom ? 'ランダム' : (
+                {isRandom ? (
+                  'ランダム'
+                ) : (
                   <>
                     {attribute.name}
                     {attribute.isCongenital && (
-                      <Badge 
-                        size="xs" 
-                        color="pink.5" 
-                        style={{ 
+                      <Badge
+                        size="xs"
+                        color="pink.5"
+                        style={{
                           marginLeft: '4px',
-                          color: 'white'
+                          color: 'white',
                         }}
                       >
                         先天性

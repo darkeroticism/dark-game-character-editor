@@ -1,14 +1,5 @@
 import { useState } from 'react';
-import {
-  Jinzai,
-  Kokyaku,
-  voices,
-  CharacterType,
-  initialRankParamter,
-  maxNameCount,
-  maxProfileLineLengthForKokyaku,
-  maxProfileLineLengthForJinzai,
-} from '../DohnaDohna/data';
+import { Jinzai, Kokyaku, voices, CharacterType, initialRankParamter } from '../DohnaDohna/data';
 import { Attribute, attributes } from '../DohnaDohna/attribute';
 import { downloadWithShiftJIS } from '../utils/shiftJisEncoder';
 import { JinzaiForm } from './JinzaiForm';
@@ -17,8 +8,12 @@ import {
   generateJinzaiIniContent,
   generateKokyakuIniContent,
 } from '../DohnaDohna/StateToTxtConverter';
-import { Container, SegmentedControl, Button } from '@mantine/core';
-import styles from '../styles/ParallelogramButton.module.css';
+import { Container } from '@mantine/core';
+import { CharacterTypeSelector } from './CharacterTypeSelector';
+import { GenerateFileButton } from './GenerateFileButton';
+import { getFileName } from '../utils/FileNameUtils';
+import { validateJinzai, validateKokyaku } from '../utils/ValidationUtils';
+import { updateArrayField } from '../utils/ArrayUtils';
 
 export type JinzaiErrors = {
   name?: string;
@@ -52,59 +47,6 @@ const getInitialKokyaku = (): Kokyaku => ({
   targets: [null, null, null],
   profiles: ['', ''],
 });
-
-// 配列フィールドを更新する関数
-const updateArrayField = <T,>(array: T[], index: number, value: T): T[] => {
-  const newArray = [...array];
-  newArray[index] = value;
-  return newArray;
-};
-
-// キャラクタータイプセレクターコンポーネント
-const CharacterTypeSelector = ({
-  characterType,
-  onChange,
-}: {
-  characterType: CharacterType;
-  onChange: (type: CharacterType) => void;
-}) => (
-  <SegmentedControl
-    value={characterType}
-    onChange={onChange as (value: string) => void}
-    data={[
-      { label: 'ジンザイ', value: 'ジンザイ' },
-      { label: 'コキャク', value: 'コキャク' },
-    ]}
-    fullWidth
-    mb="md"
-  />
-);
-
-// ファイル生成ボタンコンポーネント
-const GenerateFileButton = ({ onClick }: { onClick: () => void }) => (
-  <div style={{ textAlign: 'center', marginTop: 30 }}>
-    <Container>
-      <div className={styles.parallelogramButton}>
-        <Button onClick={onClick} size="lg" style={{ background: 'transparent', border: 'none' }}>
-          .txtファイルを生成してダウンロード
-        </Button>
-      </div>
-    </Container>
-  </div>
-);
-
-const getFileName = (type: CharacterType, name: string | null): string => {
-  switch (type) {
-    case 'ジンザイ':
-      return name ? `ジンザイ-${name}.txt` : 'ジンザイ.txt';
-    case 'コキャク':
-      return name ? `コキャク-${name}.txt` : 'コキャク.txt';
-    default:
-      // exhaustive check
-      // @link https://zenn.dev/qnighy/articles/462baa685c80e2
-      throw new Error(`Unknown type: ${(type as { type: '__invalid__' }).type}`);
-  }
-};
 
 export const CharacterEditor = () => {
   // キャラクタータイプの状態
@@ -201,72 +143,19 @@ export const CharacterEditor = () => {
       : generateKokyakuIniContent(kokyaku);
   };
 
-  // 名前の長さをバリデーションする関数
-  const validateName = (name: string | null): boolean => {
-    if (name === null) return true; // nullの場合はランダム生成なので問題なし
-    return name.length <= maxNameCount;
-  };
-
-  // プロフィール行の長さをバリデーションする関数
-  const validateProfileLine = (line: string | null, maxProfileLineLength: number): boolean => {
-    if (line === null) return true; // nullは許容 (ランダムまたは空欄)
-    return line.length <= maxProfileLineLength;
-  };
-
   // バリデーションを実行し、エラーがあればエラーstateを更新する関数
   const validateForm = (): boolean => {
-    let isValid = true;
-    const newJinzaiErrors: JinzaiErrors = { profiles: [] }; // profiles を初期化
-    const newKokyakuErrors: KokyakuErrors = { profiles: [] };
-
     if (characterType === 'ジンザイ') {
-      // ジンザイの名前バリデーション
-      if (!validateName(jinzai.name)) {
-        newJinzaiErrors.name = `名前は${maxNameCount}文字以内で入力してください`;
-        isValid = false;
-      }
-      // ジンザイのプロフィールバリデーション
-      const jinzaiProfileErrors: (string | undefined)[] = [];
-      for (let i = 0; i < jinzai.profiles.length; i++) {
-        if (!validateProfileLine(jinzai.profiles[i], maxProfileLineLengthForJinzai)) {
-          jinzaiProfileErrors[i] =
-            `プロフィールの${i + 1}行目は${maxProfileLineLengthForJinzai}文字以内で入力してください`;
-          isValid = false;
-        } else {
-          jinzaiProfileErrors[i] = undefined;
-        }
-      }
-      if (jinzaiProfileErrors.some((err) => err !== undefined)) {
-        newJinzaiErrors.profiles = jinzaiProfileErrors;
-      }
-
-      setJinzaiErrors(newJinzaiErrors);
+      const errors = validateJinzai(jinzai);
+      setJinzaiErrors(errors);
       setKokyakuErrors({}); // コキャクのエラーはクリア
+      return !errors.name && !errors.profiles?.some((err) => err !== undefined);
     } else {
-      // コキャクの名前バリデーション
-      if (!validateName(kokyaku.name)) {
-        newKokyakuErrors.name = `名前は${maxNameCount}文字以内で入力してください`;
-        isValid = false;
-      }
-      // コキャクのプロフィールバリデーション
-      const profileErrors: (string | undefined)[] = [];
-      for (let i = 0; i < kokyaku.profiles.length; i++) {
-        if (!validateProfileLine(kokyaku.profiles[i], maxProfileLineLengthForKokyaku)) {
-          profileErrors[i] =
-            `プロフィールの${i + 1}行目は${maxProfileLineLengthForKokyaku}文字以内で入力してください`;
-          isValid = false;
-        } else {
-          profileErrors[i] = undefined;
-        }
-      }
-      if (profileErrors.some((err) => err !== undefined)) {
-        newKokyakuErrors.profiles = profileErrors;
-      }
-      setKokyakuErrors(newKokyakuErrors);
+      const errors = validateKokyaku(kokyaku);
+      setKokyakuErrors(errors);
       setJinzaiErrors({}); // ジンザイのエラーはクリア
+      return !errors.name && !errors.profiles?.some((err) => err !== undefined);
     }
-
-    return isValid;
   };
 
   // ファイル生成とダウンロード処理
@@ -290,14 +179,14 @@ export const CharacterEditor = () => {
         onChange={handleJinzaiChange}
         attributes={attributes}
         voices={voices}
-        errors={jinzaiErrors} // errors props を渡す
+        errors={jinzaiErrors}
       />
     ) : (
       <KokyakuForm
         kokyaku={kokyaku}
         onChange={handleKokyakuChange}
         attributes={attributes}
-        errors={kokyakuErrors} // errors props を渡す
+        errors={kokyakuErrors}
       />
     );
   };

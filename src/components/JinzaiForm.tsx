@@ -1,30 +1,19 @@
 import {
-  initialRankParamter,
   Jinzai,
-  rankInfo,
+  initialRankParamter,
   maxNameCount,
   maxProfileLineLengthForJinzai,
 } from '../DohnaDohna/data';
 import { Attribute } from '../DohnaDohna/attribute';
 import { JinzaiErrors } from './CharacterEditor';
-import {
-  TextInput,
-  Textarea,
-  Stack,
-  Title,
-  Box,
-  Slider,
-  Switch,
-  Flex,
-  Text,
-  List,
-  useMantineTheme,
-} from '@mantine/core';
-import styles from '../styles/Title.module.css';
-import { AttributeDetailTable } from './AttributeDetailTable';
-import { AttributeSelector } from './AttributeSelector';
-import { VoiceSelector } from './VoiceSelector';
-import { VirginSelector } from './VirginSelector';
+import { Stack } from '@mantine/core';
+import { ImageSection } from './ImageSection';
+import { NameSection } from './NameSection';
+import { ParameterSlider } from './ParameterSlider';
+import { AttributeSection } from './Jinzai/AttributeSection';
+import { VirginSection } from './Jinzai/VirginSection';
+import { VoiceSection } from './Jinzai/VoiceSection';
+import { ProfileSection } from './Jinzai/ProfileSection';
 
 type JinzaiFormProps = {
   jinzai: Jinzai;
@@ -38,335 +27,100 @@ type JinzaiFormProps = {
   errors: JinzaiErrors;
 };
 
-// 値がnullの場合に表示用の値を返す
-const modelToView = (value: string | null, defaultValue: string): string => {
-  return value !== null ? value : defaultValue;
-};
-
-// プロフィール入力コンポーネント
-const ProfileInput = ({
-  value,
-  onChange,
-  index,
-  placeholder,
-  isRandom,
-  onRandomChange,
-  error,
-}: {
-  value: string | null;
-  onChange: (value: string, index: number) => void;
-  index: number;
-  placeholder: string;
-  isRandom: boolean;
-  onRandomChange: (isRandom: boolean, index: number) => void;
-  error?: string;
-}) => {
-  const count = value?.length ?? 0;
-  const maxCount = maxProfileLineLengthForJinzai;
-
-  return (
-    <Box mb="xs">
-      <Flex align="center" gap="md" mb={5}>
-        {' '}
-        <Textarea
-          placeholder={placeholder}
-          value={isRandom ? '' : value || ''}
-          onChange={(e) => onChange(e.target.value, index)}
-          disabled={isRandom}
-          autosize
-          minRows={2}
-          style={{ flex: 1 }} // Textareaがスペースを最大限使うように
-        />
-        <Text size="sm" style={{ whiteSpace: 'nowrap' }} c={count > maxCount ? 'red' : undefined}>
-          {`${count} / ${maxCount}`}
-        </Text>
-        <Switch
-          label="ランダム"
-          checked={isRandom}
-          onChange={(event) => onRandomChange(event.currentTarget.checked, index)}
-        />
-      </Flex>
-      {error && (
-        <Text c="red" size="xs">
-          {error}
-        </Text>
-      )}
-    </Box>
-  );
-};
-
 export const JinzaiForm = ({ jinzai, onChange, attributes, voices, errors }: JinzaiFormProps) => {
-  // errors を受け取る
+  // 画像変更ハンドラー
+  const handleImageChange = (value: string | null) => {
+    onChange('image', value);
+  };
+
+  // 名前変更ハンドラー
+  const handleNameChange = (value: string | null) => {
+    onChange('name', value);
+  };
+
+  // ルックス変更ハンドラー
+  const handleLooksChange = (value: number | null) => {
+    onChange('looks', value);
+  };
+
+  // テクニック変更ハンドラー
+  const handleTechnicChange = (value: number | null) => {
+    onChange('technic', value);
+  };
+
+  // メンタル変更ハンドラー
+  const handleMentalChange = (value: number | null) => {
+    onChange('mental', value);
+  };
+
   // 属性変更ハンドラー
   const handleAttributeChange = (value: Attribute | null, index: number) => {
     onChange('attributes', value, index);
   };
 
-  // プロフィール変更ハンドラー (文字数チェックは CharacterEditor.tsx で行う想定)
-  const handleProfileChange = (value: string, index: number) => {
+  // 処女変更ハンドラー
+  const handleVirginChange = (value: boolean | null) => {
+    onChange('isVergin', value);
+  };
+
+  // 音声変更ハンドラー
+  const handleVoiceChange = (value: string | null) => {
+    onChange('voice', value);
+  };
+
+  // プロフィール変更ハンドラー
+  const handleProfileChange = (value: string | null, index: number) => {
     onChange('profiles', value, index);
-  };
-
-  // プロフィールのランダム設定変更ハンドラー
-  const handleProfileRandomChange = (isRandom: boolean, index: number) => {
-    onChange('profiles', isRandom ? null : '', index);
-  };
-
-  // プロフィールがランダム設定かどうかを判定
-  const isProfileRandom = (index: number): boolean => {
-    return jinzai.profiles[index] === null;
-  };
-
-  const theme = useMantineTheme();
-  // スライダーのスタイル
-  const sliderStyles = {
-    markLabel: { color: theme.colors.black[5] },
   };
 
   return (
     <Stack gap="xl">
-      <Box>
-        <Title order={3} className={styles.blackYellowTitle}>
-          画像
-        </Title>
-        <List>
-          <List.Item>
-            <Text size="sm" mb="xs">
-              未入力の場合はランダムとなります
-            </Text>
-          </List.Item>
-          <List.Item>
-            <Text size="sm" mb="xs">
-              .pngファイルのみ対応しています
-            </Text>
-          </List.Item>
-          <List.Item>
-            <Text size="sm" mb="xs">
-              拡張子は未入力でもファイル出力時に自動で付与されます（入力されていた場合は付与しません）
-            </Text>
-          </List.Item>
-        </List>
-        <TextInput
-          label="ファイル名"
-          placeholder="画像ファイル名を入力してください"
-          value={jinzai.image || ''}
-          onChange={(e) => onChange('image', e.target.value === '' ? null : e.target.value)}
-        />
-      </Box>
+      <ImageSection image={jinzai.image} onChange={handleImageChange} />
 
-      <Box>
-        <Title order={3} className={styles.blackYellowTitle}>
-          名前
-        </Title>
-        <Text size="sm" mb="xs">
-          未入力の場合はランダムとなります
-        </Text>
-        <TextInput
-          label={`名前 (最大${maxNameCount}文字)`}
-          placeholder="名前を入力してください"
-          value={modelToView(jinzai.name, '')}
-          onChange={(e) => {
-            const value = e.target.value;
-            if (value === '') {
-              onChange('name', null);
-            } else {
-              // 文字数チェックを削除
-              onChange('name', value);
-            }
-          }}
-          error={errors.name} // name のエラーメッセージを渡す
-        />
-      </Box>
+      <NameSection
+        name={jinzai.name}
+        onChange={handleNameChange}
+        maxNameCount={maxNameCount}
+        error={errors.name}
+      />
 
-      <Box>
-        <Flex align="center" justify="space-between" mb={5}>
-          <Box>
-            <Title order={3} className={styles.blackYellowTitle}>
-              ルックス
-            </Title>
-          </Box>
-          <Switch
-            label="ランダム"
-            checked={jinzai.looks === null}
-            onChange={(event) =>
-              onChange('looks', event.currentTarget.checked ? null : initialRankParamter)
-            }
-          />
-        </Flex>
-        <Slider
-          min={1}
-          max={10}
-          step={1}
-          value={jinzai.looks !== null ? jinzai.looks : initialRankParamter}
-          onChange={(value) => onChange('looks', value)}
-          disabled={jinzai.looks === null}
-          marks={rankInfo.map((r) => ({ value: r.value, label: r.name }))}
-          label={(val: number) => {
-            const rank = rankInfo.find((r) => r.value === val);
-            return rank ? rank.description : '';
-          }}
-          mb="md"
-          styles={sliderStyles}
-        />
-      </Box>
+      <ParameterSlider
+        title="ルックス"
+        value={jinzai.looks}
+        onChange={handleLooksChange}
+        initialValue={initialRankParamter}
+      />
 
-      <Box>
-        <Flex align="center" justify="space-between" mb={5}>
-          <Box>
-            <Title order={3} className={styles.blackYellowTitle}>
-              テクニック
-            </Title>
-          </Box>
-          <Switch
-            label="ランダム"
-            checked={jinzai.technic === null}
-            onChange={(event) =>
-              onChange('technic', event.currentTarget.checked ? null : initialRankParamter)
-            }
-          />
-        </Flex>
-        <Slider
-          min={1}
-          max={10}
-          step={1}
-          value={jinzai.technic !== null ? jinzai.technic : initialRankParamter}
-          onChange={(value) => onChange('technic', value)}
-          disabled={jinzai.technic === null}
-          marks={rankInfo.map((r) => ({ value: r.value, label: r.name }))}
-          label={(val: number) => {
-            const rank = rankInfo.find((r) => r.value === val);
-            return rank ? rank.description : '';
-          }}
-          mb="md"
-          styles={sliderStyles}
-        />
-      </Box>
+      <ParameterSlider
+        title="テクニック"
+        value={jinzai.technic}
+        onChange={handleTechnicChange}
+        initialValue={initialRankParamter}
+      />
 
-      <Box>
-        <Flex align="center" justify="space-between" mb={5}>
-          <Box>
-            <Title order={3} className={styles.blackYellowTitle}>
-              メンタル
-            </Title>
-          </Box>
-          <Switch
-            label="ランダム"
-            checked={jinzai.mental === null}
-            onChange={(event) =>
-              onChange('mental', event.currentTarget.checked ? null : initialRankParamter)
-            }
-          />
-        </Flex>
-        <Slider
-          min={1}
-          max={10}
-          step={1}
-          value={jinzai.mental !== null ? jinzai.mental : initialRankParamter}
-          onChange={(value) => onChange('mental', value)}
-          disabled={jinzai.mental === null}
-          marks={rankInfo.map((r) => ({ value: r.value, label: r.name }))}
-          label={(val: number) => {
-            const rank = rankInfo.find((r) => r.value === val);
-            return rank ? rank.description : '';
-          }}
-          mb="md"
-          styles={sliderStyles}
-        />
-      </Box>
+      <ParameterSlider
+        title="メンタル"
+        value={jinzai.mental}
+        onChange={handleMentalChange}
+        initialValue={initialRankParamter}
+      />
 
-      <Box>
-        <Box mb="xs">
-          <Title order={3} className={styles.blackYellowTitle}>
-            属性
-          </Title>
-          <Text size="sm">
-            最大3つ。
-            未選択の場合は属性なしとなります。ランダムにしたい場合はランダムボタンを選択してください。
-            全ての属性をランダムにしたい場合は、ランダムボタンを3つ選択してください。
-          </Text>
-          <Text size="sm">
-            先天性属性はレアコキャク「曲輪」しかプレゼントしないため、上書きに注意
-          </Text>
-        </Box>
-        <AttributeSelector
-          selectedAttributes={jinzai.attributes.filter((attr) => attr !== null)}
-          onChange={handleAttributeChange}
-          attributes={attributes}
-        />
-        <Box mt="md">
-          <Title order={4}>選択された属性の基礎値と変動値</Title>
-          <Text size="sm" mb="xs">
-            各種基礎ステータスはステータスにそのまま加算され、変動ステータスはハルウリした際のステータス変動にかかる補正値となります。
-            なお妊娠している場合はハルウリ時のステータス変動値に更にマイナス補正がかかります。
-          </Text>
-          <AttributeDetailTable
-            attributes={jinzai.attributes.filter((attr): attr is Attribute => attr !== null)}
-          />
-        </Box>
-      </Box>
+      <AttributeSection
+        attributes={jinzai.attributes}
+        onChange={handleAttributeChange}
+        allAttributes={attributes}
+      />
 
-      <Box mt="lg">
-        <Box mb="xs">
-          <Title order={3} className={styles.blackYellowTitle}>
-            処女
-          </Title>
-          <Text size="sm">未選択の場合はランダムとなります</Text>
-        </Box>
-        <VirginSelector
-          selectedVirgin={jinzai.isVergin}
-          onChange={(value) => onChange('isVergin', value)}
-        />
-      </Box>
+      <VirginSection isVergin={jinzai.isVergin} onChange={handleVirginChange} />
 
-      <Box>
-        <Box mb="xs">
-          <Title order={3} className={styles.blackYellowTitle}>
-            音声
-          </Title>
-          <Text size="sm">未選択の場合はランダムとなります</Text>
-        </Box>
-        <VoiceSelector
-          selectedVoice={jinzai.voice}
-          onChange={(value) => onChange('voice', value)}
-          voices={voices}
-        />
-      </Box>
+      <VoiceSection voice={jinzai.voice} onChange={handleVoiceChange} voices={voices} />
 
-      <Box mt="lg">
-        <Box mb="xs">
-          <Title order={3} className={styles.blackYellowTitle}>
-            プロフィール
-          </Title>
-          <Text size="sm">最大3行、各行20文字までです。未入力の場合「空欄（なし）」となります</Text>
-        </Box>
-        <ProfileInput
-          value={jinzai.profiles[0]}
-          onChange={handleProfileChange}
-          index={0}
-          placeholder="1行目"
-          isRandom={isProfileRandom(0)}
-          onRandomChange={handleProfileRandomChange}
-          error={errors.profiles?.[0]}
-        />
-        <ProfileInput
-          value={jinzai.profiles[1]}
-          onChange={handleProfileChange}
-          index={1}
-          placeholder="2行目"
-          isRandom={isProfileRandom(1)}
-          onRandomChange={handleProfileRandomChange}
-          error={errors.profiles?.[1]}
-        />
-        <ProfileInput
-          value={jinzai.profiles[2]}
-          onChange={handleProfileChange}
-          index={2}
-          placeholder="3行目"
-          isRandom={isProfileRandom(2)}
-          onRandomChange={handleProfileRandomChange}
-          error={errors.profiles?.[2]}
-        />
-      </Box>
+      <ProfileSection
+        profiles={jinzai.profiles}
+        onChange={handleProfileChange}
+        maxProfileLineLength={maxProfileLineLengthForJinzai}
+        errors={errors.profiles}
+      />
     </Stack>
   );
 };
