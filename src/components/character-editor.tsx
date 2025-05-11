@@ -91,6 +91,9 @@ export const CharacterEditor = () => {
         if (parsedJinzai.technic === null) unparseableParams.push('テクニック');
         if (parsedJinzai.mental === null) unparseableParams.push('メンタル');
         if (parsedJinzai.isVergin === null) unparseableParams.push('処女');
+        if (parsedJinzai.voice === null) unparseableParams.push('音声');
+        if (parsedJinzai.image === null) unparseableParams.push('画像');
+        if (parsedJinzai.attributes.every((attr) => attr === null)) unparseableParams.push('属性');
 
         // 解析できなかったパラメータがある場合は注意ウィンドウを表示
         if (unparseableParams.length > 0) {
@@ -98,6 +101,7 @@ export const CharacterEditor = () => {
             title: '一部のパラメータを解析できませんでした',
             message: `以下のパラメータは解析できなかったため、デフォルト値または空欄になっています: ${unparseableParams.join(', ')}`,
             color: 'yellow',
+            autoClose: 10000, // 10秒間表示
           });
         } else {
           notifications.show({
@@ -109,6 +113,8 @@ export const CharacterEditor = () => {
 
         // ステートを更新
         setJinzai(parsedJinzai);
+        // エラーをリセット
+        setJinzaiErrors({});
       } else {
         const parsedKokyaku = parseKokyakuFromText(content);
 
@@ -116,6 +122,10 @@ export const CharacterEditor = () => {
         const unparseableParams: string[] = [];
         if (parsedKokyaku.name === null) unparseableParams.push('名前');
         if (parsedKokyaku.income === null) unparseableParams.push('インカム');
+        if (parsedKokyaku.present === null) unparseableParams.push('プレゼント');
+        if (parsedKokyaku.image === null) unparseableParams.push('画像');
+        if (parsedKokyaku.targets.every((target) => target === null))
+          unparseableParams.push('ターゲット');
 
         // 解析できなかったパラメータがある場合は注意ウィンドウを表示
         if (unparseableParams.length > 0) {
@@ -123,6 +133,7 @@ export const CharacterEditor = () => {
             title: '一部のパラメータを解析できませんでした',
             message: `以下のパラメータは解析できなかったため、デフォルト値または空欄になっています: ${unparseableParams.join(', ')}`,
             color: 'yellow',
+            autoClose: 10000, // 10秒間表示
           });
         } else {
           notifications.show({
@@ -134,14 +145,30 @@ export const CharacterEditor = () => {
 
         // ステートを更新
         setKokyaku(parsedKokyaku);
+        // エラーをリセット
+        setKokyakuErrors({});
       }
     } catch (error) {
       console.error('ファイル読み込みエラー:', error);
+      let errorMessage =
+        'ファイルの読み込みに失敗しました。正しいShift-JISエンコードのテキストファイルか確認してください。';
+
+      // エラーの種類に応じてメッセージを変更
+      if (error instanceof Error) {
+        if (error.message.includes('Encoding')) {
+          errorMessage =
+            'ファイルのエンコーディングが正しくありません。Shift-JISエンコードのテキストファイルを使用してください。';
+        } else if (error.message.includes('読み込み')) {
+          errorMessage =
+            'ファイルの読み込み中にエラーが発生しました。ファイルが破損していないか確認してください。';
+        }
+      }
+
       notifications.show({
         title: 'ファイル読み込みエラー',
-        message:
-          'ファイルの読み込みに失敗しました。正しいShift-JISエンコードのテキストファイルか確認してください。',
+        message: errorMessage,
         color: 'red',
+        autoClose: false, // 手動で閉じるまで表示
       });
     }
   };
