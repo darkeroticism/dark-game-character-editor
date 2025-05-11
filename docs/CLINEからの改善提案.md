@@ -6,7 +6,7 @@
 
 1. **readonlyの活用**
    - `.clinerules`にある「できるだけreadonlyを使う」という方針に基づき、特に配列や定数オブジェクトに対してreadonlyを積極的に適用する
-   - 例: `src/DohnaDohna/data.ts`の`Jinzai`や`Kokyaku`型のプロパティをreadonlyにする
+   - 例: `src/dohna-dohna/data.ts`の`Jinzai`や`Kokyaku`型のプロパティをreadonlyにする
 
 ```typescript
 // 改善前
@@ -26,7 +26,7 @@ export type Jinzai = {
 
 2. **より厳密な型定義**
    - 現在`null`を許容している箇所で、実際には特定の値しか取り得ない場合は、Union型を使用して明示的に定義する
-   - 例: `src/DohnaDohna/data.ts`の`ProfileText`型を`string | null`から具体的な制約を持つ型に変更
+   - 例: `src/dohna-dohna/data.ts`の`ProfileText`型を`string | null`から具体的な制約を持つ型に変更
 
 ```typescript
 // 改善前
@@ -166,16 +166,7 @@ function JinzaiFormContainer() {
 ```
 
 2. **コンポーネントの粒度**
-   - 一部のコンポーネントが大きくなりすぎている（例: `CharacterEditor.tsx`）
-   - より小さく、再利用可能なコンポーネントに分割する
-
-```typescript
-// 例: CharacterEditorを複数の小さなコンポーネントに分割
-// CharacterTypeSelector.tsx
-// FileGenerationSection.tsx
-// ValidationSection.tsx
-// など
-```
+   ✅ 完了
 
 3. **Mantineのスタイリング方法の統一**
    - 現在、インラインスタイルとCSS Modulesが混在している
