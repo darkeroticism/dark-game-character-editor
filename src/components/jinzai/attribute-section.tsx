@@ -2,7 +2,7 @@ import { Box, Title, Text } from '@mantine/core';
 import { Attribute } from '../../dohna-dohna/attribute';
 import { AttributeSelector } from '../attribute-selector';
 import { AttributeDetailTable } from './attribute-detail-table';
-import styles from '../styles/title.module.css';
+import styles from '../../styles/title.module.css';
 
 type AttributeSectionProps = {
   attributes: (Attribute | null)[];

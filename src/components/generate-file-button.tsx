@@ -1,5 +1,5 @@
 import { Button, Container } from '@mantine/core';
-import styles from '../styles/ParallelogramButton.module.css';
+import styles from '../styles/parallelogram-button.module.css';
 
 type GenerateFileButtonProps = {
   onClick: () => void;

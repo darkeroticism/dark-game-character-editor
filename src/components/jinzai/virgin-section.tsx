@@ -1,6 +1,6 @@
 import { Box, Title, Text } from '@mantine/core';
 import { VirginSelector } from './virgin-selector';
-import styles from '../styles/title.module.css';
+import styles from '../../styles/title.module.css';
 
 type VirginSectionProps = {
   isVergin: boolean | null;
