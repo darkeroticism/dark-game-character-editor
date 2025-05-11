@@ -3,17 +3,17 @@ import {
   initialRankParamter,
   maxNameCount,
   maxProfileLineLengthForJinzai,
-} from '../DohnaDohna/data';
-import { Attribute } from '../DohnaDohna/attribute';
-import { JinzaiErrors } from './CharacterEditor';
+} from '../dohna-dohna/data';
+import { Attribute } from '../dohna-dohna/attribute';
+import { JinzaiErrors } from './character-editor';
 import { Stack } from '@mantine/core';
-import { ImageSection } from './ImageSection';
-import { NameSection } from './NameSection';
-import { ParameterSlider } from './ParameterSlider';
-import { AttributeSection } from './Jinzai/AttributeSection';
-import { VirginSection } from './Jinzai/VirginSection';
-import { VoiceSection } from './Jinzai/VoiceSection';
-import { ProfileSection } from './Jinzai/ProfileSection';
+import { ImageSection } from './image-section';
+import { NameSection } from './name-section';
+import { ParameterSlider } from './parameter-slider';
+import { AttributeSection } from './jinzai/attribute-section';
+import { VirginSection } from './jinzai/virgin-section';
+import { VoiceSection } from './jinzai/voice-section';
+import { ProfileSection } from './jinzai/profile-section';
 
 type JinzaiFormProps = {
   jinzai: Jinzai;

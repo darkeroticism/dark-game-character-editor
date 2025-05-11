@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { generateJinzaiIniContent, generateKokyakuIniContent } from './StateToTxtConverter';
+import { generateJinzaiIniContent, generateKokyakuIniContent } from './state-to-txt-converter';
 import type { Jinzai, Kokyaku } from './data';
 
 describe('generateJinzaiIniContent', () => {

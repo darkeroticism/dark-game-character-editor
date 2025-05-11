@@ -1,6 +1,6 @@
 import { Box, Title, Text } from '@mantine/core';
-import { KokyakuProfileInput } from './KokyakuProfileInput';
-import styles from '../styles/Title.module.css';
+import { KokyakuProfileInput } from './kokyaku-profile-input';
+import styles from '../styles/title.module.css';
 
 type KokyakuProfileSectionProps = {
   profiles: (string | null)[];

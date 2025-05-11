@@ -1,19 +1,27 @@
 import { useState } from 'react';
-import { Jinzai, Kokyaku, voices, CharacterType, initialRankParamter } from '../DohnaDohna/data';
-import { Attribute, attributes } from '../DohnaDohna/attribute';
-import { downloadWithShiftJIS } from '../utils/shiftJisEncoder';
-import { JinzaiForm } from './JinzaiForm';
-import { KokyakuForm } from './KokyakuForm';
+import { Jinzai, Kokyaku, voices, CharacterType, initialRankParamter } from '../dohna-dohna/data';
+import { Attribute, attributes } from '../dohna-dohna/attribute';
+import { downloadWithShiftJIS } from '../utils/shift-jis-encoder';
+import { readFileAsShiftJIS } from '../utils/shift-jis-decoder';
+import {
+  parseJinzaiFromText,
+  parseKokyakuFromText,
+  detectCharacterTypeFromText,
+} from '../dohna-dohna/txt-to-state-converter';
+import { JinzaiForm } from './jinzai-form';
+import { KokyakuForm } from './kokyaku-form';
 import {
   generateJinzaiIniContent,
   generateKokyakuIniContent,
-} from '../DohnaDohna/StateToTxtConverter';
+} from '../dohna-dohna/state-to-txt-converter';
 import { Container } from '@mantine/core';
-import { CharacterTypeSelector } from './CharacterTypeSelector';
-import { GenerateFileButton } from './GenerateFileButton';
-import { getFileName } from '../utils/FileNameUtils';
-import { validateJinzai, validateKokyaku } from '../utils/ValidationUtils';
-import { updateArrayField } from '../utils/ArrayUtils';
+import { notifications } from '@mantine/notifications';
+import { FileDropZone } from './file-drop-zone';
+import { CharacterTypeSelector } from './character-type-selector';
+import { GenerateFileButton } from './generate-file-button';
+import { getFileName } from '../utils/file-name-utils';
+import { validateJinzai, validateKokyaku } from '../utils/validation-utils';
+import { updateArrayField } from '../utils/array-utils';
 
 export type JinzaiErrors = {
   name?: string;
@@ -61,6 +69,82 @@ export const CharacterEditor = () => {
   // エラーメッセージの状態
   const [jinzaiErrors, setJinzaiErrors] = useState<JinzaiErrors>({});
   const [kokyakuErrors, setKokyakuErrors] = useState<KokyakuErrors>({});
+
+  // ファイルがドロップされたときの処理
+  const handleFileDrop = async (file: File) => {
+    try {
+      // Shift-JISエンコードされたファイルを読み込む
+      const content = await readFileAsShiftJIS(file);
+
+      // キャラクタータイプを判定
+      const detectedType = detectCharacterTypeFromText(content);
+      setCharacterType(detectedType);
+
+      // キャラクタータイプに応じてパース処理を実行
+      if (detectedType === 'ジンザイ') {
+        const parsedJinzai = parseJinzaiFromText(content);
+
+        // 解析できなかったパラメータがあるか確認
+        const unparseableParams: string[] = [];
+        if (parsedJinzai.name === null) unparseableParams.push('名前');
+        if (parsedJinzai.looks === null) unparseableParams.push('ルックス');
+        if (parsedJinzai.technic === null) unparseableParams.push('テクニック');
+        if (parsedJinzai.mental === null) unparseableParams.push('メンタル');
+        if (parsedJinzai.isVergin === null) unparseableParams.push('処女');
+
+        // 解析できなかったパラメータがある場合は注意ウィンドウを表示
+        if (unparseableParams.length > 0) {
+          notifications.show({
+            title: '一部のパラメータを解析できませんでした',
+            message: `以下のパラメータは解析できなかったため、デフォルト値または空欄になっています: ${unparseableParams.join(', ')}`,
+            color: 'yellow',
+          });
+        } else {
+          notifications.show({
+            title: 'ファイルを読み込みました',
+            message: `${file.name}を正常に読み込みました`,
+            color: 'green',
+          });
+        }
+
+        // ステートを更新
+        setJinzai(parsedJinzai);
+      } else {
+        const parsedKokyaku = parseKokyakuFromText(content);
+
+        // 解析できなかったパラメータがあるか確認
+        const unparseableParams: string[] = [];
+        if (parsedKokyaku.name === null) unparseableParams.push('名前');
+        if (parsedKokyaku.income === null) unparseableParams.push('インカム');
+
+        // 解析できなかったパラメータがある場合は注意ウィンドウを表示
+        if (unparseableParams.length > 0) {
+          notifications.show({
+            title: '一部のパラメータを解析できませんでした',
+            message: `以下のパラメータは解析できなかったため、デフォルト値または空欄になっています: ${unparseableParams.join(', ')}`,
+            color: 'yellow',
+          });
+        } else {
+          notifications.show({
+            title: 'ファイルを読み込みました',
+            message: `${file.name}を正常に読み込みました`,
+            color: 'green',
+          });
+        }
+
+        // ステートを更新
+        setKokyaku(parsedKokyaku);
+      }
+    } catch (error) {
+      console.error('ファイル読み込みエラー:', error);
+      notifications.show({
+        title: 'ファイル読み込みエラー',
+        message:
+          'ファイルの読み込みに失敗しました。正しいShift-JISエンコードのテキストファイルか確認してください。',
+        color: 'red',
+      });
+    }
+  };
 
   // ジンザイのフィールド更新ハンドラー
   const handleJinzaiChange = (
@@ -149,12 +233,12 @@ export const CharacterEditor = () => {
       const errors = validateJinzai(jinzai);
       setJinzaiErrors(errors);
       setKokyakuErrors({}); // コキャクのエラーはクリア
-      return !errors.name && !errors.profiles?.some((err) => err !== undefined);
+      return !errors.name && !errors.profiles?.some((profile) => profile !== undefined);
     } else {
       const errors = validateKokyaku(kokyaku);
       setKokyakuErrors(errors);
       setJinzaiErrors({}); // ジンザイのエラーはクリア
-      return !errors.name && !errors.profiles?.some((err) => err !== undefined);
+      return !errors.name && !errors.profiles?.some((profile) => profile !== undefined);
     }
   };
 
@@ -194,6 +278,8 @@ export const CharacterEditor = () => {
   return (
     <Container size="md" py="xl">
       <CharacterTypeSelector characterType={characterType} onChange={setCharacterType} />
+
+      <FileDropZone onFileDrop={handleFileDrop} />
 
       <Container p="md">{renderCharacterForm()}</Container>
 

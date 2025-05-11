@@ -1,8 +1,8 @@
 import { Box, Title, Text } from '@mantine/core';
-import { Attribute } from '../../DohnaDohna/attribute';
-import { AttributeSelector } from './AttributeSelector';
-import { AttributeDetailTable } from './AttributeDetailTable';
-import styles from '../styles/Title.module.css';
+import { Attribute } from '../../dohna-dohna/attribute';
+import { AttributeSelector } from '../attribute-selector';
+import { AttributeDetailTable } from './attribute-detail-table';
+import styles from '../styles/title.module.css';
 
 type AttributeSectionProps = {
   attributes: (Attribute | null)[];

@@ -1,13 +1,13 @@
-import { initialRankParamter, Kokyaku, maxNameCount } from '../DohnaDohna/data';
-import { Attribute } from '../DohnaDohna/attribute';
-import { KokyakuErrors } from './CharacterEditor';
+import { initialRankParamter, Kokyaku, maxNameCount } from '../dohna-dohna/data';
+import { Attribute } from '../dohna-dohna/attribute';
+import { KokyakuErrors } from './character-editor';
 import { Stack } from '@mantine/core';
-import { ImageSection } from './ImageSection';
-import { NameSection } from './NameSection';
-import { ParameterSlider } from './ParameterSlider';
-import { PresentSection } from './Kokyaku/PresentSection';
-import { TargetSection } from './Kokyaku/TargetSection';
-import { KokyakuProfileSection } from './Kokyaku/KokyakuProfileSection';
+import { ImageSection } from './image-section';
+import { NameSection } from './name-section';
+import { ParameterSlider } from './parameter-slider';
+import { PresentSection } from './kokyaku/present-section';
+import { TargetSection } from './kokyaku/target-section';
+import { KokyakuProfileSection } from './kokyaku/kokyaku-profile-section';
 
 type KokyakuFormProps = {
   kokyaku: Kokyaku;

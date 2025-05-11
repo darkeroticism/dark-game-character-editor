@@ -1,6 +1,6 @@
 import { Box, Title, Text } from '@mantine/core';
-import { ProfileInput } from './ProfileInput';
-import styles from '../styles/Title.module.css';
+import { ProfileInput } from './profile-input';
+import styles from '../styles/title.module.css';
 
 type ProfileSectionProps = {
   profiles: (string | null)[];

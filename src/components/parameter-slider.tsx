@@ -1,5 +1,5 @@
 import { Box, Flex, Switch, Slider, Title, useMantineTheme } from '@mantine/core';
-import { rankInfo } from '../DohnaDohna/data';
+import { rankInfo } from '../dohna-dohna/data';
 import styles from '../styles/Title.module.css';
 
 type ParameterSliderProps = {
@@ -9,14 +9,9 @@ type ParameterSliderProps = {
   initialValue: number;
 };
 
-export const ParameterSlider = ({
-  title,
-  value,
-  onChange,
-  initialValue,
-}: ParameterSliderProps) => {
+export const ParameterSlider = ({ title, value, onChange, initialValue }: ParameterSliderProps) => {
   const theme = useMantineTheme();
-  
+
   // スライダーのスタイル
   const sliderStyles = {
     markLabel: { color: theme.colors.black[5] },

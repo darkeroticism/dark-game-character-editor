@@ -1,6 +1,6 @@
 import { Box, Title, Text } from '@mantine/core';
-import { PresentSelector } from './PresentSelector';
-import styles from '../styles/Title.module.css';
+import { PresentSelector } from './present-selector';
+import styles from '../styles/title.module.css';
 
 type PresentSectionProps = {
   present: string | null;

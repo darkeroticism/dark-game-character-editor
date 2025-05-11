@@ -1,6 +1,6 @@
-import { CharacterEditor } from './components/CharacterEditor';
+import { CharacterEditor } from './components/character-editor';
 import { Anchor, Center, Container, Title } from '@mantine/core';
-import { SlantedBackground } from './components/SlantedBackground';
+import { SlantedBackground } from './components/slanted-background';
 
 export const App = () => {
   return (

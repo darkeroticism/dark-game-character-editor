@@ -1,6 +1,6 @@
 import { Box, Title, Text } from '@mantine/core';
-import { VoiceSelector } from './VoiceSelector';
-import styles from '../styles/Title.module.css';
+import { VoiceSelector } from './voice-selector';
+import styles from '../styles/title.module.css';
 
 type VoiceSectionProps = {
   voice: string | null;

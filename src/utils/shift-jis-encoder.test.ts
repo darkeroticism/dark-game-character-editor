@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { downloadWithShiftJIS } from './shiftJisEncoder';
+import { downloadWithShiftJIS } from './shift-jis-encoder';
 import * as Encoding from 'encoding-japanese';
 
 // Encodingライブラリのモック
 vi.mock('encoding-japanese', () => ({
   stringToCode: vi.fn((str: string) => Array.from(str).map((c: string) => c.charCodeAt(0))),
-  convert: vi.fn((arr: number[]) => arr) // 変換をシミュレート
+  convert: vi.fn((arr: number[]) => arr), // 変換をシミュレート
 }));
 
 describe('shiftJisEncoder', () => {
@@ -69,15 +69,15 @@ describe('shiftJisEncoder', () => {
       // Encodingライブラリが正しく呼ばれたか検証
       expect(Encoding.stringToCode).toHaveBeenCalledWith(content);
       expect(Encoding.convert).toHaveBeenCalled();
-      
+
       // Blobが正しく作成されたか検証
       expect(URL.createObjectURL).toHaveBeenCalled();
-      
+
       // リンク要素が正しく作成されたか検証
       expect(document.createElement).toHaveBeenCalledWith('a');
       expect(appendChildSpy).toHaveBeenCalled();
       expect(removeChildSpy).toHaveBeenCalled();
-      
+
       // URL.revokeObjectURLが呼ばれたか検証
       expect(URL.revokeObjectURL).toHaveBeenCalled();
     });
@@ -97,15 +97,15 @@ describe('shiftJisEncoder', () => {
 
       // エラーが発生してもBlobが作成されたか検証
       expect(URL.createObjectURL).toHaveBeenCalled();
-      
+
       // リンク要素が正しく作成されたか検証
       expect(document.createElement).toHaveBeenCalledWith('a');
       expect(appendChildSpy).toHaveBeenCalled();
       expect(removeChildSpy).toHaveBeenCalled();
-      
+
       // URL.revokeObjectURLが呼ばれたか検証
       expect(URL.revokeObjectURL).toHaveBeenCalled();
-      
+
       // console.errorが呼ばれたか検証
       expect(console.error).toHaveBeenCalled();
     });

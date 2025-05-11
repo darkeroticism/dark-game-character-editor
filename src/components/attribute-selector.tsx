@@ -1,6 +1,6 @@
 import { Box, Grid, Badge } from '@mantine/core';
-import { SelectorButton } from '../SelectorButton';
-import { Attribute } from '../../DohnaDohna/attribute';
+import { SelectorButton } from './selector-button';
+import { Attribute } from '../dohna-dohna/attribute';
 
 export const AttributeSelector = ({
   selectedAttributes,

@@ -1,4 +1,4 @@
-import { CharacterType } from '../DohnaDohna/data';
+import { CharacterType } from '../dohna-dohna/data';
 
 export const getFileName = (type: CharacterType, name: string | null): string => {
   switch (type) {

@@ -1,6 +1,6 @@
 import { Box, Grid, Badge } from '@mantine/core';
-import { SelectorButton } from '../SelectorButton';
-import { Attribute, attributes } from '../../DohnaDohna/attribute';
+import { SelectorButton } from '../selector-button';
+import { Attribute, attributes } from '../../dohna-dohna/attribute';
 
 export const PresentSelector = ({
   selectedPresent,
