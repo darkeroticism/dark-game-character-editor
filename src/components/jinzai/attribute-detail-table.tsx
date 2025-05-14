@@ -1,6 +1,6 @@
 import { Table } from '@mantine/core';
-import { HaruuriFluctuatedParameterInfo } from '../DohnaDohna/data';
-import { Attribute } from '../DohnaDohna/attribute';
+import { HaruuriFluctuatedParameterInfo } from '../../dohna-dohna/data';
+import { Attribute } from '../../dohna-dohna/attribute';
 
 type Props = {
   attributes: Attribute[];

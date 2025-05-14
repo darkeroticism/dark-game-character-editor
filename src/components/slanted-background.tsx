@@ -1,4 +1,4 @@
-import styles from '../styles/SlantedBackground.module.css';
+import styles from '../styles/slanted-background.module.css';
 
 type Type = 'header' | 'normal' | 'footer';
 

@@ -1,5 +1,5 @@
 import { Box, Grid } from '@mantine/core';
-import { SelectorButton } from './SelectorButton';
+import { SelectorButton } from '../selector-button';
 
 export const VoiceSelector = ({
   selectedVoice,
