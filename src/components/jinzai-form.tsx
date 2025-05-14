@@ -5,7 +5,7 @@ import {
   maxProfileLineLengthForJinzai,
 } from '../dohna-dohna/data';
 import { Attribute } from '../dohna-dohna/attribute';
-import { JinzaiErrors } from './character-editor';
+import { JinzaiErrors } from '../hooks/use-character-state';
 import { Stack } from '@mantine/core';
 import { ImageSection } from './image-section';
 import { NameSection } from './name-section';

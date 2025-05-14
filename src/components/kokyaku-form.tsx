@@ -1,6 +1,6 @@
 import { initialRankParamter, Kokyaku, maxNameCount } from '../dohna-dohna/data';
 import { Attribute } from '../dohna-dohna/attribute';
-import { KokyakuErrors } from './character-editor';
+import { KokyakuErrors } from '../hooks/use-character-state';
 import { Stack } from '@mantine/core';
 import { ImageSection } from './image-section';
 import { NameSection } from './name-section';
