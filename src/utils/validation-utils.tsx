@@ -5,7 +5,7 @@ import {
   maxProfileLineLengthForJinzai,
   maxProfileLineLengthForKokyaku,
 } from '../dohna-dohna/data';
-import { JinzaiErrors, KokyakuErrors } from '../components/character-editor';
+import { JinzaiErrors, KokyakuErrors } from '../hooks/use-character-state';
 
 // 名前の長さをバリデーションする関数
 export const validateName = (name: string | null): boolean => {
