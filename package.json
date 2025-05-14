@@ -13,13 +13,14 @@
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
-    "@mantine/core": "^7.17.3",
-    "@mantine/hooks": "^7.17.3",
+    "@mantine/core": "^7.17.7",
+    "@mantine/dropzone": "^7.17.7",
+    "@mantine/hooks": "^7.17.7",
     "@mantine/notifications": "^7.17.7",
     "encoding-japanese": "^2.2.0",
+    "npm-check-updates": "^18.0.1",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-dropzone": "^14.3.8"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
