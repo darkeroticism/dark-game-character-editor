@@ -1,6 +1,6 @@
 import { Box, Flex, Switch, Slider, Title, useMantineTheme } from '@mantine/core';
 import { rankInfo } from '../dohna-dohna/data';
-import styles from '../styles/Title.module.css';
+import styles from '../styles/title.module.css';
 
 type ParameterSliderProps = {
   title: string;
