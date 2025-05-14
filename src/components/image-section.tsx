@@ -1,5 +1,5 @@
 import { Box, TextInput, Title, Text, List } from '@mantine/core';
-import styles from '../styles/Title.module.css';
+import styles from '../styles/title.module.css';
 
 type ImageSectionProps = {
   image: string | null;
