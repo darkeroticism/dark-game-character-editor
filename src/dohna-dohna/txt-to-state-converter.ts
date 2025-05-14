@@ -1,4 +1,11 @@
-import { Jinzai, Kokyaku, rankInfo, voices, HaruuriCharacterParameter } from './data';
+import {
+  Jinzai,
+  Kokyaku,
+  rankInfo,
+  voices,
+  HaruuriCharacterParameter,
+  CharacterType,
+} from './data';
 import { Attribute, attributes } from './attribute';
 
 // テキスト行からキーと値を抽出する関数
@@ -15,7 +22,7 @@ const parseKeyValue = (line: string): [string, string] => {
 // ランク名から値を取得する関数
 const getRankValueFromName = (rankName: string): HaruuriCharacterParameter => {
   const rank = rankInfo.find((r) => r.name === rankName);
-  return rank ? rank.value as HaruuriCharacterParameter : null;
+  return rank ? (rank.value as HaruuriCharacterParameter) : null;
 };
 
 // 属性名から属性オブジェクトを取得する関数
@@ -28,7 +35,7 @@ const getAttributeByName = (name: string): Attribute | null => {
 // テキストファイルの内容からジンザイのステートを生成する関数
 export const parseJinzaiFromText = (text: string): Jinzai => {
   const lines = text.split('\n').filter((line) => line.trim() !== '');
-  
+
   // 初期値を設定
   const jinzai: Jinzai = {
     image: null,
@@ -95,7 +102,7 @@ export const parseJinzaiFromText = (text: string): Jinzai => {
 // テキストファイルの内容からコキャクのステートを生成する関数
 export const parseKokyakuFromText = (text: string): Kokyaku => {
   const lines = text.split('\n').filter((line) => line.trim() !== '');
-  
+
   // 初期値を設定
   const kokyaku: Kokyaku = {
     characterType: 'コキャク',
@@ -151,9 +158,9 @@ export const parseKokyakuFromText = (text: string): Kokyaku => {
 };
 
 // テキストファイルの内容からキャラクタータイプを判定する関数
-export const detectCharacterTypeFromText = (text: string): 'ジンザイ' | 'コキャク' => {
+export const detectCharacterTypeFromText = (text: string): CharacterType => {
   const lines = text.split('\n').filter((line) => line.trim() !== '');
-  
+
   // 種類=コキャクの行があればコキャク
   for (const line of lines) {
     const [key, value] = parseKeyValue(line);
@@ -161,7 +168,7 @@ export const detectCharacterTypeFromText = (text: string): 'ジンザイ' | 'コ
       return 'コキャク';
     }
   }
-  
+
   // それ以外はジンザイと判定
   return 'ジンザイ';
 };
