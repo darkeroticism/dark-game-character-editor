@@ -7,8 +7,10 @@ import { FileDropZone } from './file-drop-zone';
 import { CharacterTypeSelector } from './character-type-selector';
 import { GenerateFileButton } from './generate-file-button';
 import { FileInputSection } from './file-input-section';
+import { FileNameInput } from './file-name-input';
 import { useCharacterState } from '../hooks/use-character-state';
 import { useFileOperations } from '../hooks/use-file-operations';
+import { useState } from 'react';
 
 export const CharacterEditor = () => {
   // カスタムフックから状態を取得
@@ -23,6 +25,9 @@ export const CharacterEditor = () => {
     handleJinzaiChange,
     handleKokyakuChange,
   } = characterState;
+
+  // カスタムファイル名の状態
+  const [customFileName, setCustomFileName] = useState<string | undefined>(undefined);
 
   // ファイル操作ロジックを取得
   const { handleFileDrop, handleGenerateFile } = useFileOperations({
@@ -67,7 +72,14 @@ export const CharacterEditor = () => {
       </Container>
       <FileDropZone onFileDrop={handleFileDrop} />
       <Container p="md">{renderCharacterForm()}</Container>
-      <GenerateFileButton onClick={handleGenerateFile} />
+      <Container p="md">
+        <FileNameInput 
+          characterType={characterType}
+          characterName={characterType === 'ジンザイ' ? jinzai.name : kokyaku.name}
+          onChange={setCustomFileName}
+        />
+      </Container>
+      <GenerateFileButton onClick={handleGenerateFile} fileName={customFileName} />
     </Container>
   );
 };

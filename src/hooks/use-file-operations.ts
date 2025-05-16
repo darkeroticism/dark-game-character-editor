@@ -154,13 +154,13 @@ export function useFileOperations({
   };
 
   // ファイル生成とダウンロード処理
-  const handleGenerateFile = () => {
+  const handleGenerateFile = (customFileName?: string) => {
     if (!validateForm()) {
       return; // バリデーションエラーがあれば処理を中断
     }
 
     const name = characterType === 'ジンザイ' ? jinzai.name : kokyaku.name;
-    const fileName = getFileName(characterType, name);
+    const fileName = customFileName || getFileName(characterType, name);
 
     const content = generateIniContent();
     downloadWithShiftJIS(fileName, content);
