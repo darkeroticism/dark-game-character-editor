@@ -143,6 +143,197 @@ describe('generateJinzaiIniContent', () => {
     // 未設定の場合は出力されない
     expect(generateJinzaiIniContent(jinzaiUnknownVergin)).not.toContain('処女=');
   });
+
+  it('ルックスパラメータが正しく出力される', () => {
+    // 各ランク値のテスト
+    const rankValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
+    const rankNames = ['D', 'D+', 'C', 'C+', 'B', 'B+', 'A', 'A+', 'S', 'S+'];
+    
+    rankValues.forEach((value, index) => {
+      const jinzai: Jinzai = {
+        image: '',
+        name: null,
+        looks: value,
+        technic: null,
+        mental: null,
+        attributes: [null, null, null],
+        isVergin: null,
+        voice: null,
+        profiles: ['', '', ''],
+      };
+      
+      const result = generateJinzaiIniContent(jinzai);
+      expect(result).toContain(`ルックス=${rankNames[index]}`);
+    });
+    
+    // nullの場合は出力されないことを確認
+    const jinzaiNullLooks: Jinzai = {
+      image: '',
+      name: null,
+      looks: null,
+      technic: null,
+      mental: null,
+      attributes: [null, null, null],
+      isVergin: null,
+      voice: null,
+      profiles: ['', '', ''],
+    };
+    
+    const resultNullLooks = generateJinzaiIniContent(jinzaiNullLooks);
+    expect(resultNullLooks).not.toContain('ルックス=');
+  });
+
+  it('テクニックパラメータが正しく出力される', () => {
+    // 各ランク値のテスト
+    const rankValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
+    const rankNames = ['D', 'D+', 'C', 'C+', 'B', 'B+', 'A', 'A+', 'S', 'S+'];
+    
+    rankValues.forEach((value, index) => {
+      const jinzai: Jinzai = {
+        image: '',
+        name: null,
+        looks: null,
+        technic: value,
+        mental: null,
+        attributes: [null, null, null],
+        isVergin: null,
+        voice: null,
+        profiles: ['', '', ''],
+      };
+      
+      const result = generateJinzaiIniContent(jinzai);
+      expect(result).toContain(`テクニック=${rankNames[index]}`);
+    });
+    
+    // nullの場合は出力されないことを確認
+    const jinzaiNullTechnic: Jinzai = {
+      image: '',
+      name: null,
+      looks: null,
+      technic: null,
+      mental: null,
+      attributes: [null, null, null],
+      isVergin: null,
+      voice: null,
+      profiles: ['', '', ''],
+    };
+    
+    const resultNullTechnic = generateJinzaiIniContent(jinzaiNullTechnic);
+    expect(resultNullTechnic).not.toContain('テクニック=');
+  });
+
+  it('メンタルパラメータが正しく出力される', () => {
+    // 各ランク値のテスト
+    const rankValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
+    const rankNames = ['D', 'D+', 'C', 'C+', 'B', 'B+', 'A', 'A+', 'S', 'S+'];
+    
+    rankValues.forEach((value, index) => {
+      const jinzai: Jinzai = {
+        image: '',
+        name: null,
+        looks: null,
+        technic: null,
+        mental: value,
+        attributes: [null, null, null],
+        isVergin: null,
+        voice: null,
+        profiles: ['', '', ''],
+      };
+      
+      const result = generateJinzaiIniContent(jinzai);
+      expect(result).toContain(`メンタル=${rankNames[index]}`);
+    });
+    
+    // nullの場合は出力されないことを確認
+    const jinzaiNullMental: Jinzai = {
+      image: '',
+      name: null,
+      looks: null,
+      technic: null,
+      mental: null,
+      attributes: [null, null, null],
+      isVergin: null,
+      voice: null,
+      profiles: ['', '', ''],
+    };
+    
+    const resultNullMental = generateJinzaiIniContent(jinzaiNullMental);
+    expect(resultNullMental).not.toContain('メンタル=');
+  });
+
+  it('パラメータの組み合わせが正しく出力される', () => {
+    // 全てのパラメータが設定されている場合
+    const jinzaiAllParams: Jinzai = {
+      image: 'test.png',
+      name: 'テスト',
+      looks: 10,
+      technic: 8,
+      mental: 6,
+      attributes: [null, null, null],
+      isVergin: true,
+      voice: '女子汎用／高／真面目',
+      profiles: ['', '', ''],
+    };
+    
+    const resultAllParams = generateJinzaiIniContent(jinzaiAllParams);
+    expect(resultAllParams).toContain('ルックス=S+');
+    expect(resultAllParams).toContain('テクニック=A');
+    expect(resultAllParams).toContain('メンタル=B+');
+    
+    // ルックスのみnullの場合
+    const jinzaiNullLooks: Jinzai = {
+      image: 'test.png',
+      name: 'テスト',
+      looks: null,
+      technic: 8,
+      mental: 6,
+      attributes: [null, null, null],
+      isVergin: true,
+      voice: '女子汎用／高／真面目',
+      profiles: ['', '', ''],
+    };
+    
+    const resultNullLooks = generateJinzaiIniContent(jinzaiNullLooks);
+    expect(resultNullLooks).not.toContain('ルックス=');
+    expect(resultNullLooks).toContain('テクニック=A');
+    expect(resultNullLooks).toContain('メンタル=B+');
+    
+    // テクニックのみnullの場合
+    const jinzaiNullTechnic: Jinzai = {
+      image: 'test.png',
+      name: 'テスト',
+      looks: 10,
+      technic: null,
+      mental: 6,
+      attributes: [null, null, null],
+      isVergin: true,
+      voice: '女子汎用／高／真面目',
+      profiles: ['', '', ''],
+    };
+    
+    const resultNullTechnic = generateJinzaiIniContent(jinzaiNullTechnic);
+    expect(resultNullTechnic).toContain('ルックス=S+');
+    expect(resultNullTechnic).not.toContain('テクニック=');
+    expect(resultNullTechnic).toContain('メンタル=B+');
+    
+    // メンタルのみnullの場合
+    const jinzaiNullMental: Jinzai = {
+      image: 'test.png',
+      name: 'テスト',
+      looks: 10,
+      technic: 8,
+      mental: null,
+      attributes: [null, null, null],
+      isVergin: true,
+      voice: '女子汎用／高／真面目',
+      profiles: ['', '', ''],
+    };
+    
+    const resultNullMental = generateJinzaiIniContent(jinzaiNullMental);
+    expect(resultNullMental).toContain('ルックス=S+');
+    expect(resultNullMental).toContain('テクニック=A');
+    expect(resultNullMental).not.toContain('メンタル=');
+  });
 });
 
 describe('generateKokyakuIniContent', () => {
